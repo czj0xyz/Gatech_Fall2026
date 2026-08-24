@@ -1,0 +1,112 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Title: SOP LaTeX Template
+%% Author: Soonho Kong / soonhok@cs.cmu.edu
+%% Created: 2012-11-12
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%% Requirement:
+%%     You need to have the `Adobe Caslon Pro` font family.
+%%     For more information, please visit:
+%%     http://store1.adobe.com/cfusion/store/html/index.cfm?store=OLS-US&event=displayFontPackage&code=1712
+%%
+%% How to Compile:
+%%     $ xelatex main.tex
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[letterpaper]{article}
+\usepackage[letterpaper,margin=1in,noheadfoot,bottom = 2cm]{geometry}
+\usepackage{color, enumerate, sectsty}
+\usepackage{fontspec}
+\usepackage[T1]{fontenc}
+\usepackage[normalem]{ulem}
+
+\usepackage[backend=biber,style=alphabetic,sorting=ynt]{biblatex}
+\addbibresource{ref.bib}
+% \bibliographystyle{alpha}
+% \bibliography{ref.bib}
+\usepackage{mathptmx, amsmath}
+\usepackage{amssymb}
+% \usepackage{newtxtext,newtxmath}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                      YOUR INFORMATION
+%
+%      PLEASE EDIT THE FOLLOWING LINES ACCORDINGLY!!
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\soptitle}{Statement of Research}
+\newcommand{\yourname}{Zejia Chen}
+\newcommand{\youremail}{zchen3091@gatech.edu}
+
+%% FONTS SETUP
+\defaultfontfeatures{Mapping=tex-text}
+\setromanfont[Path = fonts/, Ligatures={Common}]{adobe_caslon_pro}
+\setmonofont[Path = fonts/, Scale=0.8]{monaco}
+\setsansfont[Path = fonts/, Scale=0.9]{Optima-Regular}
+\newcommand{\amper}{{\fontspec[Scale=.95]{Adobe Caslon Pro}\selectfont\itshape\&~{}}}
+\usepackage[bookmarks, colorlinks, breaklinks,
+pdftitle={\yourname - \soptitle},pdfauthor={\yourname}, unicode]{hyperref}
+\hypersetup{linkcolor=magneta,citecolor=magenta,filecolor=magenta,urlcolor=[named]{WildStrawberry}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                      Title and Author Name
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\begin{center}{\huge \scshape \soptitle}\end{center}
+\begin{center}\vspace{0.2em} {\Large \yourname\\Supervised by Prof. Zongchen Chen\\}
+  {\youremail}\end{center}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                      SOP Body
+% NOTE: Use \amper instead of \&
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Problem Statement}
+Our primal research interests focuses on the sampling and counting problems with a particular emphasis on the Markov chain Monte Carlo (MCMC) methods applied to the approximately sampling from spin systems.
+The spin systems refer to a model based on an undirected graph $G = (V,E)$, a symmetric interaction matrix $\*A\in \!R_{\geq 0}^{q\times q}$ which represents the interaction strengths between different spins and an external field vector $\*h \in \!R_{>0}^q$.
+A configuration of the $q$-spin system is a vector $\sigma \in [q]^V$ which is the assignment of spins to each vertex.
+We assign weight to a configuration with:
+\[
+    \forall \sigma \in [q]^V, w_{G,\*A,\*h}(\sigma) = \prod_{\{u,v\}\in E} \*A(\sigma(u),\sigma(v)) \prod_{v\in V} \*h(\sigma(v)) .
+\]
+We say a configuration $\sigma$ is feasible if $w(\sigma) > 0$.
+The Gibbs distribution $\mu$ of a $q$-spin system $(G,\*A,\*h)$ is given by the weight function $w$: 
+$$
+    \forall \sigma \in [q]^V, \mu(\sigma) = \frac{1}{Z(G,\*A,\*h)}w_{G,\*A,\*h} \quad \text{ where }\quad Z(G,\*A,\*h) = \sum_{\sigma \in [q]^V} w_{G,\*A,\*h} \text{ is the partition function}.
+$$
+Many classical models can be described by spin systems, such as the hard-core model, Ising model and vertex coloring model.
+For example, let $q = 2$, $h(1) = 1$, $h(2) = \lambda$ and $A(a,b) = 1 - \mathbf 1[a=b=1]$ ($\lambda$ is called fugacity), then we get the hardcore model, which corresponds to the distribution over vertex-weighted independent sets.
+% Our goal is to approximately sample from the Gibbs distribution $\mu$ or equivalently, approximately compute the partition function $Z(G,\*A,\*h)$ under some certain conditions.
+
+Besides the classical sampling problems, we recently focus on establishing some boolean function inequalities for some Gibbs distributions over $2$-spin systems, such as the Eldan-Gross inequality and Talagrand inequality.
+Previous works have shown that some of these inequalities can be used built based on the rapid mixing of specific sampling algorithms and bounded-degree property of graphs with a potential application to voting models.
+Our goal is to prove similar inequalities with different conditions.
+
+
+
+\section*{Approach}
+
+Using semigroup analysis in discrete spaces, we will first prove local Bobkov inequalities under a reinforced Bakry--Émery condition, which develop a local analytic framework of the  discrete Markov semigroups.
+
+We will then combine these local inequalities with a suitable smoothing lemma to prove the Eldan--Gross inequality. This result can further imply Talagrand-type and KKL-type inequalities, thereby connecting our approach with classical problems in discrete isoperimetry and the analysis of Boolean functions.
+
+In addition, we may explore other topics using analytical techniques, such as spectral stability of Gibbs distributions, covariance estimates, and bounds on inverse covariance matrices, if they prove effective for our setting. Any meaningful results obtained from these approaches will be incorporated into the project. We will also remain open to developing and experimenting with new ideas and techniques as the research progresses.
+
+
+\section*{Schedule of Work}
+We will check and refine our primal proof ideas for the boolean function analysis and also find applications for this technique.
+In parallel, we may explore the relationship between discrete and continuous functional inequalities, and understand the techniques from one setting can inform the other.
+After that, we will investigate the potential applications of these inequalities to the analysis and its implications or dependency of the design of sampling algorithms for spin systems.
+
+Throughout the research project, we will maintain some notes to keep track of our progress and findings.
+If substantial progress is made and we have a breakthrough on the problem of interest, we may prepare a term paper about our problem and research results in the last few weeks of the semester.
+
+\section*{Expected Results}
+We expect to obtain a thorough understanding of the effectiveness and obstacles of our proposed proof strategy for proving the boolean function inequalities to general distributions.
+This enables us to obtain preliminary theoretical results that can either validate our approach or provide insights into potential refinements.
+If the research proceeds as expected, we will produce research notes or a term paper that summarizes our findings, including potential results, attempted proof strategies, barriers encountered with current techniques and, any new theoretical contributions or open questions that arise from our study.
+
+
+% \printbibliography
+\end{document}
