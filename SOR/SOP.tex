@@ -77,27 +77,37 @@ $$
 $$
 Many classical models can be described by spin systems, such as the hard-core model, Ising model and vertex coloring model.
 For example, let $q = 2$, $h(1) = 1$, $h(2) = \lambda$ and $A(a,b) = 1 - \mathbf 1[a=b=1]$ ($\lambda$ is called fugacity), then we get the hardcore model, which corresponds to the distribution over vertex-weighted independent sets.
-% Our goal is to approximately sample from the Gibbs distribution $\mu$ or equivalently, approximately compute the partition function $Z(G,\*A,\*h)$ under some certain conditions.
+The main goal is to design a FPRAS to sample from the the Gibbs distribution or count the partition function approximately.
+For self-reducible problems, there is equivalence between the approximate counting and approximate sampling.
 
-Besides the classical sampling problems, we recently focus on establishing some boolean function inequalities for some Gibbs distributions over $2$-spin systems, such as the Eldan-Gross inequality and Talagrand inequality.
+The main model of interest is the hard-core model on several special classes of graphs, including random reuglar graphs and line graphs.
+For random $\Delta$-regular graphs, the best known sampling result for hard-core model is $\lambda \lesssim \frac{1}{\sqrt \Delta}$.
+This still remains far from the conjectured sampling threshold, which is believed to be of order $\Omega(\frac{\log^2\Delta}{\log \log \Delta})$.
+We are also investigating the corresponding approximate counting problem.
+In the average-case setting, however, there is no immediate black-box equivalence between sampling and counting, because the standard reductions do not necessarily preserve the distribution of the random input graph.
+
+Beyond these classical sampling problems, we recently focus on establishing some boolean function inequalities, with a primary focus on isopermetric inequalities, on the boolean hypercube, such as the Eldan-Gross inequality and Talagrand-type inequality.
 Previous works have shown that some of these inequalities can be used built based on the rapid mixing of specific sampling algorithms and bounded-degree property of graphs with a potential application to voting models.
-Our goal is to prove similar inequalities with different conditions.
+Our goal is to establish analogous inequalities under different structural or probabilistic conditions.
+We also aim to extend this framework to more general combinatorial structures, such as Schreier graphs and hypergrids.
 
 
 
 \section*{Approach}
 
-Using semigroup analysis in discrete spaces, we will first prove local Bobkov inequalities under a reinforced Bakry--Émery condition, which develop a local analytic framework of the  discrete Markov semigroups.
+Using semigroup methods on discrete spaces, we will first prove local Bobkov inequalities under a reinforced Bakry--Émery condition, thereby developing a local analytic framework of discrete Markov semigroups.
+Then we use Dobrushin matrix as a bridge to give a sufficient condition for coordinate-wise strong gradient estimate.
+Together with the hypercontractivity, this estimate yields an L1--L2 Talagrand inequality.
+We will further combine these local inequalities with an appropriate smoothing lemma to prove the Eldan--Gross inequality.
+These results can further imply KKL--type inequalities.
 
-We will then combine these local inequalities with a suitable smoothing lemma to prove the Eldan--Gross inequality. This result can further imply Talagrand-type and KKL-type inequalities, thereby connecting our approach with classical problems in discrete isoperimetry and the analysis of Boolean functions.
-
-In addition, we may explore other topics using analytical techniques, such as spectral stability of Gibbs distributions, covariance estimates, and bounds on inverse covariance matrices, if they prove effective for our setting. Any meaningful results obtained from these approaches will be incorporated into the project. We will also remain open to developing and experimenting with new ideas and techniques as the research progresses.
+In addition, we may explore other topics using analytical techniques, such as spectral stability of Gibbs distributions, covariance estimates, zero-freeness, and bounds on inverse covariance matrices, if they prove effective for our setting. Any meaningful results obtained from these approaches will be incorporated into the project. We will also remain open to developing and experimenting with new ideas and techniques as the research progresses.
 
 
 \section*{Schedule of Work}
 We will check and refine our primal proof ideas for the boolean function analysis and also find applications for this technique.
-In parallel, we may explore the relationship between discrete and continuous functional inequalities, and understand the techniques from one setting can inform the other.
-After that, we will investigate the potential applications of these inequalities to the analysis and its implications or dependency of the design of sampling algorithms for spin systems.
+In parallel, we may investigate the connections between discrete and continuous functional inequalities and develop a better understanding of the corresponding analytic methods.
+We will then explore how these inequalities can be applied to the analysis of sampling algorithms for spin systems, as well as their implications for—and possible role in—the design of such algorithms.
 
 Throughout the research project, we will maintain some notes to keep track of our progress and findings.
 If substantial progress is made and we have a breakthrough on the problem of interest, we may prepare a term paper about our problem and research results in the last few weeks of the semester.

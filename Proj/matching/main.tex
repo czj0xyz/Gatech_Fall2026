@@ -245,6 +245,7 @@ Then we have the upper bound of marginal distribution:
 \begin{equation}
     \Pr[S\sim \mu]{e\in S} = p_e \leq \frac{\Theta}{1+\Theta} .
 \end{equation}
+Therefore, it is sufficient to show $\Cov(X) \preceq \diag\{\E[\mu]{X}\}$.
 
 Let us fix $a\in \R^E$.
 Define $\phi_e(i,j)$ backwards on $(\{0\}\cup [c_u])\times (\{0\}\cup [c_v])$ as follows,
@@ -322,6 +323,30 @@ Plugging \Cref{lem:1} into $K_e$, we have that
 $$
     \Var[\mu]{K_e}\lesssim \underbrace{\sum_{v,s=1}\E[\mu]{Y_{v,s}H_{v,s}^2}}_{\lesssim Q(a)+R(a)} + \underbrace{\sum_{v,s\geq 2}\E[\mu]{Y_{v,s}H_{v,s}^2}}_{\lesssim Q(a)} + \underbrace{\sum_{u,v,s,r}c_{ij}\E[\mu]{Y_{u,s}Y_{v,r}}}_{\lesssim Q(a)}
 $$
-\color{red}
-Use Hodge decomposition to bound $R(a)$.
+
+\subsection{Hodge decomposition}
+Let $B$ be the incident matrix.
+Let $h$ be the vector that solves
+$$
+    (W + BPB^\top)h=BPa ,
+$$
+where $P = \diag\{p_e\}$ and $W = \diag\{\E[\mu]{Y_{v,1}}\}$.
+Put $z = a - B^\top h$, thereby, $BPz = BPa - BPB^\top h = Wh$.
+We have that 
+$$
+    R(a) = (BPa)^\top W^{-1} (BPa), \quad R(z) = h^\top Wh.
+$$
+$$
+    Q(a) = (z+B^\top h)^\top P (z+B^\top h) = Q(z)+R(z)+h^\top BPB^\top h \geq Q(z)+R(z),
+$$
+since $h^\top BPz = h^\top Wh$.
+$$
+    F_z = F_a - \sum_{e\in E} (B^\top h)_e X_e \implies \Var[\mu]{\sum_{e\in E} (B^\top h)_e X_e} = \Var[\mu]{\sum_{v\in E} h_vd_S(v)} \underbrace{\lesssim}_{S.S. of Y} R(z)
+$$
+\begin{align*}
+    \Var[\mu]{F_a} &\leq \tp{\sqrt{\Var[\mu]{F_z}} + \sqrt{\Var[\mu]{F_{B^\top h}}}}^2
+    \leq 2(\Var[\mu]{F_z} + \Var[\mu]{F_{B^\top h}})
+    \\&\lesssim Q(z)+R(z) \lesssim Q(a).
+\end{align*}
+
 \end{document}
