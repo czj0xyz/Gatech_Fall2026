@@ -1,0 +1,327 @@
+\documentclass[11pt]{article}
+\pagestyle{plain}
+
+% \pgfplotsset{compat=1.18}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amsfonts,amssymb,amsthm}
+\usepackage[ruled,vlined,linesnumbered,commentsnumbered]{algorithm2e}
+\SetKwInput{KwIn}{Input}
+\SetKwInput{KwOut}{Output}
+\SetKwInput{KwGlobal}{Global variable}
+\SetKwInput{KwOracle}{Oracle}
+\SetKwComment{Comment}{// }{}
+\usepackage{graphicx}
+\usepackage{enumerate}
+\usepackage{bbm}
+\usepackage{verbatim}
+\usepackage{hyperref,color}
+\usepackage[capitalize,nameinlink]{cleveref}
+\usepackage[dvipsnames]{xcolor}
+\hypersetup{
+	colorlinks=true,
+	pdfpagemode=UseNone,
+	citecolor=OliveGreen,
+	linkcolor=NavyBlue,
+	urlcolor=Magenta,
+	pdfstartview=FitW
+}
+\usepackage{appendix}
+\usepackage{makecell}
+\usepackage{tablefootnote}
+\crefname{appsec}{Appendix}{Appendices}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{xifthen}
+\usepackage{subcaption}
+\usepackage{hhline}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{problem}[theorem]{Problem}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{fact}[theorem]{Fact}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{observation}[theorem]{Observation}
+\newtheorem{assumption}[theorem]{Assumption}
+\newtheorem*{assumption*}{Assumption}
+\newtheorem{condition}[theorem]{Condition}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\crefname{lemma}{Lemma}{Lemmas}
+\crefname{theorem}{Theorem}{Theorems}
+\crefname{definition}{Definition}{Definitions}
+\crefname{fact}{Fact}{Facts}
+\crefname{claim}{Claim}{Claims}
+\crefname{proposition}{Proposition}{Propositions}
+
+
+\newcommand{\dif}{\,\mathrm{d}}
+%\newcommand{\E}{\mathbb{E}}
+%\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\Cov}{\mathrm{Cov}}
+\newcommand{\MI}{\mathrm{I}}
+%\newcommand{\Ent}{\mathrm{Ent}}
+\newcommand{\ind}{\mathbbm{1}}
+\newcommand{\allone}{\mathbf{1}}
+\newcommand{\tr}{\mathrm{tr}}
+\newcommand{\wt}{\mathrm{weight}}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\newcommand{\TV}[2]{\left\|#1 - #2\right\|_{\mathrm{TV}}}
+\newcommand{\ceil}[1]{\left\lceil #1 \right\rceil}
+\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
+\newcommand{\ip}[2]{\left\langle #1 , #2 \right\rangle}
+\newcommand{\grad}{\nabla}
+\newcommand{\hessian}{\nabla^2}
+\newcommand{\trans}{\intercal}
+\newcommand{\diag}{\mathrm{diag}}
+\newcommand{\poly}{\mathrm{poly}}
+\newcommand{\dist}{\mathrm{dist}}
+\newcommand{\sgn}{\mathrm{sgn}}
+\newcommand{\fpras}{\mathsf{FPRAS}}
+\newcommand{\fpaus}{\mathsf{FPAUS}}
+\newcommand{\fptas}{\mathsf{FPTAS}}
+
+\newcommand{\eps}{\varepsilon}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+
+\renewcommand{\AA}{\mathcal{A}}
+\newcommand{\BB}{\mathcal{B}}
+\newcommand{\CC}{\mathcal{C}}
+\newcommand{\DD}{\mathcal{D}}
+\newcommand{\EE}{\mathcal{E}}
+\newcommand{\FF}{\mathcal{F}}
+\newcommand{\GG}{\mathcal{G}}
+\newcommand{\HH}{\mathcal{H}}
+\newcommand{\II}{\mathcal{I}}
+\newcommand{\JJ}{\mathcal{J}}
+\newcommand{\KK}{\mathcal{K}}
+\newcommand{\LL}{\mathcal{L}}
+\newcommand{\MM}{\mathcal{M}}
+\newcommand{\NN}{\mathcal{N}}
+\newcommand{\OO}{\mathcal{O}}
+\newcommand{\PP}{\mathcal{P}}
+\newcommand{\QQ}{\mathcal{Q}}
+\newcommand{\RR}{\mathcal{R}}
+\renewcommand{\SS}{\mathcal{S}}
+\newcommand{\TT}{\mathcal{T}}
+\newcommand{\UU}{\mathcal{U}}
+\newcommand{\VV}{\mathcal{V}}
+\newcommand{\WW}{\mathcal{W}}
+\newcommand{\XX}{\mathcal{X}}
+\newcommand{\YY}{\mathcal{Y}}
+\newcommand{\ZZ}{\mathcal{Z}}
+
+\newcommand{\KL}[2]{D_{\mathrm{KL}} \left( #1 \,\Vert\, #2 \right)}
+\newcommand{\KLbig}[2]{D_{\mathrm{KL}} \left( #1 \,\big\Vert\, #2 \right)}
+\newcommand{\KLBig}[2]{D_{\mathrm{KL}} \left( #1 \,\Big\Vert\, #2 \right)}
+
+\newcommand{\SKL}[2]{D_{\mathrm{SKL}} \left( #1 \,\Vert\, #2 \right)}
+\newcommand{\SKLbig}[2]{D_{\mathrm{SKL}} \left( #1 \,\big\Vert\, #2 \right)}
+\newcommand{\SKLBig}[2]{D_{\mathrm{SKL}} \left( #1 \,\Big\Vert\, #2 \right)}
+
+\newcommand{\qandq}{\quad\text{and}\quad}
+\newcommand{\supp}{\mathrm{supp}}
+
+\newcommand{\DKL}[2]{\-D_{\-{KL}}\left(#1 \parallel #2\right)}
+\newcommand{\DTV}[2]{\-D_{\mathrm{TV}}\left({#1},{#2}\right)}
+% \newcommand{\dist}{\mathrm{dist}}
+\newcommand{\e}{\mathrm{e}}
+\renewcommand{\epsilon}{\varepsilon}
+\renewcommand{\emptyset}{\varnothing}
+% \newcommand{\norm}[1]{\left\Vert#1\right\Vert}
+\newcommand{\set}[1]{\left\{#1\right\}}
+\newcommand{\tuple}[1]{\left(#1\right)} 
+% \newcommand{\eps}{\varepsilon}
+\newcommand{\inner}[2]{\left\langle #1,#2\right\rangle}
+\newcommand{\tp}{\tuple}
+\newcommand{\ol}{\overline}
+\newcommand{\abs}[1]{\left\vert#1\right\vert}
+\newcommand{\ctp}[1]{\left\lceil#1\right\rceil}
+\newcommand{\ftp}[1]{\left\lfloor#1\right\rfloor}
+\newcommand{\Ind}[1]{\-{Ind}_{#1}}
+\newcommand{\todo}[1]{{\color{red} TODO: #1}}
+
+\newcommand{\Cor}{\Psi^{\mathrm{sym}}}
+\newcommand{\cor}{\Psi^{\-{cor}}}
+\newcommand{\Inf}{\Psi}
+% \newcommand{\diag}{\-{diag}}
+
+\def\*#1{\boldsymbol{#1}} % Use \*A for \mathbf{A}
+\def\+#1{\mathcal{#1}} % Use \+A for \mathcal{A}
+\def\-#1{\mathrm{#1}} % Use \-A for \mathrm{A}
+\def\=#1{\mathbb{#1}} % Use \^A for \mathbb{A}
+\def\!#1{\mathfrak{#1}} % Use \!A for \mathfrak{A}
+
+\newcommand*\diff{\mathop{}\!\mathrm{d}}
+
+% probability
+% \DeclareMathOperator*{\oPr}{\mathbf{Pr}}
+\def\oPr{\mathop{\mathrm{Pr}}}
+\renewcommand{\Pr}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oPr\left[#2\right]}
+  {\oPr_{#1}\left[#2\right]} } % Use \Pr[a]{b} for \mathbf{Pr}_a[b], \Pr{b} for  \mathbf{Pr}[b]
+
+% expectation: relies on the package "dsfont"
+% \DeclareMathOperator*{\oE}{\mathbb{E}}
+\def\oE{\mathop{\mathbb{E}}}
+\newcommand{\E}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oE\left[#2\right]}
+  {\oE_{#1}\left[#2\right]} }
+
+% variance
+%\DeclareMathOperator*{\oVar}{\mathbf{Var}}
+\def\oVar{\mathrm{Var}}
+\newcommand{\Var}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oVar\left[#2\right]}
+  {\oVar_{#1}\left[#2\right]} }
+
+% entropy
+% \DeclareMathOperator*{\oEnt}{\mathbf{Ent}}
+\def\oEnt{\mathrm{Ent}}
+\newcommand{\Ent}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oEnt\left[#2\right]}
+  {\oEnt_{#1}\left[#2\right]} }
+
+\newcommand{\PhiEnt}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oEnt^\phi\left[#2\right]}
+  {\oEnt^\phi_{#1}\left[#2\right]} }
+
+
+\newenvironment{Exampleparagraph}[1][]
+{
+    \par 
+    \noindent 
+    \textbf{\color{blue} #1}
+    \par 
+    \vspace{0.5em} 
+    \itshape 
+}
+{
+    \par 
+    \vspace{1em} 
+}
+
+%\input{local-macro}
+
+\newcommand{\RED}[1]{\textcolor{red}{#1}}
+\newcommand{\zc}[1]{\textcolor{red}{ZC: #1}}
+
+\newcommand{\bern}[1]{\mathrm{Bern}\left(#1\right)}
+\newcommand{\pll}{\parallel}
+
+
+
+\title{Degree-free Holant SI Reading}
+\date{\today}
+
+\pgfplotsset{compat=1.18} 
+\begin{document}
+
+\maketitle
+
+\section{Main structure}
+Assumptions:
+\begin{itemize}
+    \item for any $v\in V$, the signature of $v$ is log-concave.
+    \item for $e=uv\in E$, let $\theta_{e}(i,j) = \lambda_e \frac{f_u(i+1)}{f_u(i)}\frac{f_v(j+1)}{f_v(j)}$ be the increased weight if we add the edge $e$. We have that $\theta_e(i,j)\in [\gamma,\Theta]$, where $\gamma$ and $\Theta$ are some constants independent of the graph.
+    % \item 
+\end{itemize}
+Then we have the upper bound of marginal distribution:
+\begin{equation}
+    \Pr[S\sim \mu]{e\in S} = p_e \leq \frac{\Theta}{1+\Theta} .
+\end{equation}
+
+Let us fix $a\in \R^E$.
+Define $\phi_e(i,j)$ backwards on $(\{0\}\cup [c_u])\times (\{0\}\cup [c_v])$ as follows,
+\begin{align}
+    \phi_e(i,j) = \begin{cases}
+        0 &, i=c_u \lor j=c_v
+        \\\theta_e(i,j)(1 - \phi_e(i+1,j+1)) &, \text{o.w.}
+    \end{cases} ,
+\end{align}
+and $K_{e} := \phi_e(d_S(u),d_S(v))$ for $uv=e\in E$.
+Here $\phi$ is \emph{intentionally} defined to have the following property:
+\begin{align}\label{eq:1}
+    \E[\mu]{K_e\mid X_{-e}} = \E[\mu]{X_e\mid X_{-e}} \implies \E[\mu]{K_eX_f} = \E[\mu]{X_eX_f }, \forall f\neq e .
+\end{align}
+
+Define 
+$$
+    F_a := \sum_{e\in E}a_eX_e\quad \text{ and }\quad K_a := \sum_{e\in E}a_eK_e.
+$$
+By \Cref{eq:1}, we decompose $\Var[\mu]{F_a}$ as follows,
+\begin{align*}
+    \Var[\mu]{F_a} &= \Cov(F_a,K_a) + \E[\mu]{F_a^2} - \E[\mu]{F_aK_a}
+    \\&=\Cov(F_a,K_a) + \sum_{e_1,e_2\in E}a_{e_1}a_{e_2}(\E[\mu]{X_{e_1}X_{e_2}} - \E[\mu]{X_{e_1}K_{e_2}})
+    \\&=\Cov(F_a,K_a) + \sum_{e\in E}a_{e}^2(\E[\mu]{X_e^2} - \E[\mu]{X_{e}K_{e}})
+    \\&\leq \sqrt{\Var[\mu]{F_a}\Var[\mu]{K_a}} + \sum_{e\in E}a_{e}^2(p_e - \E[\mu]{X_{e}K_{e}}).
+\end{align*}
+Here the off-diagonal elements cancel and we only need to focus on the diagonal elements.
+\begin{proposition}
+    There exists some constant $H = H(b,\gamma,\Theta,\lambda)$ such that $\abs{K_e}\leq H$ for $e\in E$.
+\end{proposition}
+Define
+$$
+    Q(a) := \sum_{e\in E}a_e^2 p_e = a^\top \diag\{p\} a_e.
+$$
+we have that $\E[\mu]{-X_e K_e}\leq \max_{e\in E}\abs{K_e}\Pr[\mu]{e\in S} \leq p_eH$.
+Therefore, by AM-GM inequality,
+\begin{equation}
+    \Var[\mu]{F_a} \leq \Var[\mu]{K_a} + (1+H)Q(a).
+\end{equation}
+
+\subsection{Upper bound $\Var[\mu]{K_a}$}
+
+\begin{lemma}
+    Consider two Holant measures that agree except at one vertex $v$. where their signatures are either
+    $$
+        (f_v, \+D f_v)\quad  \text{ or }\quad (\delta_{k+1},\delta_k),
+    $$
+    then \textbf{log-concavity} implies there is a coupling $(S^+,S^-)$ such that
+    $$
+        \sum_{x\in V} \abs{d_{S^+}(x) - d_{S^-}(x)} \leq 2.
+    $$
+\end{lemma}
+Let $Y = \*1_{c_v - d_S(v)\geq r}$ where $c_v$ is the support length of $f_v$.
+\begin{proposition}
+    The above coupling implies the spectral stability of $Y$.
+\end{proposition}
+\begin{lemma}\label{lem:1}
+    The spectral stability of $Y$ ($\Cov(Y)\preceq C\cdot \diag\{\E Y\}$) implies the spectral gap of some resulting kernel.
+    Together with spectral stability, the spectral gap implies the following bound
+    $$
+        \Var[\mu]{K}\leq 4^b\tp{\sum_i\E[\mu]{Y_iH_i^2} + \sum_{ij}c_{ij}\E[\mu]{Y_iY_j}},
+    $$
+    where $K(Y) = \sum_{ij}c_{ij}Y_iY_j$ is the quadratic form of $Y$ and $H_i(Y) = \sum_j c_{ij}Y_j$ is the ``first derivative''.
+\end{lemma}
+We can also express $K_a$ as the quadratic form of $Y$ variables:
+\begin{align}
+    K_e = \sum_{e\in E}a_e\sum_{r=1}^{c_u}\sum_{s=1}^{c_v} \alpha_{rs}^e Y_{u,r} Y_{v,s},
+\end{align}
+where $\alpha$ is ``second derivative" of $\phi_e$.
+Define 
+$$
+    R(a) = \sum_{v\in V} \frac{(\sum_{e:v\in e} p_ea_e)^2}{\E[\mu]{Y_{v,1}}} .
+$$
+Plugging \Cref{lem:1} into $K_e$, we have that
+$$
+    \Var[\mu]{K_e}\lesssim \underbrace{\sum_{v,s=1}\E[\mu]{Y_{v,s}H_{v,s}^2}}_{\lesssim Q(a)+R(a)} + \underbrace{\sum_{v,s\geq 2}\E[\mu]{Y_{v,s}H_{v,s}^2}}_{\lesssim Q(a)} + \underbrace{\sum_{u,v,s,r}c_{ij}\E[\mu]{Y_{u,s}Y_{v,r}}}_{\lesssim Q(a)}
+$$
+\color{red}
+Use Hodge decomposition to bound $R(a)$.
+\end{document}
