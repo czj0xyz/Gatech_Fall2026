@@ -1,0 +1,295 @@
+\documentclass[11pt]{article}
+\pagestyle{plain}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amsfonts,amssymb,amsthm}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=green,urlcolor=magenta]{hyperref}
+\usepackage[capitalize,nameinlink]{cleveref}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{claim}[theorem]{Claim}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\abs}[1]{\left\lvert #1 \right\rvert}
+\newcommand{\ip}[2]{\left\langle #1,#2 \right\rangle}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\newcommand{\Hess}{\nabla^2}
+\newcommand{\HessG}{\operatorname{Hess}^{\Gamma}}
+\newcommand{\Ric}{\operatorname{Ric}}
+
+\title{Curvature-Dimension Versus Reinforced Curvature-Dimension}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Setup}
+
+Let $L$ be the generator of a Markov semigroup. Recall the carré du champ
+\begin{align*}
+    \Gamma(f,g) := \frac{1}{2}\left(L(fg)-fLg-gLf\right),
+    \qquad
+    \Gamma(f) := \Gamma(f,f),
+\end{align*}
+and
+\begin{align*}
+    \Gamma_2(f,g) := \frac{1}{2}\left(L\Gamma(f,g)-\Gamma(f,Lg)-\Gamma(g,Lf)\right),
+    \qquad
+    \Gamma_2(f):=\Gamma_2(f,f).
+\end{align*}
+The curvature-dimension condition $\operatorname{CD}(\rho,\infty)$ is the pointwise inequality
+\begin{align*}
+    \Gamma_2(f) \ge \rho \Gamma(f)
+\end{align*}
+for all sufficiently regular $f$. The reinforced curvature-dimension condition used below is
+\begin{align}\label{eq:rcd}
+    \Gamma(\Gamma(f)) \le 4\Gamma(f)\left(\Gamma_2(f)-\rho\Gamma(f)\right).
+\end{align}
+The point of this note is that, for ordinary diffusion generators, $\operatorname{CD}(\rho,\infty)$ implies~\eqref{eq:rcd}; for discrete chains this implication is false.
+
+\section{Diffusion Case}
+
+In this section we assume that $L$ is a diffusion generator. Concretely, this
+means that $\Gamma$ is a derivation in each argument:
+\begin{align}\label{eq:derivation}
+    \Gamma(ab,c)=a\Gamma(b,c)+b\Gamma(a,c).
+\end{align}
+Equivalently, for smooth functions one may think of
+\[
+    L=\sum_{i,j}a^{ij}\partial_{ij}+\sum_i b^i\partial_i,
+    \qquad
+    \Gamma(f,g)=\sum_{i,j}a^{ij}\partial_i f\,\partial_j g.
+\]
+Thus $\Gamma$ behaves like an inner product of gradients.
+
+\begin{proposition}
+Let $L$ be a diffusion generator satisfying $\operatorname{CD}(\rho,\infty)$.
+Then the reinforced curvature-dimension inequality
+\[
+    \Gamma(\Gamma(f))
+    \le
+    4\Gamma(f)\left(\Gamma_2(f)-\rho\Gamma(f)\right)
+\]
+holds pointwise for every sufficiently regular $f$.
+\end{proposition}
+
+\begin{proof}
+Fix a point $x$. All quantities below are evaluated at $x$. Define the
+symmetric bilinear form
+\[
+    B(h,k):=\Gamma_2(h,k)-\rho\Gamma(h,k).
+\]
+The condition $\operatorname{CD}(\rho,\infty)$ says precisely that
+\[
+    B(h,h)\ge 0
+\]
+for every test function $h$. Hence, by Cauchy--Schwarz for positive
+semidefinite bilinear forms,
+\begin{align}\label{eq:B-cs}
+    B(h,k)^2\le B(h,h)B(k,k).
+\end{align}
+
+Let $f$ and $g$ be test functions. Set
+\[
+    u:=f-f(x),\qquad v:=g-g(x),\qquad \eta:=uv.
+\]
+Then $u(x)=v(x)=0$. Since $\Gamma$ is a derivation,
+\[
+    \Gamma(\eta)(x)=0,
+    \qquad
+    \Gamma(f,\eta)(x)=0.
+\]
+Therefore
+\[
+    B(\eta,\eta)(x)=\Gamma_2(\eta)(x),
+    \qquad
+    B(f,\eta)(x)=\Gamma_2(f,\eta)(x).
+\]
+Applying \eqref{eq:B-cs} with $h=f$ and $k=\eta$ gives
+\begin{align}\label{eq:first-cs}
+    \Gamma_2(f,\eta)^2
+    \le
+    \left(\Gamma_2(f)-\rho\Gamma(f)\right)\Gamma_2(\eta).
+\end{align}
+
+We now compute the two terms involving $\eta$. First, using the derivation rule,
+\[
+    \Gamma(f,\eta)
+    =
+    \Gamma(f,uv)
+    =
+    u\Gamma(f,v)+v\Gamma(f,u).
+\]
+A standard expansion of $\Gamma_2$ using \eqref{eq:derivation} gives, at the
+point $x$,
+\begin{align}\label{eq:mixed-gamma2}
+    \Gamma_2(f,\eta)
+    =
+    \Gamma(g,\Gamma(f)).
+\end{align}
+Similarly,
+\begin{align}\label{eq:eta-gamma2}
+    \Gamma_2(\eta)
+    =
+    2\left(\Gamma(f)\Gamma(g)+\Gamma(f,g)^2\right).
+\end{align}
+By Cauchy--Schwarz for the positive semidefinite form $\Gamma$,
+\[
+    \Gamma(f,g)^2\le \Gamma(f)\Gamma(g).
+\]
+Hence \eqref{eq:eta-gamma2} implies
+\[
+    \Gamma_2(\eta)
+    \le
+    4\Gamma(f)\Gamma(g).
+\]
+Combining this with \eqref{eq:first-cs} and \eqref{eq:mixed-gamma2}, we obtain
+\begin{align}\label{eq:mixed-estimate}
+    \Gamma(g,\Gamma(f))^2
+    \le
+    4\Gamma(f)\Gamma(g)
+    \left(\Gamma_2(f)-\rho\Gamma(f)\right).
+\end{align}
+
+Finally choose $g=\Gamma(f)$. Then
+\[
+    \Gamma(g,\Gamma(f))=\Gamma(\Gamma(f)),
+    \qquad
+    \Gamma(g)=\Gamma(\Gamma(f)).
+\]
+Thus \eqref{eq:mixed-estimate} becomes
+\[
+    \Gamma(\Gamma(f))^2
+    \le
+    4\Gamma(f)\Gamma(\Gamma(f))
+    \left(\Gamma_2(f)-\rho\Gamma(f)\right).
+\]
+If $\Gamma(\Gamma(f))(x)=0$, the desired inequality is immediate. Otherwise
+we divide by $\Gamma(\Gamma(f))(x)$ and get
+\[
+    \Gamma(\Gamma(f))(x)
+    \le
+    4\Gamma(f)(x)
+    \left(\Gamma_2(f)(x)-\rho\Gamma(f)(x)\right).
+\]
+Since $x$ was arbitrary, the reinforced inequality holds pointwise.
+\end{proof}
+
+\begin{remark}
+The proof uses only the locality of a diffusion generator, encoded in the
+derivation rule \eqref{eq:derivation}. This is precisely the step that fails
+for jump generators on graphs. In the discrete case, even if
+$\eta(x)=0$, the quantity $\Gamma(\eta)(x)$ may be positive because it depends
+on values of $\eta$ at neighboring vertices.
+\end{remark}
+
+\section{A Discrete Counterexample}
+
+Let $X=\{0,1,2\}$ and let $L$ be the continuous-time simple random walk generator on the path $0-1-2$:
+\begin{align*}
+    Lf(0)=f(1)-f(0),\qquad
+    Lf(1)=f(0)+f(2)-2f(1),\qquad
+    Lf(2)=f(1)-f(2).
+\end{align*}
+This chain is reversible with respect to the uniform measure. We use the same definitions of $\Gamma$ and $\Gamma_2$ as above.
+
+\begin{lemma}
+The path chain satisfies $\operatorname{CD}(1/2,\infty)$.
+\end{lemma}
+
+\begin{proof}
+Write
+\begin{align*}
+    u=f(0)-f(1),\qquad v=f(2)-f(1).
+\end{align*}
+Adding a constant to $f$ does not change $\Gamma$ or $\Gamma_2$, so these two variables determine all the relevant quantities. Direct calculation gives
+\begin{align*}
+    \Gamma(f)(0)&=\frac{u^2}{2},
+    &
+    \Gamma_2(f)(0)&=u^2+\frac{uv}{2}+\frac{v^2}{4},
+    \\
+    \Gamma(f)(1)&=\frac{u^2+v^2}{2},
+    &
+    \Gamma_2(f)(1)&=\frac{3}{4}(u^2+v^2)+uv,
+    \\
+    \Gamma(f)(2)&=\frac{v^2}{2},
+    &
+    \Gamma_2(f)(2)&=v^2+\frac{uv}{2}+\frac{u^2}{4}.
+\end{align*}
+Therefore,
+\begin{align*}
+    \Gamma_2(f)(0)-\frac{1}{2}\Gamma(f)(0)
+    &=
+    \frac{(u+v)^2+2u^2}{4}
+    \ge 0,\\
+    \Gamma_2(f)(1)-\frac{1}{2}\Gamma(f)(1)
+    &=
+    \frac{(u+v)^2}{2}
+    \ge 0,\\
+    \Gamma_2(f)(2)-\frac{1}{2}\Gamma(f)(2)
+    &=
+    \frac{(u+v)^2+2v^2}{4}
+    \ge 0.
+\end{align*}
+Thus $\Gamma_2(f)\ge \frac12 \Gamma(f)$ at every vertex for every $f$.
+\end{proof}
+
+\begin{proposition}
+The same chain does not satisfy the reinforced inequality~\eqref{eq:rcd} with $\rho=1/2$.
+\end{proposition}
+
+\begin{proof}
+Take
+\begin{align*}
+    f(0)=0,\qquad f(1)=0,\qquad f(2)=1.
+\end{align*}
+At the vertex $0$,
+\begin{align*}
+    \Gamma(f)(0)
+    =
+    \frac{1}{2}\left(f(1)-f(0)\right)^2
+    =
+    0.
+\end{align*}
+Also,
+\begin{align*}
+    \Gamma(f)(1)
+    =
+    \frac{1}{2}\left((f(0)-f(1))^2+(f(2)-f(1))^2\right)
+    =
+    \frac{1}{2}.
+\end{align*}
+Hence
+\begin{align*}
+    \Gamma(\Gamma(f))(0)
+    =
+    \frac{1}{2}\left(\Gamma(f)(1)-\Gamma(f)(0)\right)^2
+    =
+    \frac{1}{8}.
+\end{align*}
+The left-hand side of~\eqref{eq:rcd} at the vertex $0$ is therefore
+\begin{align*}
+    \Gamma(\Gamma(f))(0)=\frac18,
+\end{align*}
+whereas the right-hand side is
+\begin{align*}
+    4\Gamma(f)(0)\left(\Gamma_2(f)(0)-\frac12\Gamma(f)(0)\right)=0.
+\end{align*}
+Thus~\eqref{eq:rcd} fails.
+\end{proof}
+
+\begin{remark}
+The counterexample is not caused by failure of the usual curvature-dimension condition: the previous lemma proves $\operatorname{CD}(1/2,\infty)$. The obstruction is that $\Gamma$ is nonlocal on a graph. Even if $f$ is locally constant across the only edge incident to $0$, so that $\Gamma(f)(0)=0$, the energy $\Gamma(f)$ can change across that edge because of edges adjacent to the neighboring vertex. Consequently $\Gamma(\Gamma(f))(0)$ can be positive.
+\end{remark}
+
+\end{document}

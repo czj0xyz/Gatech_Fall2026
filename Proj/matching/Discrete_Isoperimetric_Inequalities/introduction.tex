@@ -1,0 +1,515 @@
+\section{Introduction}
+
+Isoperimetric inequalities, such as the Kahn--Kalai--Linial (KKL) inequality and Talagrand's \(L^1\)--\(L^2\) inequality, play a fundamental role in the analysis of Boolean functions. A Boolean function \(f:\{\pm 1\}^n \to \{\pm 1\}\) can, for example, represent a voting rule or indicate a graph property. These inequalities connect local perturbations to global fluctuations by quantifying how the value of \(f\) changes when one or more input coordinates are altered.
+
+Isoperimetric inequalities have numerous applications in probability theory, combinatorics, and theoretical computer science. For instance, they are central to sharp-threshold theorems, junta approximations, noise sensitivity, percolation, social choice, the hardness of approximation, and the geometry of product spaces; see \cite{ODonnell14} for further discussion.
+
+Most previous work presents isoperimetric inequalities on the Boolean hypercube equipped with the uniform measure. Extensions are known for general product measures and for structured spaces such as the hypergrid $[m]^n$ or the $k$-slice $\binom{[n]}{k}$.
+Although uniform distributions are natural and cover many applications, many probabilistic and algorithmic models require non-uniform or non-product measures, including Gibbs measures of Markov random fields and graphical models that allow local dependence. Recent work has studied, for example, learning Boolean functions under such non-uniform measures \cite{CGMV26,FYYZ26}. The purpose of this paper is to establish new isoperimetric inequalities beyond the uniform setting.
+
+To introduce our main contributions, we first review basic definitions related to Boolean functions and classical isoperimetric inequalities under the uniform measure. We focus on four key inequalities: the Kahn--Kalai--Linial (KKL) inequality \cite{KKL88}, Talagrand's \( L^1 \)--\( L^2 \) inequality \cite{Talagrand94}, Talagrand's variance--surface-area inequality \cite{Talagrand93}, and the Eldan--Gross inequality \cite{EldanGross22}. Although closely related, these four inequalities measure the boundary of a Boolean function in different ways.
+
+\subsection{Influence and boundary on the discrete cube}
+
+
+Let $\mu$ be a probability measure on $\cube$; in the classical setting, $\mu$ is the uniform measure. 
+For $x=(x_1,\ldots,x_n)\in\cube$ and $i\in[n]$, let $x^i$ denote the point obtained by flipping the $i$th coordinate of $x$. 
+
+\paragraph{Boolean-valued function.}
+Let $f: \cube \to \{\pm 1\}$ be a Boolean-valued function.
+The pointwise \emph{sensitivity} $s(f)$ of a Boolean function $f$ is
+\[
+    s(f)(x) :=\sum_{i=1}^n \ind{\{f(x^i)\neq f(x)\}},
+\]
+namely, $s(f)(x)$ counts the number of pivotal coordinates that change the function value when flipped. 
+We use the following standard notation:
+%suppressing the dependence on $\mu$ when the measure is clear
+\begin{enumerate}[(1)]
+    \item The \emph{influence of the $i$-th coordinate} $\Inf_{\mu,i}(f)$ is the probability that coordinate $i$ is pivotal:
+    \begin{align*}
+        \Inf_{\mu,i}(f)
+        := \Pr[\mu]{f(x^i)\neq f(x)};
+    \end{align*}
+
+    \item The \emph{total influence} or \emph{average edge boundary} $\Inf_\mu(f)$ is defined as
+    \begin{align*}
+        \Inf_\mu(f)
+        := \sum_{i=1}^n \Inf_{\mu,i}(f) = \sum_{i=1}^n \Pr[\mu]{f(x^i)\neq f(x)};
+    \end{align*}
+
+    \item The \emph{(Boolean) surface area} or \emph{Talagrand boundary} $\SurfArea_\mu(f)$ is the square-root sensitivity boundary, defined by
+    \begin{align*}
+        \SurfArea_\mu(f)
+        := \E[\mu]{\sqrt{s(f)}};
+    \end{align*}
+
+    \item The \emph{total squared influence} $\SqInf_\mu(f)$ is the sum of squared influences:
+    \begin{align*}
+        \SqInf_\mu(f)
+        := \sum_{i=1}^n \Inf_{\mu,i}(f)^2 = \sum_{i=1}^n
+            \Pr[\mu]{f(x^i)\neq f(x)}^2.
+    \end{align*}
+\end{enumerate}
+
+Although we initially focus on uniform $\mu$, these definitions also apply to non-uniform $\mu$. 
+
+
+\paragraph{Real-valued functions.}
+For a real-valued function $f: \cube \to \R$, we define the discrete derivative and the norm by
+\[
+    D_i f(x):= \frac{f(x^i)-f(x)}{2},
+    \qquad
+    \norm{g}_{p,\mu}:=\bigl(\E[\mu]{\abs{g}^p}\bigr)^{1/p}.
+\]
+If $f$ is Boolean-valued, then $D_i f \in\set{0,\pm 1}$ and consequently
+\[
+    \Inf_{\mu,i}(f)=\norm{D_i f}_{1,\mu}=\norm{D_i f}_{2,\mu}^2,
+    \qquad
+    s(f)(x)=\sum_{i=1}^n \abs{D_i f(x)}^2.
+\]
+These identities explain why functional inequalities interpolating the $L^1$ and $L^2$ norms of the discrete derivatives translate into statements about influences.
+
+\subsection{The classical uniform-measure inequalities}
+
+Throughout this subsection, $\mu$ denotes the uniform probability measure on $\cube$. We summarize the key isoperimetric inequalities studied in this work.
+
+\paragraph{Poincaré inequality.} The Poincaré inequality gives the baseline comparison between the variance and the total influence. 
+For any real-valued function $f: \cube \to \R$,
+\begin{equation}\label{eq:poincare-R}
+    \Var[\mu]{f}
+    \leq \sum_{i=1}^n \norm{D_i f}_{2,\mu}^2.
+\end{equation}
+For any Boolean-valued function $f: \cube \to \{\pm 1\}$,
+\begin{equation}\label{eq:poincare-B}
+    \Var[\mu]{f}
+    \leq \Inf_\mu(f).
+\end{equation}
+The Poincaré inequality is tight for real-valued functions but not for Boolean-valued ones.
+It asserts that a function with nontrivial variance has a nontrivial edge boundary, but by itself guarantees only a coordinate with influence of order $\Var{f}/n$.
+
+\paragraph{Kahn-Kalai-Linial (KKL) inequality.}
+The KKL theorem provides the decisive logarithmic improvement. 
+There is a universal constant $C>0$ such that every Boolean-valued $f: \cube \to \{\pm 1\}$ satisfies
+\begin{equation}\label{eq:kkl}
+    \max_{i\in[n]} \,\Inf_{\mu,i}(f)
+    \geq C \frac{\log n}{n} \,\Var[\mu]{f}.
+\end{equation}
+In particular, it identifies a coordinate whose influence improves on the Poincaré scale by a logarithmic factor.
+This order of magnitude is optimal, as witnessed by the Tribes construction of Ben-Or and Linial \cite{BenOrLinial90}. KKL is therefore not merely a refinement of \cref{eq:poincare-B}: the diverging factor $\log n$ is what drives many sharp-threshold and coalition results.
+One can also state a version of \cref{eq:poincare-B} for real-valued functions, but this is more conveniently described in the $L^1$--$L^2$ inequality below.
+
+\paragraph{Talagrand's $L^1$--$L^2$ inequality.}
+Talagrand's $L^1$--$L^2$ inequality provides a stronger functional statement. 
+For general real-valued functions, it compares $\Var[\mu]{f}$ with an $L^1$--$L^2$ interpolation of the coordinate derivatives. 
+For every real-valued $f: \cube \to \R$ on the uniform cube,
+\begin{equation}\label{eq:tal-l1l2}
+    \Var[\mu]{f}
+    \leq C\sum_{i=1}^n
+    \frac{\norm{D_i f}_{2,\mu}^2}
+    {1+\log\left(\norm{D_i f}_{2,\mu}/\norm{D_i f}_{1,\mu}\right)},
+\end{equation}
+where a summand is zero if $\norm{D_i f}_{2,\mu} = 0$ by continuity, and $C>$ is a universal constant. 
+Talagrand's $L^1$--$L^2$ inequality \cref{eq:tal-l1l2} implies the KKL inequality \cref{eq:kkl} for Boolean $f$ because, up to a change of the universal constant,
+\begin{equation}\label{eq:tal-influence}
+    \Var[\mu]{f}
+    \leq C'\sum_{i=1}^n
+    \frac{\Inf_{\mu,i}(f)}{1+\log(1/\Inf_{\mu,i}(f))}.
+\end{equation}
+The KKL lower bound follows by comparing each summand with the maximum influence. Analytically, the gain in the denominator comes from hypercontractivity: the Bonami--Beckner semigroup interpolates between $L^1$ and $L^2$, while its tensor-product structure makes the coordinate derivatives commute with the noise operator \cite{Bonami70,Beckner75,Gross75}.
+
+\paragraph{Talagrand's variance--surface-area inequality.}
+Talagrand's second inequality is geometrically different: it relates $\SurfArea_\mu(f)$ to $\Var[\mu]{f}$ with the appropriate logarithmic correction. In the terminology of this paper, it is a variance--surface-area inequality: 
+for any Boolean function $f:\cube\to\{\pm 1\}$, 
+\begin{equation}\label{eq:tal-surface}
+    \SurfArea_\mu(f)
+    \geq C\,\Var[\mu]{f}
+    \sqrt{\log\left(\frac{1}{\Var[\mu]{f}}\right)},
+\end{equation}
+where $C>0$ is universal and the right-hand side is zero if $\Var[\mu]{f} = 0$ (i.e., $f$ is constant).
+Here $\SurfArea_\mu(f)=\E[\mu]{\sqrt{s(f)}}$ gives less weight to vertices of very high sensitivity than the ordinary edge boundary $\E[\mu]{s(f)}=\Inf_\mu(f)$. This makes \cref{eq:tal-surface} effective for functions such as majority, for which the edge boundary is concentrated on a thin layer of vertices with many incident bichromatic edges. 
+By contrast, KKL \cref{eq:kkl} is sharp for Tribes; neither viewpoint alone fully captures both examples.
+
+\paragraph{Eldan--Gross inequality.}
+Talagrand asked for a single inequality that reconciles the KKL inequality \cref{eq:kkl} with the variance--surface-area inequality \cref{eq:tal-surface} \cite{Talagrand97}. 
+Eldan and Gross resolved this question using pathwise stochastic analysis \cite{EldanGross22}. 
+Their inequality states that every Boolean $f$ satisfies
+\begin{equation}\label{eq:eldan-gross}
+    \SurfArea_\mu(f)
+    \geq C\,\Var[\mu]{f}
+    \sqrt{\log\left(2+\frac{\e}{\SqInf_\mu(f)}\right)},
+\end{equation}
+where $C>0$ is a universal constant.
+The quantity $\SqInf_\mu(f)$ measures the concentration of the boundary among coordinate directions, distinguishing a boundary spread thinly over many coordinates from one concentrated in a few directions. 
+This is the strongest geometric statement since it preserves the square-root sensitivity boundary while detecting the KKL regime through the squared influences.
+Together with Cauchy--Schwarz and the elementary comparisons between $\Inf_\mu(f)$, $\SqInf_\mu(f)$, and $\max_i\Inf_{\mu,i}(f)$, \cref{eq:eldan-gross} recovers the logarithmic KKL scale while retaining the square-root sensitivity boundary. Subsequent work gave Fourier-analytic and semigroup proofs and clarified the relation between \cref{eq:tal-surface} and \cref{eq:eldan-gross} \cite{EldanKindlerLifshitzMinzer25,IvanisviliZhang26}.
+
+
+\subsection{Main result}
+
+In this work, we extend all four inequalities to non-product measures on the Boolean hypercube with weak dependence among the coordinates.
+Previous work \cite{KoehlerLifshitzMinzerMossel23} pursued this direction for Markov random fields on bounded-degree graphs; in contrast, our setting is more general.
+
+For simplicity, we present our results here under a Dobrushin-type condition; the assumptions in our formal results are weaker and are implied by the condition stated here.
+
+For an arbitrary distribution $\mu$ supported on $\cube$, its associated \emph{Dobrushin influence matrix} $R = R(\mu) \in [0,1]^{n \times n}$ is defined as follows:
+\begin{align}
+    R_{ij} &= \max_{x \in \cube} \TV{\mu(\cdot \mid X_{-j} = x_{-j})}{\mu(\cdot \mid X_{-j} = x^i_{-j})}, \quad \forall i,j \in [n], i \neq j;\\
+    R_{ii} &= 0, \quad \forall i \in [n].
+\end{align}
+
+
+The Dobrushin matrix quantifies the dependence among the random variables.
+Informally, the ``smaller'' $R$ is with respect to an appropriate matrix norm, the weaker the dependence among the variables.
+For example, if $\mu$ is a product measure with independent coordinates, then $R = 0$. 
+Under the Dobrushin uniqueness condition $\norm{R} < 1$, where $\norm{\cdot}$ is any consistent matrix norm, the Gibbs sampler (also known as Glauber dynamics) mixes rapidly, and one obtains concentration of measure \cite{Hayes06,DGJ09,marton2019logarithmic,SS20}.
+
+\begin{theorem}
+    \label{thm:informal}
+    For any $b \in (0,1]$, there exists $r \in (0,1)$ such that the following holds.
+    
+    Let $\mu$ be a distribution fully supported on $\cube$ satisfying the following conditions: 
+    \begin{enumerate}[(i)]
+        \item (Marginal boundedness) For every $i \in [n]$ and $x \in \cube$,
+        \begin{align*}
+            b \le \sqrt{\frac{\mu(x^i)}{\mu(x)}} \le \frac{1}{b};
+        \end{align*}
+
+        \item (Dobrushin condition) The Dobrushin matrix $R$ of $\mu$ satisfies $\norm{R}_1 < r$.
+    \end{enumerate}
+    Then, for any Boolean $f: \cube \to \R$, all of the following isoperimetric inequalities hold, where $C>0$ depends only on $b$ and $(r-\norm{R}_1)$, but not on $n$.
+    \begin{enumerate}[(1)]
+        \item KKL inequality:
+        \begin{equation}\label{eq:inf-KKL}
+            \max_{i\in[n]} \,\Inf_{\mu,i}(f)
+            \geq C \frac{\log n}{n} \,\Var[\mu]{f};
+        \end{equation}
+
+        \item Talagrand's $L^1$--$L^2$ inequality:
+        \begin{equation}\label{eq:inf-L1-L2}
+            \Var[\mu]{f}
+            \leq C \sum_{i=1}^n
+            \frac{\Inf_{\mu,i}(f)}{1+\log(1/\Inf_{\mu,i}(f))};
+        \end{equation}
+
+        \item Talagrand's variance--surface-area inequality:
+        \begin{equation}\label{eq:inf-var-SA}
+            \SurfArea_\mu(f)
+            \geq C\,\Var[\mu]{f}
+            \sqrt{\log\left(\frac{1}{\Var[\mu]{f}}\right)};
+        \end{equation}
+
+        \item Eldan--Gross inequality:
+        \begin{equation}\label{eq:inf-EG}
+            \SurfArea_\mu(f)
+            \geq C\,\Var[\mu]{f}
+            \sqrt{\log\left(1+\frac{\e}{\SqInf_\mu(f)}\right)},
+        \end{equation}
+    \end{enumerate}
+\end{theorem}
+
+
+As a concrete example, we consider the zero-field Ising model on $n$ spins. Let $J \in \R^{n \times n}$ be a symmetric interaction matrix. The Gibbs distribution $\mu_J$ for the Ising model assigns each spin configuration $x \in \cube$ the probability mass
+\begin{align}\label{eq:Ising}
+    \mu_J(x) := \frac{1}{Z_J} \exp\left( \frac{1}{2} x^\top J x \right),
+\end{align}
+where $Z_J := \sum_{x \in \cube} \exp(\frac{1}{2} x^\top J x)$ is the partition function that normalizes the distribution.
+An entrywise comparison gives $\norm{R}_1 \le \norm{J}_1$, where $R$ denotes the Dobrushin matrix. 
+Moreover, $\norm{J}_1$ controls the marginal boundedness because it corresponds to the largest effective field resulting from pinning vertices.
+A numerical calculation then shows that the assumptions of \Cref{thm:informal} are satisfied when $\norm{J}_1 \le 0.27$.
+
+\begin{corollary}
+    Let $J \in \R^{n \times n}$ be a symmetric interaction matrix for a zero-field Ising model. If $\norm{J}_1 \le 0.27$, then the KKL inequality \cref{eq:inf-KKL}, Talagrand's $L^1$--$L^2$ inequality \cref{eq:inf-L1-L2}, Talagrand's variance--surface-area inequality \cref{eq:inf-var-SA}, and the Eldan--Gross inequality \cref{eq:inf-EG} all hold.
+\end{corollary}
+
+
+Our results generalize the classical inequalities under the uniform measure, allowing for bias and dependence in the underlying measure. 
+The $L^1$--$L^2$ and KKL statements should be compared with those of \cite{KoehlerLifshitzMinzerMossel23} for mixing measures. The main result of \cite{KoehlerLifshitzMinzerMossel23} applies to sparse Markov random fields, specifically to undirected graphical models or spin systems such as the Ising model.
+In addition to marginal boundedness, their result requires the original Dobrushin uniqueness condition $\norm{R}_1 < 1$ together with a ``bounded-degree'' assumption. For the Ising model, this means that $\norm{J}_1 < 1$ and that the underlying graph, corresponding to the support of $J$, has bounded maximum degree. In contrast, our result applies in the more restricted regime $\norm{J}_1 \le 0.27$ but imposes no degree bound. Furthermore, our main theorem \Cref{thm:informal} applies beyond Markov random fields to any distribution on weakly dependent random variables.
+
+Our results also extend beyond the Boolean hypercube. In particular, all four results admit counterparts on the hypergrid $[m]^n$ and the Hamming slice $\binom{[n]}{k}$ with suitable definitions of influences; the corresponding measure assumptions and constants depend on the alphabet size and local geometry. To keep the main narrative focused on $\cube$, we do not state these extensions in this introduction; their proofs and precise formulations appear later in the paper. This extension is consistent with earlier appearances of KKL phenomena on $\mathbb Z_m^n$ and other finite product or Schreier spaces \cite{ODonnellWimmer13,ODonnellWimmerSharp13,CorderoErausquinLedoux12}, while covering the non-uniform setting addressed here.
+
+
+\section{Our Approach: Curvature}
+
+Many approaches to isoperimetric inequalities on the discrete Boolean cube draw on tools such as Fourier analysis, hypercontractivity, martingale methods, induction, random restrictions, and heat-semigroup techniques. Extending these approaches to general measures, especially non-product measures, presents immediate difficulties. For a general measure \(\mu\), the standard parity functions \(\chi_S(x)=\prod_{i\in S}x_i\) need not form an orthonormal basis, the associated semigroup need not be diagonal in this basis, and the coordinate-flip operators need not be reversible with respect to \(\mu\). At the operator level, these difficulties are further reflected in the general failure of coordinate derivatives to commute with the associated semigroup.
+
+
+We establish isoperimetric inequalities through a purely semigroup approach.
+We show that these inequalities can be deduced from a curvature condition and the hypercontractivity of the associated semigroup. More precisely, our method uses discrete versions of the Bakry--\'Emery curvature-dimension conditions and gradient estimates that are well developed in continuous space. Because establishing such a curvature condition on the Boolean hypercube is nontrivial, we introduce a weighted version and reduce its verification to local algebraic properties of the measure.
+
+At a high level, our proof is a novel combination and generalization of the approaches in \cite{CorderoErausquinLedoux12,IvanisviliZhang26} for establishing isoperimetric inequalities and in \cite{CKLP22} for deducing curvature conditions. 
+Cordero-Erausquin and Ledoux \cite{CorderoErausquinLedoux12} introduced a curvature-type condition and derived Talagrand's $L^1$--$L^2$ inequality from it. However, their assumption is strong and suitable only for product measures on the Boolean hypercube. 
+Ivanisvili and Zhang \cite{IvanisviliZhang26} established the Eldan--Gross inequality in continuous space for measures satisfying the Bakry--\'Emery curvature-dimension condition. They also proved the inequality on the Boolean hypercube under a product measure, but their proof relies on independence and induction.
+Cushing, Kamtue, Liu, and Peyerimhoff reduced the Bakry--\'Emery curvature on arbitrary graphs to a local minimal eigenvalue problem. However, their conclusion does not apply directly to arbitrary measures on the hypercube.
+We give a more detailed discussion in \Cref{subsec:related-work}.
+
+
+\subsection{A running example and our proof approach}
+In this subsection, we illustrate the key ingredients of our approach by sketching a proof of an alternative version of Talagrand's $L^1$--$L^2$ inequality. 
+
+
+\begin{theorem}[Alternative $L^1$--$L^2$ inequality]
+\label{thm:alt-L1-L2}
+    For any $b \in (0,1]$, there exists $r \in (0,1)$ such that the following holds.
+    
+    Let $\mu$ be a distribution fully supported on $\cube$ satisfying the marginal boundedness condition and the Dobrushin condition stated in \Cref{thm:informal}. 
+    Then, for any Boolean $f: \cube \to \R$,
+    \begin{align}\label{eq:alt-L1-L2}
+        \Var[\mu]{f} \le C \frac{\Inf_\mu(f)}{1 + \log (\Inf_\mu(f)/\SurfArea_\mu(f)^2)}.
+    \end{align}
+    Here, $C>0$ depends only on $b$ and $(r-\norm{R}_1)$, but not on $n$.
+\end{theorem}
+
+Our strategy for establishing \Cref{thm:alt-L1-L2}, as well as all the inequalities in \Cref{thm:informal}, consists of two steps.
+\begin{enumerate}[\bfseries Step 1.]
+    \item Identify the appropriate curvature condition for the measure $\mu$ and the associated Markov processes from which the target isoperimetric inequality can be derived. 
+
+    \item Choose suitable Markov semigroups and weighting schemes under which the desired curvature conditions hold.
+\end{enumerate}
+
+In Step 1, we use discrete versions of the Bakry--\'Emery curvature-dimension conditions that have been studied extensively in continuous space, and we give black-box reductions to these conditions.
+In Step 2, we introduce a canonical Markov process with suitable weights and verify the curvature properties for this particular choice.
+
+\subsection{Semigroup and hypercontractivity}
+
+Although the statement of \Cref{thm:informal} does not involve a Markov process, its proof requires a suitable hypercontractive semigroup.
+
+Let $\mu$ be a distribution fully supported on $\cube$. 
+We define a \emph{canonical} continuous-time Markov process with semigroup $(P_t)_{t\ge 0}$ and generator $L$. Specifically, $P_t = e^{t L}$ for $t \ge 0$, and, for any function $f: \Omega \to \R$,
+\begin{align*}
+    Lf(x) = \sum_{i=1} q_i(x) (f(x^i)-f(x)),
+\end{align*}
+where $q_i(\cdot)$ denotes the transition rate for flipping the $i$-th coordinate and is given by
+\begin{align*}
+    q_i(x) = \frac{1}{2} \sqrt{\frac{\mu(x^i)}{\mu(x)}}, \quad \forall x \in \cube.
+\end{align*}
+This semigroup is reversible with respect to $\mu$ because the detailed balance identity $\mu(x) q_i(x) = \mu(x^i) q_i(x^i)$ holds for each $i \in [n]$ and $x \in \cube$. The significance of this canonical choice will become clear below.
+
+As in previous work, we require the heat semigroup $(P_t)_{t\ge 0}$ to be hypercontractive. Hypercontractivity is equivalent to a log-Sobolev inequality and plays a key role in the analysis of mixing times for Markov processes.
+For a real $p > 0$ and a function $f: \cube \to \R$, the $L^p(\mu)$-norm of $f$ is defined as
+\begin{align*}
+    \norm{f}_{p,\mu} := \left( \E[\mu]{|f(x)|^p} \right)^{1/p}.
+\end{align*}
+For a constant $\rho >0$, \emph{hypercontractivity} means that, for any $1\leq p \leq q \leq \infty$ satisfying $\frac{q-1}{p-1}\leq \exp(2\rho t)$ and every $f: \cube \to \R$, the following holds:
+\begin{align}\label{eq:hypercontractivity-intro}
+    \norm{P_t f}_{q,\mu} \leq \norm{f}_{p,\mu}.
+\end{align}
+
+The following lemma is a direct consequence of hypercontractivity.
+\begin{lemma}\label{lem:hypercontractivity}
+    Let $t \ge 0$. For any function $f: \cube \to \R$,
+    \begin{align*}
+        \norm{P_t f}_{2,\mu} \le \norm{f}_{1,\mu}^{\theta_t} \norm{f}_{2,\mu}^{1-\theta_t},
+    \end{align*}
+    where $\theta_t = \tanh (\rho t)$.
+\end{lemma}
+\begin{proof}[Proof sketch]
+    Let $p_t = 1 + \e^{-2\rho t}$. Then $\theta_t + \frac{1-\theta_t}{2} = \frac{1}{p_t}$, and we deduce that
+    \begin{align}
+        \norm{P_t f}_{2,\mu} 
+        &\le \norm{f}_{p_t} \tag{Hypercontractivity} \\
+        &\le \norm{f}_{1}^{\theta_t} \norm{f}_2^{(1-\theta_t)}, \tag{H\"older's inequality}
+    \end{align}
+    as claimed.
+\end{proof}
+
+
+
+
+\subsection{Bakry--\'Emery theory and gradient estimates}
+We now introduce the basic notions of Bakry--\'Emery theory and the associated gradient estimates. For our purposes, we focus on the Boolean hypercube $\cube$, although these notions extend to a general finite state space and a reversible Markov semigroup. 
+
+The \textit{carr\'e du champ operator} $\Gamma$ is defined, for any functions $f,g:\cube \to \R$, by
+\begin{align*}
+    \Gamma(f,g) := \frac 12 (L(fg)-gLf-fLg), \quad \Gamma(f) := \Gamma(f,f).
+\end{align*}
+A straightforward calculation yields
+\begin{align*}
+    \Gamma(f,g)(x) = \frac 12\sum_{i=1}^n q_i(x)(f(x^i) - f(x))(g(x^i) - g(x)),
+    \quad \Gamma(f)(x) = \frac 12\sum_{i=1}^n q_i(x)(f(x^i) - f(x))^2.
+\end{align*}
+% We also use $\Gamma_{w,i}$ to denote the contribution of the $i$-th coordinate to $\Gamma_w$, that is, 
+% \begin{align*}
+%     \forall x \in \Omega,\quad \Gamma_{w,i}(f,g)(x) := \frac 12 w_i(x)q_i(x)(f(x^i) - f(x))(g(x^i) - g(x)).
+% \end{align*}
+% We write $\Gamma_{w,i}(f) := \Gamma_{w,i}(f,f)$ for simplicity.
+% Note, $\Gamma_w(f) = \sum_{i=1}^n \Gamma_{w,i}(f)$.
+The following versions of the discrete derivatives and gradient provide an intuitive representation of the carr\'e du champ operator.
+The \textit{discrete gradient} of a function $f: \Omega \to \mathbb{R}$ is defined as the vector 
+\begin{align*}
+    \nabla f := (\delta_1 f, \ldots, \delta_n f),\quad \text{where} \quad \delta_i f := \sqrt{\frac 12 q_i(x)}(f(x^i) - f(x)).
+\end{align*}
+It follows that $\Gamma(f,g) = \inner{\nabla f}{\nabla g}$ and $\Gamma(f) = \norm{\nabla f}_2^2$.
+
+The \textit{second-order carr\'e du champ operator} $\Gamma_2$ is defined, for any function $f:\Omega \to \R$, by
+\begin{align*}
+    \Gamma_2(f) := \frac 12 L\Gamma(f) - \Gamma(f,Lf).
+\end{align*}
+
+Let $\rho > 0$ be a constant. We now define the principal notions of Bakry--\'Emery theory and the associated gradient-estimate properties:
+\begin{itemize}
+    \item \emph{Bakry--\'Emery (BE) condition:} For every function $f: \cube \to \R$, the following holds:
+    \begin{align*}
+        \Gamma_2(f) \geq \rho \cdot \Gamma(f);
+    \end{align*}
+
+    \item \emph{Reinforced Bakry--\'Emery (rBE) condition:} For every function $f: \cube \to \R$, the following holds:
+    \begin{align}
+        \Gamma_2(f) - \Gamma(\sqrt{\Gamma(f)}) \ge \rho \cdot \Gamma(f);
+    \end{align}
+
+    \item \emph{Weak Gradient Estimate (WGE):} For every function $f:\cube \to \R$ and $t\geq 0$, the following holds:
+    \begin{align}
+        \Gamma(P_t f) \leq e^{-2\rho t} P_t(\Gamma(f)) \quad\iff\quad \norm{\nabla P_t f}^2_2 \leq e^{-2\rho t} P_t(\norm{\nabla f}^2_2);
+    \end{align}
+
+    \item \emph{Strong Gradient Estimate (SGE):} For every function $f: \cube \to \R$ and $t\geq 0$, the following holds:
+    \begin{align}\label{eq:SGE-intro}
+        \sqrt{\Gamma(P_t f)} \leq e^{-\rho t} P_t \sqrt{\Gamma(f)} \quad\iff\quad 
+        \norm{\nabla P_t f}_2 \leq e^{-\rho t} P_t(\norm{\nabla f}_2).
+    \end{align}
+\end{itemize}
+
+The following proposition establishes the equivalence between curvature-dimension conditions and gradient estimates and is central to Bakry--\'Emery theory.
+
+\begin{proposition}\label{prop:intro-BE-GE}
+    Fix $\rho > 0$. Then:
+    \begin{itemize}
+        \item BE $\Leftrightarrow$ WGE;
+        \item RBE $\Leftrightarrow$ SGE.
+    \end{itemize}
+\end{proposition}
+
+\Cref{prop:intro-BE-GE} is a fundamental result whose proof can be found, for example, in the survey \cite{Salez-survey} or the thesis \cite{Kamtue-thesis}.
+We sketch the proof of the implication BE $\Rightarrow$ WGE, which is based on the \emph{interpolation argument} from continuous space \cite{BGL-book}.
+\begin{proof}[Proof sketch of BE $\Rightarrow$ WGE]
+    Let $F_s := e^{-2\rho s} P_s \Gamma(P_{t-s} f)$. Our goal is to show $F_0 \le F_t$.
+    Differentiating with respect to $s$ yields
+    \begin{align*}
+        \frac{\dif}{\dif s} F_s 
+        &= e^{-2\rho s}\left( - 2 \rho \cdot P_s \Gamma(P_{t-s} f) + \frac{\dif}{\dif s} P_s \Gamma(P_{t-s} f) \right) \\
+        &= e^{-2\rho s}\left( - 2 \rho \cdot P_s \Gamma(P_{t-s} f) + P_s \left( L + \frac{\dif}{\dif s} \right) \Gamma(P_{t-s} f) \right) \tag{$\frac{\dif}{\dif s} P_s g_s = P_s L g_s + P_s (\frac{\dif}{\dif s} g_s)$} \\
+        &= 2 e^{-2\rho s} P_s \left( - \rho \cdot \Gamma(P_{t-s} f) + \frac{1}{2} L \Gamma(P_{t-s} f) - \Gamma(P_{t-s} f, L P_{t-s} f) \right) \tag{$\frac{\dif}{\dif s} \Gamma(h_s) = 2 \Gamma(h_s, \frac{\dif}{\dif s} h_s)$} \\
+        &= 2 e^{-2\rho s} P_s \left( - \rho \cdot \Gamma(P_{t-s} f) + \Gamma_2(P_{t-s} f) \right) \ge 0,
+    \end{align*}
+    and hence $F_0 \le F_t$.
+\end{proof}
+
+
+\subsection{From curvature conditions to isoperimetric inequalities}
+
+We show that the $L^1$--$L^2$ inequality \Cref{eq:alt-L1-L2} follows from two properties of the underlying measure and its associated semigroup: 
+(1) the log-Sobolev inequality, or equivalently, hypercontractivity of the semigroup; and
+(2) the reinforced Bakry--\'Emery (rBE) condition, or equivalently, the strong gradient estimate (SGE) property.
+
+\begin{theorem}[\cite{CorderoErausquinLedoux12}]
+\label{thm:intro-L1-L2}
+    Suppose the measure $\mu$ and the associated semigroup $(P_t)_{t \ge 0}$ satisfy both hypercontractivity \Cref{eq:hypercontractivity-intro} and SGE \Cref{eq:SGE-intro}. Then the $L^1$--$L^2$ inequality \Cref{eq:alt-L1-L2} holds.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+    We first consider a real-valued function $f: \cube \to \R$ and later specialize to the Boolean-valued case.
+    We begin with an integration formula for the variance, which follows immediately from the definition of the carr\'e du champ operator:
+    \begin{align*}
+        \Var[\mu]{f} = 2 \int_0^{+\infty} \E[\mu]{\Gamma(P_t f)} \dif t.
+    \end{align*}
+    We then deduce from SGE and \Cref{lem:hypercontractivity} that
+    \begin{align*}
+        \Var[\mu]{f} 
+        &= 2 \int_0^{+\infty} \E[\mu]{\left( \sqrt{\Gamma(P_t f)} \right)^2} \dif t \\
+        &\le 2 \int_0^{+\infty} \e^{-2 \rho t} \cdot \E[\mu]{\tp{P_t \sqrt{\Gamma f}}^2} \dif t \tag{SGE} \\
+        &= 2 \int_0^{+\infty} \e^{-2 \rho t} \cdot \norm{P_t \sqrt{\Gamma f}}_{2,\mu}^2 \dif t \\ 
+        &\le 2 \int_0^{+\infty} \e^{-2 \rho t} \cdot \norm{\sqrt{\Gamma f}}_{1,\mu}^{2 \theta_t} \norm{\sqrt{\Gamma f}}_{2,\mu}^{2 (1-\theta_t)} \dif t \tag{\Cref{lem:hypercontractivity}, $\theta_t = \tanh (\rho t)$} \\
+        &= 2 \norm{\sqrt{\Gamma f}}_{2,\mu}^{2} \int_0^{+\infty} \e^{-2 \rho t} \cdot \tp{\frac{\norm{\sqrt{\Gamma f}}_{1,\mu}^2}{\norm{\sqrt{\Gamma f}}_{2,\mu}^2}}^{\theta_t} \dif t.
+    \end{align*}
+    A suitable upper bound on this integral, whose technical proof is omitted from this sketch, gives
+    \begin{align*}
+        \Var[\mu]{f} \lesssim \frac{\norm{\sqrt{\Gamma f}}_{2,\mu}^2}{1+\log \tp{ \norm{\sqrt{\Gamma f}}_{2,\mu}^2 / \norm{\sqrt{\Gamma f}}_{1,\mu}^2 }}.
+    \end{align*}
+    This inequality can be viewed as an $L^1$--$L^2$ inequality for real $f$. Finally, for Boolean $f$, one simply observes that, if the transition rates $\{q_i: \Omega \mapsto \R_+\}_{i\in[n]}$ are bounded, 
+    \begin{align*}
+        \Inf_\mu(f) \approx \norm{\sqrt{\Gamma f}}_{2,\mu}^2
+        \quad \text{and} \quad
+        \SurfArea_\mu(f) \approx \norm{\sqrt{\Gamma f}}_{1,\mu}
+    \end{align*}
+    and hence \Cref{eq:alt-L1-L2} follows.
+\end{proof}
+
+The proofs of the alternative $L^1$--$L^2$ inequality \Cref{thm:intro-L1-L2} and the original $L^1$--$L^2$ inequality in \Cref{thm:informal} should be credited to \cite{CorderoErausquinLedoux12}. We believe our main contribution lies in \emph{identifying the precise structural property underlying the proof}. In particular, for the original $L^1$--$L^2$ inequality, we introduce a coordinate-wise version of SGE that is the essential property needed for the proof.
+By contrast, \cite{CorderoErausquinLedoux12} imposes a structural assumption that appears feasible only for product measures.
+
+\subsection{Establishing curvature conditions via reweighting}
+By \Cref{thm:intro-L1-L2}, establishing \Cref{thm:alt-L1-L2} reduces to establishing both hypercontractivity and SGE. Hypercontractivity follows from the Dobrushin condition by a result from the study of Markov chain mixing times \cite{marton2019logarithmic}. The main obstacle is therefore to prove SGE, or equivalently, the rBE condition. 
+
+Proving rBE is challenging in general, and we cannot establish it in its original form. Instead, we consider weighted versions of the carr\'e du champ operator and the discrete gradient, and then define and prove corresponding weighted versions of rBE and SGE.
+Specifically, for each $i \in [n]$ and $x \in \cube$, we define transition weights
+\begin{align*}
+    w_i(x) = 2 q_i(x) = \sqrt{\frac{\mu(x^i)}{\mu(x)}}.
+\end{align*}
+We then define the weighted carr\'e du champ operator and the weighted discrete gradient, respectively, by
+\begin{align*}
+    \Gamma_w(f)(x) &:= \frac 12\sum_{i=1}^n w_i(x) q_i(x)(f(x^i) - f(x))^2
+    = \sum_{i=1}^n q_i(x)^2(f(x^i) - f(x))^2;\\
+    \nabla_w f &:= (\delta_{w,1} f, \ldots, \delta_{w,n} f),\\
+    \text{where} \quad \delta_{w,i} f &:= \sqrt{\frac 12 w_i(x) q_i(x)}(f(x^i) - f(x)) = q_i(x) (f(x^i) - f(x)).
+\end{align*}
+As before, $\Gamma_w(f) = \norm{\nabla_w f}_2^2$.
+We define the weighted version of the second-order carr\'e du champ operator $\Gamma_{2;w}$ analogously.
+The rBE condition and SGE property then take the following weighted forms: for every function $f: \cube \to \R$,
+\begin{align}
+    \Gamma_{2;w}(f) - \Gamma(\sqrt{\Gamma_w(f)}) &\ge \rho \cdot \Gamma_w(f); \tag{rBE} \\
+    %\sqrt{\Gamma_w(P_t f)} \leq e^{-\rho t} P_t  \sqrt{\Gamma_w(f)} \quad\iff\quad 
+    \norm{\nabla_w P_t f}_2 &\leq e^{-\rho t} P_t(\norm{\nabla_w f}_2). \tag{SGE}
+\end{align}
+The equivalence rBE $\Leftrightarrow$ SGE continues to hold, as in \Cref{prop:intro-BE-GE}.
+More importantly, this choice of weights has the following two key properties.
+
+\begin{itemize}
+    \item \Cref{thm:intro-L1-L2} continues to hold in the weighted setting, provided only that the weights are bounded above and below; marginal boundedness of the measure guarantees this property.
+    \item We can establish the weighted versions of rBE and SGE using a useful commutator identity for the weighted gradient $\grad_w$ and the generator $L$: for every function $f$,
+    \begin{align*}
+        (L\grad_w - \grad_w L) f = A \grad_w f,
+    \end{align*}
+    where $L \grad_w$ denotes the entrywise application of $L$ and $A: \cube \to \R^{n \times n}$ is a matrix field that can be written down explicitly. 
+    Thus, the commutator $L\grad_w - \grad_w L$ acts pointwise and linearly on the gradient $\grad_w f$. This commutator identity plays a crucial role both in the original Bakry--\'Emery theory for strongly log-concave distributions and in our derivation of SGE and its coordinate-wise generalization.
+\end{itemize}
+
+
+\subsection{Comparison with previous work}
+\label{subsec:related-work}
+\ZC{Need polishing.}
+Our approach combines three ingredients from previous work: componentwise semigroup estimates for influence inequalities \cite{CorderoErausquinLedoux12}, the local Bobkov route to surface-area inequalities \cite{IvanisviliZhang26}, and local matrix criteria for discrete Bakry--\'Emery curvature \cite{CKLP22}.
+
+Cordero-Erausquin and Ledoux \cite{CorderoErausquinLedoux12} developed a hypercontractive semigroup proof of the KKL inequality and Talagrand's $L^1$--$L^2$ inequality based on coordinate-wise commutation estimates. In the product and symmetric settings considered there, the required estimates follow from independence or group symmetry. A stronger positive-decay version in our notation is: for every $i \in [n]$, every function $f: \cube \to \R$, and every $t\geq 0$,
+\begin{align}\label{eq:CL-condition}
+    |\delta_i P_t f| \le e^{-\rho t} P_t(|\delta_i f|).
+\end{align}
+This pointwise coordinate-wise estimate implies both SGE \Cref{eq:SGE-intro} and its coordinate-wise strengthening. Such an estimate is natural for product measures and highly symmetric spaces, but is generally unavailable for inhomogeneous, non-product measures. Our approach instead derives suitable weighted gradient estimates under weak dependence.
+
+Ivanisvili and Zhang \cite{IvanisviliZhang26} gave an alternative semigroup proof of the Eldan--Gross inequality based on a \emph{local Bobkov inequality}. They treated both biased product measures on the Boolean hypercube and products of diffuse Markov triples satisfying $CD(K,\infty)$ for some $K>0$. In the diffuse setting, the local Bobkov inequality follows from the curvature condition \cite{BGL-book}; on the discrete Boolean hypercube, Ivanisvili and Zhang established it through an inductive argument that uses the product structure. In contrast, we derive a discrete local Bobkov inequality from Bakry--\'Emery-type semigroup estimates without relying on coordinate independence.
+
+Cushing, Kamtue, Liu, and Peyerimhoff \cite{CKLP22} showed that discrete Bakry--\'Emery curvature on a weighted graph can be formulated as a local matrix eigenvalue problem. We adapt this viewpoint to non-product measures by choosing canonical reversible transition rates and compatible gradient weights. For the resulting weighted carr\'e du champ, we impose the reinforced condition $\Gamma_{2;w}(f)-\Gamma(\sqrt{\Gamma_w(f)}) \geq \rho\Gamma_w(f)$, equivalently the strong gradient estimate $\sqrt{\Gamma_w(P_t f)} \leq e^{-\rho t}P_t\sqrt{\Gamma_w(f)}$. A commutator identity reduces the verification of this estimate to the positivity of an explicit local matrix. It is this strengthened semigroup estimate, rather than a transport-curvature bound, that supplies the curvature input to our isoperimetric inequalities.
+
+
+\subsection{Other related works}
+\ZC{Need polishing.}
+We next situate our results within the broader literature on influence inequalities, square-root boundary estimates, and discrete curvature.
+
+\paragraph{Influence inequalities}
+Early extensions beyond the uniform Boolean cube largely retained an underlying product structure. Talagrand proved a biased version of his $L^1$--$L^2$ inequality and the corresponding influence bound on the $p$-biased cube, with constants depending on $p$; related biased influence estimates underlie sharp-threshold results for symmetric monotone properties \cite{Talagrand94,FriedgutKalai96}. Bourgain, Kahn, Kalai, Katznelson, and Linial developed a KKL theory for general product probability spaces, defining the influence of a coordinate as the probability that the corresponding one-coordinate fiber is nonconstant \cite{BKKKL92}. For Boolean-valued functions on a two-point factor, this agrees with flip pivotality, whereas on larger alphabets it is a genuinely different convention. Keller, Mossel, and Sen later introduced geometric influences adapted to continuous product measures and established KKL- and Talagrand-type inequalities using one-dimensional isoperimetry \cite{KellerMosselSen12}.
+
+Semigroup methods also reach homogeneous non-product spaces. O'Donnell and Wimmer obtained KKL- and Talagrand-type inequalities for random walks on Cayley and Schreier graphs, including the uniform measure on the $k$-slice \cite{ODonnellWimmer13,ODonnellWimmerSharp13}. In these dependent examples, however, the invariant measure remains uniform on a homogeneous state space, so this framework does not by itself cover a genuinely inhomogeneous measure on the full cube.
+
+Order structure provides a different route beyond product measures. Graham and Grimmett extended influence and sharp-threshold theorems to monotonic measures satisfying a strong positive-association condition \cite{GrahamGrimmett06}. Duminil-Copin, Raoufi, and Tassion subsequently established an OSSS-type inequality for monotonic measures and used it to prove sharp phase transitions for random-cluster and Potts models \cite{DuminilCopinRaoufiTassion19}. These results do not require correlation decay, but they concern monotone events and are naturally formulated in terms of conditional influences, or effects, rather than the absolute flip influence used here for arbitrary Boolean functions.
+
+A closely related result for general mixing measures is due to Koehler, Lifshitz, Minzer, and Mossel \cite{KoehlerLifshitzMinzerMossel23}. They proved analogues of the KKL and Talagrand $L^1$--$L^2$ inequalities for Markov random fields on a finite alphabet, assuming uniformly bounded single-site likelihood ratios, a bounded-degree dependency graph, and a dimension-free log-Sobolev inequality for the Glauber dynamics. Their absolute fiber influence agrees with our flip influence on a binary alphabet. The comparison involves a tradeoff: our Dobrushin-type hypothesis in \Cref{thm:informal} is a high-temperature condition, but it removes the bounded-degree assumption and does not require a prescribed dependency graph. The additional surface-area conclusions are discussed next.
+
+\paragraph{Surface-area inequalities}
+Square-root boundary inequalities have followed a partly separate development. Talagrand's original variance--surface-area theorem holds on the $p$-biased cube in the stronger one-sided form, in which the sensitivity is set to zero on one output class and the right-hand side is multiplied by $\min\{p,1-p\}/\sqrt{p(1-p)}$ \cite{Talagrand93}. Bobkov and G\"otze subsequently determined the correct dependence on the bias in the one-sided inequality and proved a Gaussian-profile bound for the two-sided square-root boundary \cite{BobkovGotze99}.
+
+Eldan and Gross proved the influence-sensitive, two-sided inequality on the uniform cube using pathwise stochastic analysis \cite{EldanGross22}, and Eldan, Kindler, Lifshitz, and Minzer later gave a proof based on random restrictions \cite{EldanKindlerLifshitzMinzer25}. Ivanisvili and Zhang established the two-sided Eldan--Gross inequality on the $p$-biased cube and on products of diffuse Markov triples satisfying a positive Bakry--\'Emery curvature bound \cite{IvanisviliZhang26}. On the $p$-biased cube, their conditional-resampling influence is $4p(1-p)$ times our flip influence. Thus, the fixed-bias product case is known, whereas the present work simultaneously extends all four inequalities to weakly dependent, inhomogeneous measures on the full Boolean cube, without exact tensor-product commutation.
+
+\paragraph{Bakry--\'Emery theory}
+The $\Gamma$-calculus of Bakry and \'Emery expresses a lower curvature bound for a Markov generator $L$ through the inequality $\Gamma_2(f) \geq \rho \Gamma(f)$ \cite{BakryEmery85,BGL-book}. For diffusion generators, this condition is the semigroup analogue of a lower Ricci-curvature bound. A standard interpolation argument identifies it with the pointwise gradient estimate $\Gamma(P_t f) \leq e^{-2\rho t} P_t\Gamma(f)$, and the resulting calculus provides a systematic route to spectral, functional, and concentration inequalities. For reversible jump generators, $\Gamma$ and $\Gamma_2$ remain algebraically well defined, but the diffusion chain rule is unavailable, so continuous-space arguments do not transfer automatically. On graphs, this obstruction has motivated curvature-dimension refinements tailored to Li--Yau estimates \cite{BHLLMY15}; standard graph curvature can also be encoded by local curvature matrices \cite{CKLP22}. See \cite{Kamtue-thesis,Salez-survey} for broader perspectives on discrete curvature and Markov chains.
+
+Discrete Ricci curvature is not a single notion; see \cite{NR-book,Kamtue-thesis} for broader perspectives. Ollivier's coarse Ricci curvature is defined through Wasserstein contraction of transition laws \cite{Ollivier09}, whereas the entropic Ricci curvature of Erbar and Maas is defined through geodesic convexity of relative entropy in a transport metric adapted to the Markov chain \cite{ErbarMaas12}. Although these transport-based notions share some analytic consequences with $\Gamma_2$ lower bounds, they are inequivalent in general and neither is used in our proofs. Throughout this paper, curvature refers to the Bakry--\'Emery $\Gamma$-calculus framework and, where specified, to the weighted reinforced variant described in the preceding subsection.

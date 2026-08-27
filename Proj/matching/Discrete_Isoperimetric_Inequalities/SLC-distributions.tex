@@ -1,0 +1,90 @@
+\section{Strongly log-concave distributions}
+
+Let $V:\R^n \to \R$ be a $\alpha$-strongly log-concave function, and $L = \Delta - \nabla V \cdot \nabla$ be the Langevin generator. The stationary distribution $\mu$ satisfies $\dif \mu(x) \propto \exp\tp{-V(x)} \dif x$.
+
+\begin{definition}
+    For any smooth function $f : \R^n \to \R$,
+    \begin{itemize}
+    \item $\Gamma(f) = \norm{\nabla f}_2^2$, $\Gamma_i(f) = (\partial_i f)^2$;
+    \item $I(f) = \E[\mu]{\norm{\nabla f}_2^2}$, $A(f) = \E[\mu]{\norm{\nabla f}_2}$ and $J(f) = \sum_{i=1}^n \tp{\norm{\partial_i f}_1}^2$.
+    \end{itemize}
+\end{definition}
+
+{\color{blue}
+Xinyuan: It might be better to use $\norm{\nabla f}_p$ and $\norm{f}_{p,\mu}$ for different kinds of $L_p$-norm.
+}
+
+
+\begin{proposition}[folklore]
+    reinforced BE condition and log-Sobolev inequality hold with the same constant $\alpha$.
+\end{proposition}
+
+\begin{remark}
+    Coordinate-wise strong gradient estimate and decay of $J(P_t f)$ may fail for strongly log-concave function.
+\end{remark}
+\begin{lemma}\label{lem:variance-estimate}
+    For any smooth function $f$, it holds
+    \begin{align*}
+        \Var[\mu]{f} \le \sum_{i=1}^n \int_0^{+\infty} \e^{-\rho t} \inner{\partial_i f}{P_t \partial_i f} \dif t = \sum_{i=1}^n \inner{\partial_i f}{(\rho I - L)^{-1} \partial_i f}.
+    \end{align*}
+\end{lemma}
+
+\ZC{Witten Laplacian:
+\begin{align*}
+    &\Var[\mu]{f} = \inner{\nabla f}{(-\mathcal{L})^{-1} \grad f}_\mu
+    = \int \inner{\nabla f(x)}{(-\mathcal{L})^{-1} \grad f(x)} d\mu(x).\\
+    &\mathcal{L} = L \otimes I_n - \nabla^2 V.
+\end{align*}
+\begin{align*}
+    &v: \R^n \to \R^n\\
+    &\mathcal{L}v: \R^n \to \R^n\\
+    &(L \otimes I_n)v(x) = \begin{pmatrix}
+        Lv_1(x) \\
+        \vdots \\
+        Lv_n(x)
+    \end{pmatrix} \\
+    &(\nabla^2 V) v(x)
+    = \nabla^2 V(x) v(x)
+\end{align*}
+Motivation:
+\begin{align*}
+    \nabla L f = \mathcal{L} \grad f \quad\Rightarrow\quad \nabla P_t f = \mathcal{P}_t \grad f.
+\end{align*}
+Brascamp–Lieb inequality:
+\begin{align*}
+    \Var[\mu]{f} \le \int \inner{\nabla f(x)}{(\nabla^2 V)^{-1} \grad f(x)} d\mu(x)
+\end{align*}
+\begin{proof}
+    $-\mathcal{L} = -L \otimes I_n + \nabla^2 V \succeq \nabla^2 V$.
+\end{proof}
+\begin{proof}[Proof of Lemma 6.4]
+    $-\mathcal{L} = -L \otimes I_n + \nabla^2 V \succeq -L \otimes I_n + \rho \, \mathrm{id}$.
+\end{proof}
+}
+
+\begin{theorem}[Talagrand's $L_1$-$L_2$ inequality]
+    For any smooth function $f$,
+    \begin{align*}
+        \Var[\mu]{f} \lesssim \frac{1}{\alpha} \sum_{i=1}^n \frac{\norm{\partial_i f}_2^2}{1+\log\tp{\norm{\partial_i f}_2/\norm{\partial_i f}_1}}.
+    \end{align*}
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+    Using~\Cref{lem:variance-estimate} and hypercontractivity.
+\end{proof}
+
+{\color{red}
+Question: It seems the smoothing lemma does not hold (see \url{https://chatgpt.com/share/6a1ad57c-7620-83ea-b97f-6972ad01b9b2}). 
+}
+
+\ZC{Todo:
+\begin{itemize}
+
+    \item \href{https://web.math.princeton.edu/~rvan/APC550.pdf}{Book},
+8.3 Talagrand’s L1-L2 inequality,
+Proof of L1-L2 inequality and its application.
+
+    \item \href{https://arxiv.org/pdf/2606.31961}{https://arxiv.org/pdf/2606.31961}
+    
+\end{itemize}
+}

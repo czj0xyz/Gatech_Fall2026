@@ -1,0 +1,355 @@
+\documentclass[11pt]{article}
+\pagestyle{plain}
+
+% \pgfplotsset{compat=1.18}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amsfonts,amssymb,amsthm}
+\usepackage[ruled,vlined,linesnumbered,commentsnumbered]{algorithm2e}
+\SetKwInput{KwIn}{Input}
+\SetKwInput{KwOut}{Output}
+\SetKwInput{KwGlobal}{Global variable}
+\SetKwInput{KwOracle}{Oracle}
+\SetKwComment{Comment}{// }{}
+\usepackage{graphicx}
+\usepackage{enumerate}
+\usepackage{bbm}
+\usepackage{verbatim}
+\usepackage{hyperref,color}
+\usepackage[capitalize,nameinlink]{cleveref}
+\usepackage[dvipsnames]{xcolor}
+\hypersetup{
+	colorlinks=true,
+	pdfpagemode=UseNone,
+	citecolor=OliveGreen,
+	linkcolor=NavyBlue,
+	urlcolor=Magenta,
+	pdfstartview=FitW
+}
+\usepackage{appendix}
+\usepackage{makecell}
+\usepackage{tablefootnote}
+\crefname{appsec}{Appendix}{Appendices}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{xifthen}
+\usepackage{subcaption}
+\usepackage{hhline}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{problem}[theorem]{Problem}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{fact}[theorem]{Fact}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{observation}[theorem]{Observation}
+\newtheorem{assumption}[theorem]{Assumption}
+\newtheorem*{assumption*}{Assumption}
+\newtheorem{condition}[theorem]{Condition}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\crefname{lemma}{Lemma}{Lemmas}
+\crefname{theorem}{Theorem}{Theorems}
+\crefname{definition}{Definition}{Definitions}
+\crefname{fact}{Fact}{Facts}
+\crefname{claim}{Claim}{Claims}
+\crefname{proposition}{Proposition}{Propositions}
+
+
+\newcommand{\dif}{\,\mathrm{d}}
+%\newcommand{\E}{\mathbb{E}}
+%\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\Cov}{\mathrm{Cov}}
+\newcommand{\MI}{\mathrm{I}}
+%\newcommand{\Ent}{\mathrm{Ent}}
+\newcommand{\ind}{\mathbbm{1}}
+\newcommand{\allone}{\mathbf{1}}
+\newcommand{\tr}{\mathrm{tr}}
+\newcommand{\wt}{\mathrm{weight}}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\newcommand{\TV}[2]{\left\|#1 - #2\right\|_{\mathrm{TV}}}
+\newcommand{\ceil}[1]{\left\lceil #1 \right\rceil}
+\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
+\newcommand{\ip}[2]{\left\langle #1 , #2 \right\rangle}
+\newcommand{\grad}{\nabla}
+\newcommand{\hessian}{\nabla^2}
+\newcommand{\trans}{\intercal}
+\newcommand{\diag}{\mathrm{diag}}
+\newcommand{\poly}{\mathrm{poly}}
+\newcommand{\dist}{\mathrm{dist}}
+\newcommand{\sgn}{\mathrm{sgn}}
+\newcommand{\fpras}{\mathsf{FPRAS}}
+\newcommand{\fpaus}{\mathsf{FPAUS}}
+\newcommand{\fptas}{\mathsf{FPTAS}}
+
+\newcommand{\eps}{\varepsilon}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+
+\renewcommand{\AA}{\mathcal{A}}
+\newcommand{\BB}{\mathcal{B}}
+\newcommand{\CC}{\mathcal{C}}
+\newcommand{\DD}{\mathcal{D}}
+\newcommand{\EE}{\mathcal{E}}
+\newcommand{\FF}{\mathcal{F}}
+\newcommand{\GG}{\mathcal{G}}
+\newcommand{\HH}{\mathcal{H}}
+\newcommand{\II}{\mathcal{I}}
+\newcommand{\JJ}{\mathcal{J}}
+\newcommand{\KK}{\mathcal{K}}
+\newcommand{\LL}{\mathcal{L}}
+\newcommand{\MM}{\mathcal{M}}
+\newcommand{\NN}{\mathcal{N}}
+\newcommand{\OO}{\mathcal{O}}
+\newcommand{\PP}{\mathcal{P}}
+\newcommand{\QQ}{\mathcal{Q}}
+\newcommand{\RR}{\mathcal{R}}
+\renewcommand{\SS}{\mathcal{S}}
+\newcommand{\TT}{\mathcal{T}}
+\newcommand{\UU}{\mathcal{U}}
+\newcommand{\VV}{\mathcal{V}}
+\newcommand{\WW}{\mathcal{W}}
+\newcommand{\XX}{\mathcal{X}}
+\newcommand{\YY}{\mathcal{Y}}
+\newcommand{\ZZ}{\mathcal{Z}}
+
+\newcommand{\KL}[2]{D_{\mathrm{KL}} \left( #1 \,\Vert\, #2 \right)}
+\newcommand{\KLbig}[2]{D_{\mathrm{KL}} \left( #1 \,\big\Vert\, #2 \right)}
+\newcommand{\KLBig}[2]{D_{\mathrm{KL}} \left( #1 \,\Big\Vert\, #2 \right)}
+
+\newcommand{\SKL}[2]{D_{\mathrm{SKL}} \left( #1 \,\Vert\, #2 \right)}
+\newcommand{\SKLbig}[2]{D_{\mathrm{SKL}} \left( #1 \,\big\Vert\, #2 \right)}
+\newcommand{\SKLBig}[2]{D_{\mathrm{SKL}} \left( #1 \,\Big\Vert\, #2 \right)}
+
+\newcommand{\qandq}{\quad\text{and}\quad}
+\newcommand{\supp}{\mathrm{supp}}
+
+\newcommand{\DKL}[2]{\-D_{\-{KL}}\left(#1 \parallel #2\right)}
+\newcommand{\DTV}[2]{\-D_{\mathrm{TV}}\left({#1},{#2}\right)}
+% \newcommand{\dist}{\mathrm{dist}}
+\newcommand{\e}{\mathrm{e}}
+\renewcommand{\epsilon}{\varepsilon}
+\renewcommand{\emptyset}{\varnothing}
+% \newcommand{\norm}[1]{\left\Vert#1\right\Vert}
+\newcommand{\set}[1]{\left\{#1\right\}}
+\newcommand{\tuple}[1]{\left(#1\right)} 
+% \newcommand{\eps}{\varepsilon}
+\newcommand{\inner}[2]{\left\langle #1,#2\right\rangle}
+\newcommand{\tp}{\tuple}
+\newcommand{\ol}{\overline}
+\newcommand{\abs}[1]{\left\vert#1\right\vert}
+\newcommand{\ctp}[1]{\left\lceil#1\right\rceil}
+\newcommand{\ftp}[1]{\left\lfloor#1\right\rfloor}
+\newcommand{\Ind}[1]{\-{Ind}_{#1}}
+\newcommand{\todo}[1]{{\color{red} TODO: #1}}
+
+\newcommand{\Cor}{\Psi^{\mathrm{sym}}}
+\newcommand{\cor}{\Psi^{\-{cor}}}
+\newcommand{\Inf}{\Psi}
+% \newcommand{\diag}{\-{diag}}
+
+\def\*#1{\boldsymbol{#1}} % Use \*A for \mathbf{A}
+\def\+#1{\mathcal{#1}} % Use \+A for \mathcal{A}
+\def\-#1{\mathrm{#1}} % Use \-A for \mathrm{A}
+\def\=#1{\mathbb{#1}} % Use \^A for \mathbb{A}
+\def\!#1{\mathfrak{#1}} % Use \!A for \mathfrak{A}
+
+\newcommand*\diff{\mathop{}\!\mathrm{d}}
+
+% probability
+% \DeclareMathOperator*{\oPr}{\mathbf{Pr}}
+\def\oPr{\mathop{\mathrm{Pr}}}
+\renewcommand{\Pr}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oPr\left[#2\right]}
+  {\oPr_{#1}\left[#2\right]} } % Use \Pr[a]{b} for \mathbf{Pr}_a[b], \Pr{b} for  \mathbf{Pr}[b]
+
+% expectation: relies on the package "dsfont"
+% \DeclareMathOperator*{\oE}{\mathbb{E}}
+\def\oE{\mathop{\mathbb{E}}}
+\newcommand{\E}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oE\left[#2\right]}
+  {\oE_{#1}\left[#2\right]} }
+
+% variance
+%\DeclareMathOperator*{\oVar}{\mathbf{Var}}
+\def\oVar{\mathrm{Var}}
+\newcommand{\Var}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oVar\left[#2\right]}
+  {\oVar_{#1}\left[#2\right]} }
+
+% entropy
+% \DeclareMathOperator*{\oEnt}{\mathbf{Ent}}
+\def\oEnt{\mathrm{Ent}}
+\newcommand{\Ent}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oEnt\left[#2\right]}
+  {\oEnt_{#1}\left[#2\right]} }
+
+\newcommand{\PhiEnt}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oEnt^\phi\left[#2\right]}
+  {\oEnt^\phi_{#1}\left[#2\right]} }
+
+
+\newenvironment{Exampleparagraph}[1][]
+{
+    \par 
+    \noindent 
+    \textbf{\color{blue} #1}
+    \par 
+    \vspace{0.5em} 
+    \itshape 
+}
+{
+    \par 
+    \vspace{1em} 
+}
+
+%\input{local-macro}
+
+\newcommand{\RED}[1]{\textcolor{red}{#1}}
+\newcommand{\zc}[1]{\textcolor{red}{ZC: #1}}
+
+\newcommand{\bern}[1]{\mathrm{Bern}\left(#1\right)}
+
+
+
+\title{Relaxed Spectral Stability}
+\date{\today}
+
+\pgfplotsset{compat=1.18} 
+\begin{document}
+
+\maketitle
+\section{Mixing Within a Phase}
+\begin{proposition}
+    Let $\mu$ be the Gibbs distribution of low-temperature Ising model on random $\Delta$-regular graphs, and $P$ be the transition matrix of Glauber dynamics. Suppose $\lambda_3(P) = 1 - \Omega\tp{\frac{1}{n}}$, then the Glauber dynamics has a  polynomial mixing time starting from a ``warm start'' (with high probability).
+\end{proposition}
+
+\begin{proof}
+    Define $f(x) = \mathrm{sgn}(\sum_{i=1}^n x_i)$ as the test function. It is known that with high probability over the choice of random graphs, it holds
+    \begin{align*}
+        \+E_P(f,f) = \exp\tp{-\Omega(n)} \quad \text{and} \quad \Var[\mu]{f} = \Theta(1).
+    \end{align*}
+    Let $f_1 = \*1,f_2,\ldots,f_{N=\abs{\Omega}}$ be the eigenvectors of the transition matrix $P$ with $\inner{f_i}{f_j}_{\mu} = 0$, and we decompose the function $f = \sum_{i=1}^{N} \alpha_i f_i$ where $\alpha_i = \inner{f}{f_i}_{\mu}$. By a contrapositive argument, we can show that $\frac{\alpha_2^2}{\sum_{i>2} \alpha_i^2} = \exp\tp{\Omega(n)}$. Therefore, for any function $h = \sum_{i=2}^N \beta_i f_i$ perpendicular to both $f$ and $f_1 = \*1$, we have
+    \begin{align*}
+        \beta_2^2 = \frac{\tp{\sum_{i \ge 3} \alpha_i \beta_i}^2}{\alpha_2^2} \le \exp\tp{-\Omega(n)} \cdot \sum_{i \ge 3} \beta_i^2.
+    \end{align*}
+    Therefore, the variance of $P^t h$ satisfies
+    \begin{align*}
+        \Var[\mu]{P^t h} = \sum_{i \ge 2} \lambda_i^{2t} \beta_i^2 \le \tp{\exp\tp{-\Omega(n)} + \lambda_3^{2t} } \sum_{i \ge 3} \beta_i^2 = \tp{\exp\tp{-\Omega(n)} + \lambda_3^{2t}} \cdot \Var[\mu]{h}.
+    \end{align*}
+\end{proof}
+
+\begin{remark}
+    With a similar argument, we are able to show that, for any $h$ perpendicular to $f$ and $f_1 = \*1$, we have (weak Poincare inequality)
+    \begin{align*}
+        \+E_P(h,h) \ge \tp{1-\lambda_3(P)-\exp\tp{-\Omega(n)}} \cdot \Var[\mu]{h}.
+    \end{align*}
+    Therefore, for any $h^+ : \Omega_+ \to \mathbb{R}$ with $\mu^+(h^+) = 0$, the function $h = h^+ \vee \*0_{\Omega_-}: \Omega \to \mathbb{R}$ satisfies
+    \begin{align*}
+        \mu(h) = 0 \text{ and } \inner{h}{f}_{\mu} = 0.
+    \end{align*}
+    Note that we have
+    \begin{align*}
+        \+E_P(h,h) &\le \sum_{x,y \in \Omega_+} \mu(x) P(x,y) (h(x)-h(y))^2 + \mu(\Omega_+\cap \partial \Omega_-) \max_{x \in \Omega_+\cap \partial \Omega_-} h^2(x)\\
+        &= \mu(\Omega_+) \cdot \+E_{P^+}(h^+,h^+) + \exp\tp{-\Omega(n)} \cdot \max_{x \in \Omega_+\cap \partial \Omega_-} h^2(x),
+    \end{align*}
+    and it holds
+    \begin{align*}
+        \Var[\mu]{h} = \mu(\Omega_+) \cdot \Var[\mu^+]{h^+}.
+    \end{align*}
+    Therefore, it holds
+    \begin{align*}
+        \forall h^+,\quad \+E_{P^+}(h^+,h^+) \ge \tp{1-\lambda_3(P)-\exp\tp{-\Omega(n)}} \cdot \Var[\mu^+]{h^+} - \exp\tp{-\Omega(n)} \cdot \max_{x \in \Omega_+ \cap \partial \Omega_-} h^2(x).
+    \end{align*}
+    Starting from $\delta_+$, $h(x) = P^t \cdot \frac{\delta_+}{\mu^+}$ satisfies $\max_{x \in \Omega_+ \cap \partial \Omega_-} h^2(x) \le t$. Therefore, we may expect the rapid mixing of Glauber dynamics within a phase. 
+\end{remark}
+\section{Universality of Spectral Independence}
+\begin{proposition}
+Let $\mu$ be the Gibbs distribution over a subset $\Omega$ of $\{0,1\}^n$, and $P$ be transition matrix of Glauber dynamics on $\mu$. If $\lambda_3(P) = 1- \Omega\tp{\frac{1}{n}}$, then the second largest eigenvalue of the covariance matrix is $O(1)$.
+\end{proposition}
+
+\begin{proof}
+    Suppose $a,b \in \mathbb{R}^n$ be the eigenvectors corresponding to the top two eigenvalues of the covariance matrix $\mathrm{Cov}(\mu)$. Let $f(x) = a^\intercal x$ and $g(x) = b^\intercal x$. It holds that
+    \begin{align*}
+        \E[\mu]{fg} = \E[\mu]{a^\intercal x x^\intercal b} = a^\intercal \mathrm{Cov}(\mu) b + \E[\mu]{f} \E[\mu]{g} = \E[\mu]{f} \E[\mu]{g},
+    \end{align*}
+    where the last equality follows from $a^\intercal b = 0$. Therefore, $f - \E[\mu]{f}$ and $g-\E[\mu]{g}$ are perpendicular with respect to the inner product $\inner{\cdot}{\cdot}_\mu$. Note that
+    \begin{align*}
+        \Var[\mu]{f} = a^\intercal \mathrm{Cov}(\mu) a = \lambda_1(\mathrm{Cov}(\mu)) \sum_{i} a_i^2 \text{ and } \E[]{\Var[i]{f}} \le a_i^2 \cdot \mathrm{Var}[X_i] \le a_i^2.
+    \end{align*}
+    Therefore, there exists a subspace $\+S$ of dimension $2$ such that for any $f \in \+S$, we have $f \perp_\mu 1$ and $\Var[\mu]{f} \ge \lambda_2(\mathrm{Cov}(\mu)) \cdot \sum_{i} \E[]{\Var[i]{f}}$. This proves the theorem (as the tensorization of variance is equivalent to $\+E_P(f,f) \ge \gamma \cdot \Var[\mu]{f}$). 
+\end{proof}
+
+\section{Relaxed Spectral Stability}
+Recall that the spectral stability (at time $\eta = 0$) reads
+\begin{align}\label{eq:SS}
+    \sum_{i \in [n]} p_i \cdot \tp{\frac{q_i}{p_i}-1}^2 \le C \cdot D_{\mathrm{KL}}(\nu \parallel \mu),
+\end{align}
+for all distribution $\nu \ll \mu$, where $p$ and $q$ denotes the mass center for distribution $\mu$ and $\nu$ respectively. A relaxed version is to restrict the class of distributions $\nu$.
+
+\begin{definition}
+    Let $w:\Omega \to \mathbb{R}$ be a weight function. We say the distribution satisfies the relaxed spectral stability if for any distribution $\nu$ such that $\E[\nu]{w} = \E[\mu]{w}$, the inequality~\eqref{eq:SS} holds.
+\end{definition}
+
+\begin{proposition}
+ Let $\phi(q) = \inf_{\substack{\*m(\nu) = q\\ \E[\mu]{w}=\E[\nu]{w}} }D_{\mathrm{KL}}(\nu \parallel \mu)$. The Legendre dual of $\phi$ satisfies
+    \begin{enumerate}
+    \item $\phi^\star(\theta) = \inf_{\lambda \in \mathbb{R}} \set{\log \E[\mu]{\e^{\theta X + \lambda w(X)}} - \lambda \E[\mu]{w}}$.
+    \item For any $\theta \in \mathbb{R}^n$, let $\nu:=\nu_{\theta,\lambda^\star(\theta)}$ denote the tilted distribution. It holds 
+    \begin{align*}
+        \nabla \phi^\star(\theta) = \*m(\nu) \quad \text{and} \quad \nabla^2 \phi^\star(\theta) = \mathrm{Cov}_{\nu}(X,X) - \frac{\mathrm{Cov}_{\nu}(X,w) \cdot\mathrm{Cov}_{\nu}(w,X)}{\mathrm{Var}_{\nu}(w,w)}
+    \end{align*}
+    \end{enumerate}
+\end{proposition}
+The proof follows from a straightforward calculation.
+
+With this proposition, we are able to understand the relaxed spectral stability condition.
+\begin{lemma}
+    The relaxed spectral stability is equivalent to the condition:
+    \begin{align*}
+        \nabla^2 \phi^\star(0) = \mathrm{Cov}(\mu) - \frac{\mathrm{Cov}_\mu(X,w) \cdot \mathrm{Cov}_\mu(w,X)}{\Var[\mu]{w}} \preceq C \cdot \mathrm{diag}(\*m(\mu)).
+     \end{align*}
+\end{lemma}
+
+The proof follows from the equivalence of spectral stability for function $f$ and entropic stability for function $1+\epsilon f$ for small $\epsilon = o(1)$.
+\begin{remark}
+When $w(X) = \sum_{i \in [n]} a_i X_i$, 
+\begin{enumerate}
+\item the variance of $w$ is $\Var[\mu]{w} = \*a^\intercal \mathrm{Cov}(\mu) \*a$;
+\item $\mathrm{Cov}_{\mu}(X,w) \cdot \mathrm{Cov}_{\mu}(w,X) = \mathrm{Cov}(\mu) \cdot \*a \*a^\intercal \cdot \mathrm{Cov}(\mu)$;
+\item If $\*a$ is the (unit) eigenvector corresponds to the maximum eigenvalue of $\mathrm{Cov}(\mu)$, it holds 
+\begin{align*}
+    \nabla^2 \phi^\star(0) = \mathrm{Cov}(\mu) - \lambda_{\max} \cdot \*a \*a^\intercal.
+\end{align*}
+\end{enumerate}
+\end{remark}
+
+\section{CLV-type local-to-global theorem for localization schemes}
+\begin{proposition}
+    Let $F:[0,1]\to \mathbb{R}$ be a smooth function, and $K(\eta) \le 0$ be a rate function. Suppose $F(0) = 0$, $F(\eta) \ge 0$, and for all $\eta \in (0,1)$ it holds
+    \begin{align*}
+        F''(\eta) \ge K(\eta) \cdot F'(\eta).
+    \end{align*}
+    Then, the function $F$ must satisfy
+    \begin{align*}
+        F(1) \le \tp{1+\frac{\int_0^\eta \exp\tp{\int_s^\eta K(t) \mathrm{d} t} \mathrm{d} s }{\int_\eta^1 \exp\tp{\int_\eta^s K(t) \mathrm{d} t} \mathrm{d} s }}\tp{F(1)-F(\eta)}
+    \end{align*}
+    Specifically, when $K \equiv 0$, we have $F(1) \le \frac{1}{1-\eta} \cdot \tp{F(1)-F(\eta)}$.
+\end{proposition}
+\begin{remark}
+    Let $F(\eta) = \Var[\mu_\eta]{f_\eta}$. This establishes the conservation of variance, assuming a different type of spectral independence.
+\end{remark}
+\end{document}

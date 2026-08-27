@@ -1,0 +1,480 @@
+\documentclass[11pt]{article}
+\pagestyle{plain}
+
+% \pgfplotsset{compat=1.18}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amsfonts,amssymb,amsthm}
+\usepackage[ruled,vlined,linesnumbered,commentsnumbered]{algorithm2e}
+\SetKwInput{KwIn}{Input}
+\SetKwInput{KwOut}{Output}
+\SetKwInput{KwGlobal}{Global variable}
+\SetKwInput{KwOracle}{Oracle}
+\SetKwComment{Comment}{// }{}
+\usepackage{graphicx}
+\usepackage{enumerate}
+\usepackage{bbm}
+\usepackage{verbatim}
+\usepackage{hyperref,color}
+\usepackage[capitalize,nameinlink]{cleveref}
+\usepackage[dvipsnames]{xcolor}
+\hypersetup{
+	colorlinks=true,
+	pdfpagemode=UseNone,
+	citecolor=OliveGreen,
+	linkcolor=NavyBlue,
+	urlcolor=Magenta,
+	pdfstartview=FitW
+}
+\usepackage{appendix}
+\usepackage{makecell}
+\usepackage{tablefootnote}
+\crefname{appsec}{Appendix}{Appendices}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{xifthen}
+\usepackage{subcaption}
+\usepackage{hhline}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{problem}[theorem]{Problem}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{fact}[theorem]{Fact}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{observation}[theorem]{Observation}
+\newtheorem{assumption}[theorem]{Assumption}
+\newtheorem*{assumption*}{Assumption}
+\newtheorem{condition}[theorem]{Condition}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\crefname{lemma}{Lemma}{Lemmas}
+\crefname{theorem}{Theorem}{Theorems}
+\crefname{definition}{Definition}{Definitions}
+\crefname{fact}{Fact}{Facts}
+\crefname{claim}{Claim}{Claims}
+\crefname{proposition}{Proposition}{Propositions}
+
+
+\newcommand{\dif}{\,\mathrm{d}}
+%\newcommand{\E}{\mathbb{E}}
+%\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\Cov}{\mathrm{Cov}}
+\newcommand{\MI}{\mathrm{I}}
+%\newcommand{\Ent}{\mathrm{Ent}}
+\newcommand{\ind}{\mathbbm{1}}
+\newcommand{\allone}{\mathbf{1}}
+\newcommand{\tr}{\mathrm{tr}}
+\newcommand{\wt}{\mathrm{weight}}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\newcommand{\TV}[2]{\left\|#1 - #2\right\|_{\mathrm{TV}}}
+\newcommand{\ceil}[1]{\left\lceil #1 \right\rceil}
+\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
+\newcommand{\ip}[2]{\left\langle #1 , #2 \right\rangle}
+\newcommand{\grad}{\nabla}
+\newcommand{\hessian}{\nabla^2}
+\newcommand{\trans}{\intercal}
+\newcommand{\diag}{\mathrm{diag}}
+\newcommand{\poly}{\mathrm{poly}}
+\newcommand{\dist}{\mathrm{dist}}
+\newcommand{\sgn}{\mathrm{sgn}}
+\newcommand{\fpras}{\mathsf{FPRAS}}
+\newcommand{\fpaus}{\mathsf{FPAUS}}
+\newcommand{\fptas}{\mathsf{FPTAS}}
+
+\newcommand{\eps}{\varepsilon}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+
+\renewcommand{\AA}{\mathcal{A}}
+\newcommand{\BB}{\mathcal{B}}
+\newcommand{\CC}{\mathcal{C}}
+\newcommand{\DD}{\mathcal{D}}
+\newcommand{\EE}{\mathcal{E}}
+\newcommand{\FF}{\mathcal{F}}
+\newcommand{\GG}{\mathcal{G}}
+\newcommand{\HH}{\mathcal{H}}
+\newcommand{\II}{\mathcal{I}}
+\newcommand{\JJ}{\mathcal{J}}
+\newcommand{\KK}{\mathcal{K}}
+\newcommand{\LL}{\mathcal{L}}
+\newcommand{\MM}{\mathcal{M}}
+\newcommand{\NN}{\mathcal{N}}
+\newcommand{\OO}{\mathcal{O}}
+\newcommand{\PP}{\mathcal{P}}
+\newcommand{\QQ}{\mathcal{Q}}
+\newcommand{\RR}{\mathcal{R}}
+\renewcommand{\SS}{\mathcal{S}}
+\newcommand{\TT}{\mathcal{T}}
+\newcommand{\UU}{\mathcal{U}}
+\newcommand{\VV}{\mathcal{V}}
+\newcommand{\WW}{\mathcal{W}}
+\newcommand{\XX}{\mathcal{X}}
+\newcommand{\YY}{\mathcal{Y}}
+\newcommand{\ZZ}{\mathcal{Z}}
+
+\newcommand{\KL}[2]{D_{\mathrm{KL}} \left( #1 \,\Vert\, #2 \right)}
+\newcommand{\KLbig}[2]{D_{\mathrm{KL}} \left( #1 \,\big\Vert\, #2 \right)}
+\newcommand{\KLBig}[2]{D_{\mathrm{KL}} \left( #1 \,\Big\Vert\, #2 \right)}
+
+\newcommand{\SKL}[2]{D_{\mathrm{SKL}} \left( #1 \,\Vert\, #2 \right)}
+\newcommand{\SKLbig}[2]{D_{\mathrm{SKL}} \left( #1 \,\big\Vert\, #2 \right)}
+\newcommand{\SKLBig}[2]{D_{\mathrm{SKL}} \left( #1 \,\Big\Vert\, #2 \right)}
+
+\newcommand{\qandq}{\quad\text{and}\quad}
+\newcommand{\supp}{\mathrm{supp}}
+
+\newcommand{\DKL}[2]{\-D_{\-{KL}}\left(#1 \parallel #2\right)}
+\newcommand{\DTV}[2]{\-D_{\mathrm{TV}}\left({#1},{#2}\right)}
+% \newcommand{\dist}{\mathrm{dist}}
+\newcommand{\e}{\mathrm{e}}
+\renewcommand{\epsilon}{\varepsilon}
+\renewcommand{\emptyset}{\varnothing}
+% \newcommand{\norm}[1]{\left\Vert#1\right\Vert}
+\newcommand{\set}[1]{\left\{#1\right\}}
+\newcommand{\tuple}[1]{\left(#1\right)} 
+% \newcommand{\eps}{\varepsilon}
+\newcommand{\inner}[2]{\left\langle #1,#2\right\rangle}
+\newcommand{\tp}{\tuple}
+\newcommand{\ol}{\overline}
+\newcommand{\abs}[1]{\left\vert#1\right\vert}
+\newcommand{\ctp}[1]{\left\lceil#1\right\rceil}
+\newcommand{\ftp}[1]{\left\lfloor#1\right\rfloor}
+\newcommand{\Ind}[1]{\-{Ind}_{#1}}
+\newcommand{\todo}[1]{{\color{red} TODO: #1}}
+
+\newcommand{\Cor}{\Psi^{\mathrm{sym}}}
+\newcommand{\cor}{\Psi^{\-{cor}}}
+\newcommand{\Inf}{\Psi}
+% \newcommand{\diag}{\-{diag}}
+
+\def\*#1{\boldsymbol{#1}} % Use \*A for \mathbf{A}
+\def\+#1{\mathcal{#1}} % Use \+A for \mathcal{A}
+\def\-#1{\mathrm{#1}} % Use \-A for \mathrm{A}
+\def\=#1{\mathbb{#1}} % Use \^A for \mathbb{A}
+\def\!#1{\mathfrak{#1}} % Use \!A for \mathfrak{A}
+
+\newcommand*\diff{\mathop{}\!\mathrm{d}}
+
+% probability
+% \DeclareMathOperator*{\oPr}{\mathbf{Pr}}
+\def\oPr{\mathop{\mathrm{Pr}}}
+\renewcommand{\Pr}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oPr\left[#2\right]}
+  {\oPr_{#1}\left[#2\right]} } % Use \Pr[a]{b} for \mathbf{Pr}_a[b], \Pr{b} for  \mathbf{Pr}[b]
+
+% expectation: relies on the package "dsfont"
+% \DeclareMathOperator*{\oE}{\mathbb{E}}
+\def\oE{\mathop{\mathbb{E}}}
+\newcommand{\E}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oE\left[#2\right]}
+  {\oE_{#1}\left[#2\right]} }
+
+% variance
+%\DeclareMathOperator*{\oVar}{\mathbf{Var}}
+\def\oVar{\mathrm{Var}}
+\newcommand{\Var}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oVar\left[#2\right]}
+  {\oVar_{#1}\left[#2\right]} }
+
+% entropy
+% \DeclareMathOperator*{\oEnt}{\mathbf{Ent}}
+\def\oEnt{\mathrm{Ent}}
+\newcommand{\Ent}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oEnt\left[#2\right]}
+  {\oEnt_{#1}\left[#2\right]} }
+
+\newcommand{\PhiEnt}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oEnt^\phi\left[#2\right]}
+  {\oEnt^\phi_{#1}\left[#2\right]} }
+
+
+\newenvironment{Exampleparagraph}[1][]
+{
+    \par 
+    \noindent 
+    \textbf{\color{blue} #1}
+    \par 
+    \vspace{0.5em} 
+    \itshape 
+}
+{
+    \par 
+    \vspace{1em} 
+}
+
+%\input{local-macro}
+
+\newcommand{\RED}[1]{\textcolor{red}{#1}}
+\newcommand{\zc}[1]{\textcolor{red}{ZC: #1}}
+
+\newcommand{\bern}[1]{\mathrm{Bern}\left(#1\right)}
+
+
+
+\title{Local Bobkov inequality and Eldan-Gross inequality}
+\date{\today}
+
+\pgfplotsset{compat=1.18} 
+\begin{document}
+
+\maketitle
+
+\section{Local Bobkov inequality}
+Let $\mathrm{Sch}(G,X,U)$ be the Schreier graph. We assume that each element in $U$ has exponent $2$, i.e., $g^2 = e$ for all $g \in U$. Furthermore, we assume $g U g^{-1} = U$ for all $g \in U$.
+Define the Laplacian operator $L$ as follows:
+\begin{align*}
+    \forall f:X \to [0,1],\quad Lf(x) = \sum_{g \in U} \tp{f(g x) - f(x)}.
+\end{align*}
+The Markov semigroup $P_t = \e^{tL}$. We establish the following local Bobkov inequality.
+\begin{lemma}[Local Bobkov inequality]
+    For any $t \ge 0$ and $f: X \to [0,1]$, it holds
+    \begin{align*}
+        I(P_t f) \le P_t \tp{\sqrt{I(f)^2 + 2(1-\e^{-4t}) \abs{\nabla f}^2}},
+    \end{align*}
+    where $\nabla f(x) = (f(g x) - f(x))_{g \in U}$ and $I$ is the Guassian isoperimetric profile.
+\end{lemma}
+\begin{proof}
+    Let $J(s) = P_s F_s$, where $F_s = \sqrt{I(f_{t-s})^2 + 2\tp{1-\e^{-4s}} \abs{\nabla f_{t-s}}^2}$.
+    It suffices to prove that $J(s)$ is monotone increasing. 
+    Note that
+    \begin{align*}
+        \frac{\dif}{\dif s} P_s F_s = P_s \tp{(L + \partial_s) F_s}.
+    \end{align*}
+    Therefore, it suffices to show that $(L+\partial_s) F_s \ge 0$.
+
+    Let $V_s = (I(f_{t-s}), \sqrt{2\tp{1-\e^{-4s}}} \partial_1 f_{t-s}, \ldots, \sqrt{2\tp{1-\e^{-4s}}} \partial_{\abs{U}} f_{t-s})$. 
+    It can be seen that $F_s = \abs{V_s}$. By a straightforward calculation, it holds
+    \begin{align*}
+        L F_s(x) &=  \sum_{g \in U} \tp{|V_s|(g x) - |V_s|(x)}\\
+        &= \sum_{g \in U} \tp{\abs{V_s}(g x) - \frac{\abs{V_s}^2(x)}{\abs{V_s}(x)}}\\
+        &= \frac{\inner{V_s}{LV_s}}{\abs{V_s}}(x) + \sum_{g \in U} \underbrace{\tp{\abs{V_s}(g x) - \frac{\inner{V_s(x)}{V_s(g x)} }{\abs{V_s}(x)}}}_{:=D_g}.
+    \end{align*}
+    Furthermore,
+\begin{align*}
+\partial_s F_s(x) = \partial_s \sqrt{\sum_{i=0}^n V_{s,i}^2} = \frac{\inner{V_{s}}{\partial_s V_s}}{\abs{V_s}}(x). 
+\end{align*}
+Hence, we have
+\begin{align*}
+    (\partial_s + L) F_s(x) = \frac{\inner{V_s}{(\partial_s + L)V_s}}{\abs{V_s}} + \sum_{g \in U} D_g.
+\end{align*}
+By a straightforward calculation, we have
+\begin{align*}
+    (\partial_s+L) \sqrt{2(1-\e^{-4s})} \partial_i f_{t-s} = \frac{4\e^{-4s}}{\sqrt{2(1-\e^{-4s})}} \partial_i f_{t-s},
+\end{align*}
+where we use the fact that $g U g^{-1} = U$ for all $g \in U$.
+Furthermore, note that
+\begin{align*}
+    (\partial_{g} f_{t-s})(gx) = f_{t-s}(x) - f_{t-s}(g x) = - \partial_g f_{t-s}(x).
+\end{align*}
+Let $\widetilde{V}_s(x)$ be the vector $V_s(x)$ except $(\widetilde{V}_s(x))_g = - (V_s(x))_g$.
+Hence, the quantity $D_g$ satisfies
+\begin{align*}
+    D_g &= \abs{V_s}(gx) - \frac{\inner{V_s(x)}{V_s(gx)}}{\abs{V_s}(x)}\\
+    &=\abs{V_s}(gx) - \frac{\inner{\widetilde{V}_s(x)}{V_s(gx)}}{\abs{\widetilde{V}_s}(x)} + \frac{2(V^2_s(x))_g}{\abs{V_s}(x)}\\
+    &\ge  \frac{2(V^2_s(x))_g}{\abs{V_s}(x)}
+\end{align*}
+Therefore, it holds
+\begin{align*}
+    (\partial_s + L) F_s(x) &=\frac{1}{\abs{V_s}}\tp{I(f_{t-s}) \cdot (\partial_s + L) I(f_{t-s}) + 4 \e^{-2s} \abs{\nabla f_{t-s}}^2} + \sum_{g \in U} D_g\\
+    &\ge \frac{1}{\abs{V_s}}\tp{I(f_{t-s}) \cdot (\partial_s + L) I(f_{t-s}) + 4 \abs{\nabla f_{t-s}}^2}.
+\end{align*}
+Finally, we have
+\begin{align*}
+    I(f_{t-s}) (\partial_s + L) I(f_{t-s}) = I(f_{t-s}) \sum_{g \in U}\tp{I(f_{t-s}(gx)) - I(f_{t-s}) -I'(f_{t-s}) \partial_g f_{t-s}} \ge - \abs{\nabla f_{t-s}}^2,
+\end{align*}
+where we use the inequality $I(a) \tp{I(b) - I(a) - I'(a)(b-a)} \ge -(b-a)^2$.
+\end{proof}
+
+\begin{remark}
+    Let $X = \binom{[n]}{k}$ and $U$ be the collection of transpositions. 
+    We have $g^2 = id$ for all $g \in U$ and $g U g^{-1} = U$.
+\end{remark}
+\section{Eldan--Gross inequality}
+In this section, we prove the Eldan-Gross inequality for slices.
+Let $X = \binom{[n]}{k}$ and $U$ be the collection of transpositions. 
+Let $N = \abs{U} = \binom{n}{2}$ and $\rho = \frac{1}{n \log (1/\nu(k))}$ where $\nu(k) = \frac{k(n-k)}{N}$.
+\begin{theorem}[Eldan-Gross inequality]\label{thm:EG-ineq}
+    For any $f:X \to \{-1,+1\}$, it holds
+    \begin{align*}
+        \E[]{\abs{\nabla f}} \gtrsim \sqrt{N \rho} \Var[\mu]{f} \sqrt{\log\tp{1+ \frac{\e}{W(f)}}},
+    \end{align*}
+    where $W(f) = \sum_{\tau \in U} I^2_\tau(f)$ and $I_\tau(f) = \E[\mu]{\abs{\partial_\tau f}}$.
+    Here, $\partial_\tau f(x) = \tp{f(\tau x) - f(x)}/2$.
+\end{theorem}
+
+\paragraph{Step 1. Local Bobkov inequality to Improved Talagrand's inequality}
+\begin{lemma}[Improved Talagrand's inequality]
+    For any function $f : X \to \{-1,+1\}$, it holds
+    \begin{align}\label{eq:improved-talagrand}
+        \E[]{\abs{\nabla{f}}} \gtrsim \sqrt{N \rho} \cdot \Var[]{f} \sqrt{\log \frac{\e}{\Var[]{f}}}.
+    \end{align}
+\end{lemma}
+\begin{proof}
+    Let $h = \frac{1+f}{2}$ and $H_t = P_{t / N}$. By local Bobkov inequality, it holds
+\begin{align*}
+    I\tp{\frac{1+H_t f}{2}} \le \sqrt{2 \tp{1-\e^{-4t/N}}} H_t \abs{\nabla{f}}.
+\end{align*}
+Together with $I\tp{\frac{1+s}{2}} \gtrsim (1-s^2)$, it holds
+\begin{align*}
+    1-(H_t f)^2 \lesssim \sqrt{1-\e^{-4t/N}} H_t \abs{\nabla f}.
+\end{align*}
+Taking expectation over $\mu$ on both sides, we have
+\begin{align}\label{eq:var-contraction}
+    \Var[]{f} - \Var[]{H_t f} \lesssim \sqrt{1-\e^{-4t/N}} \E[]{\abs{\nabla f}}.
+\end{align} 
+We first assume $\Var[]{f} \ge \frac{1}{\e^4}$. Plugging $t = 1/\rho$, the variance $\Var[]{H_{1/\rho}}$ satisfies
+\begin{align*}
+    \Var[]{H_{1/\rho} f} \le \e^{-2} \Var[]{f}
+\end{align*}
+Combining with~\eqref{eq:var-contraction}, it holds
+\begin{align*}
+    \Var[]{f} \lesssim \sqrt{1-\e^{-4/\rho N}} \E[]{\abs{\nabla f}} \lesssim \frac{1}{\sqrt{\rho N}} \E[]{\abs{\nabla{f}}}.
+\end{align*} 
+Together with the lower bound $\Var[]{f} \ge \frac{1}{\e^4}$, we establish~\eqref{eq:improved-talagrand}. For the case where $\Var[]{f} \le \frac{1}{\e^4}$, we use the hypercontractivity to bound $\Var[]{H_t f}$.
+Let $g = f - \E[]{f}$. 
+By hypercontractivity, we have
+\begin{align*}
+    \Var[]{H_t f} = \Var[]{H_t g} = \norm{H_t g}_2^2 \le \norm{g}_{p_t}^2 \le \norm{g}_1^{2\theta_t} \norm{g}_2^{2-2\theta_t} = \tp{\Var[\mu]{f}}^{1+\theta_t},
+\end{align*}
+where $p_t = 1+\e^{-2\rho t}$ and $\theta_t = \frac{1-\e^{-2\rho t}}{1+\e^{-2\rho t}}$.
+Therefore, we have
+\begin{align}\label{eq:contract}
+    \Var[]{f} - \tp{\Var[]{f}}^{1+\theta_t} \lesssim \sqrt{1-\e^{-4t/N}} \E[]{\abs{\nabla f}}.
+\end{align}
+We now fix $\eps = \frac{1}{\log \tp{\e / \Var[]{f}}} \le \frac{1}{3}$, and $1-\e^{-2\rho t} = \eps$. In this case, $\tp{\Var[]{f}}^{\theta_t} \le \tp{\Var[]{f}}^{\epsilon/2} \le 1/\e$.
+Therefore, we have
+\begin{align*}
+   \Var[]{f} \lesssim \sqrt{1-\e^{-4t/N}} \E[]{\abs{\nabla f}}.
+\end{align*}
+On the other hand,
+\begin{align*}
+    1-\e^{-4t/N} \lesssim \frac{4\epsilon}{N \rho}.
+\end{align*}
+Therefore, we have
+\begin{align*}
+    \E[]{\abs{\nabla f}} \gtrsim \sqrt{N \rho} \cdot \Var[]{f} \sqrt{\log \tp{\frac{\e}{\Var[]{f}}}}.
+\end{align*}
+\end{proof}
+
+\paragraph{Step 2. Smoothing lemma}
+\begin{lemma}\label{lem:smooth}
+    For any function $f: X \to \{-1,+1\}$, it holds
+    \begin{align*}
+        \Var[]{H_t f} \le W(f)^{\theta_t} \Var[]{f}^{1-\theta_t},
+    \end{align*}
+    where $\theta_t = \frac{1-\e^{-2\rho t}}{1+\e^{-2\rho t}}$ and $W(f)$ is the sum of squared influences.
+\end{lemma}
+\begin{proof}
+    Let $S_n^{(m)}$ denote the set of permutations $\tau \in S_n$ such that for all $i \le m$, it holds $\tau_i = i$. Let $Q_m$ be the averaging operator defined as 
+    \begin{align*}
+        (Q_m f)(x) = \frac{1}{(n-m)!}\sum_{\tau \in S_n^{(m)}} f(\tau x).
+    \end{align*}
+    Specifically, $(Q_m f)(x)$ is the average of values $f(y)$ over $y$'s satisfying $i \in x$ if and only if $i \in y$ for all $i \le m$.
+    Fix $f: X \to \{-1,+1\}$, the variance of $H_t f$ satisfies
+    \begin{align*}
+        \Var[]{H_t f} = \norm{\sum_{i=1}^n \tp{Q_i H_t f - Q_{i-1} H_t f}}_2^{2} &= \sum_{i=1}^n \norm{Q_i H_t f - Q_{i-1} H_t f}_2^2\\
+        (\text{$L Q_i = Q_i L$})\quad &=\sum_{i=1}^n \norm{H_t (Q_i - Q_{i-1}) f}_2^2\\
+        (\text{hypercontractivity}) \quad &\le \sum_{i=1}^n \norm{(Q_i - Q_{i-1}) f}^2_{q_t}\\
+        &\le \sum_{i=1}^n \norm{(Q_i - Q_{i-1}) f}_{1}^{2 \theta_t} \norm{(Q_i - Q_{i-1}) f}_{2}^{2- 2 \theta_t}\\
+        &\le \tp{\sum_{i=1}^n \norm{(Q_i-Q_{i-1}) f}_1^2}^{\theta_t} \cdot \Var[]{f}^{1-\theta_t}.
+    \end{align*} 
+    Note that we are able to generate a uniform sample $\tau \in S_n^{(i-1)}$ by first generating $\tau \in S_n^{(i)}$ uniformly at random, choosing an index $j \ge i$ independently at random, and finally swapping $\tau_i$ and $\tau_j$.
+    Therefore, the quantity $\norm{(Q_i - Q_{i-1}) f}_1$ satisfies
+    \begin{align*}
+        \norm{(Q_i - Q_{i-1}) f}_1 \le \frac{1}{n-i+1} \sum_{\tau = (i,j) \in U}\norm{\abs{\partial_\tau f}}_1 =  \frac{1}{n-i+1} \sum_{\tau = (i,j) \in U} I_\tau(f).
+    \end{align*}
+    Therefore, we have the following:
+    \begin{align*}
+        \norm{(Q_i-Q_{i-1}) f}_1^2 \le \frac{(n-i)}{(n-i+1)^2} \sum_{\tau = (i,j) \in U} I^2_\tau(f).
+    \end{align*}
+    This concludes the proof.
+\end{proof}
+
+\paragraph{Step 3. Wrapping up}
+We now ready to prove~\Cref{thm:EG-ineq}. 
+It suffices to show~\Cref{thm:EG-ineq} when $W(f) < \frac{1}{100}$ and $\Var[]{f} \ge \max\set{\sqrt{W(f)}, 100W(f)}$.
+It then follows from~\eqref{eq:contract},~\Cref{lem:smooth} and the choice $\eps = \frac{1}{\log \tp{\e/W(f)}}$.
+
+\section{Eldan--Gross Implies KKL}
+Suppose $f: \{0,1\}^n \to \{+1, -1\}$.
+
+Definitions:
+\begin{align*}
+    V &= \Var[]{f}\\
+    I &= \sum_{i=1}^n \mathrm{Inf}_i(f)\\
+    W &= \sum_{i=1}^n \mathrm{Inf}_i(f)^2
+\end{align*}
+
+\begin{lemma}
+    Suppose $f: \{0,1\}^n \to \{+1, -1\}$.
+    \begin{align}
+        &\text{Eldan--Gross inequality} \nonumber\\
+        \quad\Longrightarrow\quad
+        & V^2 \log\left(1 + \frac{e}{W}\right) \lesssim I \label{eq:EG-coro}\\
+        \quad\Longrightarrow\quad
+        & V \log\left(1 + \frac{eV}{W}\right) \lesssim I 
+    \end{align}
+\end{lemma}
+
+\begin{proof}
+    Take 
+    \begin{align*}
+        \ell \approx \frac{1}{V_f}.
+    \end{align*}
+    Define $g: \{0,1\}^{n\ell} \to \{+1, -1\}$, such that for every $x = (x^{(1)}, x^{(2)}, \dots, x^{(\ell)}) \in \{0,1\}^{n\ell}$ where each $x^{(i)} \in \{0,1\}^n$, 
+    \begin{align*}
+        g(x^{(1)}, x^{(2)}, \dots, x^{(\ell)}) = \prod_{i=1}^\ell f(x^{(i)}).
+    \end{align*}
+
+    We observe that
+    \begin{align*}
+        V_g &= 1 - (1 - V_f)^\ell = \Theta(1); \\
+        I_g &= \ell I_f; \\
+        W_g &= \ell W_f.
+    \end{align*}
+    For the variance, this follows from that $V_g = 1 - (\mathbb{E}[g])^2 = 1 - (\mathbb{E}[f])^{2\ell} = 1 - (1 - V_f)^\ell$.
+    \begin{align*}
+        &V_g^2 \log\left(1 + \frac{e}{W_g}\right) \lesssim I_g \tag{\cref{eq:EG-coro} for $g$}\\
+        \Longrightarrow \qquad
+        &\log\left(1 + \frac{e V_f}{W_f}\right) \lesssim \frac{I_f}{V_f} 
+        %\Longrightarrow \qquad
+        %&V_f^2 \log^2\left(1 + \frac{e V_f}{W_f}\right) \lesssim n W_f \tag{$I^2 \le n W$}
+    \end{align*}
+\end{proof}
+
+\begin{lemma}
+    Suppose $f: \{0,1\}^n \to \{+1, -1\}$.
+    Let $M = \max_i \mathrm{Inf}_i(f)$.
+    \begin{align}
+        V \log\left(1 + \frac{eV}{W}\right) \lesssim I 
+        \quad\Longrightarrow\quad
+        \begin{cases}
+            \frac{\log^2 n}{n} V^2 \lesssim W \\
+            V \log\left(1 + \frac{1}{M}\right) \lesssim I 
+        \end{cases} 
+        \quad\Longrightarrow\quad
+        M \gtrsim \frac{\log n}{n} V \tag{KKL}
+    \end{align}
+\end{lemma}
+
+\section*{Questions}
+\begin{itemize}
+\item Is there any application of Eldan-Gross inequality?
+\item I suspect this approach is insufficient to establish a local Bobkov inequality for mixing Gibbs measures on $\{-1,+1\}^n$. Although I don’t have immediate evidence to confirm this.
+\end{itemize}
+\end{document}
+

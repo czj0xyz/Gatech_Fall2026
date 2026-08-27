@@ -1,0 +1,423 @@
+\section{Sufficient Conditions for Gradient Estimates}
+
+
+In this section, we establish \ref{eq:CSGE} by choosing appropriate transition rates and weights, and the resulting bound can be controlled by norms of the Dobrushin influence matrix.
+
+\subsection{Canonical transition rates and weights}
+Given a distribution $\mu$ supported on $\Omega=\{\pm 1\}^n$, for any $x \in \Omega$ and $i \in [n]$, we define
+\begin{align}\label{eq:canonical-r-w}
+    q^\star_i(x) = \frac 12\sqrt{\frac{\mu(x^i)}{\mu(x)}}
+        \qquad\text{and}\qquad
+    w^\star_i(x) = 2q^\star_i(x) = \sqrt{\frac{\mu(x^i)}{\mu(x)}}.
+\end{align}
+It is straightforward to show that such transition rates $\{q^\star_i\}_{i \in [n]}$ satisfy the detailed balance condition and hence the associated heat semigroup $(P_t)_{t\ge 0}$ is reversible with respect to $\mu$.
+We call \Cref{eq:canonical-r-w} the \emph{canonical transition rates and weights} associated with $\mu$. 
+
+Under the canonical rates and weights, many notions in the $\Gamma$-calculus simplify to a nice form, which we summarize below.
+Throughout, we use superscript $\star$ to indicate that the weight functions are canonical, and thereby omit $w^\star$ in the subscript; e.g., $\Gamma^\star = \Gamma_{w^\star}$ denotes the weighted carr\'e du champ operator under $q^\star$ and $w^\star$.
+We have the following:
+\begin{align*}
+    \delta^\star_i f(x) &= \sqrt{\frac{1}{2} w^\star_i(x) q^\star_i(x)} (f(x^i) - f(x)) = q^\star_i(x) (f(x^i) - f(x)); \\
+    \grad^\star f &= (\delta^\star_1 f, \dots, \delta^\star_n f); \quad
+    L f = \sum_{i=1}^n \delta^\star_i f; \quad
+    %\Gamma_{w,i} f(x) = q_i(x)^2 (f(x^i) - f(x))^2 \\
+    \Gamma^\star f = \sum_{i=1}^n (\delta^\star_i f)^2.
+\end{align*}
+
+We also record two important properties of the canonical transition rates and weights. These properties are essential for establishing \ref{eq:SGE} and \ref{eq:CSGE}.
+
+\begin{fact}[Square property]\label{fact:square}
+    For any $i,j \in [n]$ and $x \in \Omega$, we have
+    \begin{align*}
+        q^\star_i(x) q^\star_j(x^i) = q^\star_j(x) q^\star_i(x^j).
+    \end{align*}
+\end{fact}
+
+\begin{lemma}
+\label{lem:commutator}
+    Let $\mu$ be a distribution supported on $\Omega = \{\pm 1\}^n$.
+    Let $M: \Omega \to \R^{n \times n}$ be a matrix field defined by, for each $x \in \Omega$,
+    \begin{align}\label{eq:local-matrix}
+        M_{ij}(x) := 
+        \begin{cases}
+            \frac{1}2 \tp{\sqrt{\frac{\mu(x^{ij})}{\mu(x^i)}}-\sqrt{\frac{\mu(x^j)}{\mu(x)}}}, & i \neq j;\\
+            0, & i = j.
+        \end{cases}
+    \end{align}
+    For any function $f: \Omega \to \R$,
+    \begin{align*}
+        (L \grad^\star - \grad^\star L) f = \left( \diag\{M\*1\} - M^\top \right) \grad^\star f.
+    \end{align*}
+\end{lemma}
+
+\begin{proof}
+    % \ZC{@Zejia: You need to make the proof more comprehensible. For example, for this proof, first calculate $\delta^\star_j \delta^\star_i - \delta^\star_i \delta^\star_j$, then $L \delta^\star_i - \delta^\star_i L$, and finally $L \grad^\star - \grad^\star L$ (the latter two should follow straightforwardly). Use
+    % \begin{align*}
+    %     \grad^\star f &= (\delta^\star_1 f, \dots, \delta^\star_n f);\\
+    %     L f &= \sum_{i=1}^n \delta^\star_i f;
+    % \end{align*}
+    % which were mentioned above, to simplify the presentation (doesn't mean shorter proof, but easier to understand). Your proof should rely on the square property, and you should explicitly mention it; this helps the reader understand why the canonical rates and weights work.}
+    
+    
+    Fix $f: \Omega\mapsto \R$, $x\in \Omega$.
+    For any $i,j \in [n]$ with $i\neq j$, by definition,
+    $$
+        \delta^\star_j \delta^\star_i f(x) = q^\star_j(x) (\delta^\star_i f(x^j) - \delta^\star_i f(x)) = q^\star_j(x) q^\star_i(x^j)(f(x^{ij})-f(x^j)) - q^\star_j(x)q^\star_i(x)(f(x^i)-f(x)).
+    $$
+    \Cref{fact:square} implies that the cancellation of the second derivative in the commutator term $\delta^\star_i\delta^\star_j - \delta^\star_j\delta^\star_i$. 
+    We have that,
+    \begin{align}
+        (\delta^\star_j \delta^\star_i - \delta^\star_i \delta^\star_j) f(x) &= (q_j^\star(x)q_i^\star(x^j) - q_i^\star(x)q_j^\star(x^i)) f(x^{ij})  \nonumber
+        \\&-(q_i^\star(x^j) - q_i^\star(x))q_j^\star(x)f(x^j)+(q_j^\star(x^i) - q_j^\star(x))q_i^\star(x)f(x^i) \nonumber
+        \\&= M_{ij}(x)q_i^\star(x)f(x^i) - M_{ji}(x)q_j^\star(x)f(x^j), \nonumber
+        \\&= M_{ij}(x)\delta^\star_i f(x) - M_{ji}(x)\delta^\star_j f(x), \label{eq:commutator_delta_ij}
+    \end{align}
+    where the last equality follows from $M_{ij}(x) q_i^\star(x) = M_{ji}(x) q_j^\star(x)$ by \Cref{fact:square}.
+    Then the following equality immediately follows from
+    \Cref{eq:commutator_delta_ij},
+    \begin{align}
+        (L\delta^\star_i - \delta^\star_iL) f(x) &= (\sum_{j=1}^n \delta^\star_j\delta^\star_i - \delta^\star_i\delta^\star_j)f(x)
+        = \sum_{j=1}^n M_{ij}(x)\delta^\star_i f(x) - \sum_{j=1}^n M_{ji}(x)\delta^\star_j f(x) \nonumber
+        \\&= \tp{M(x)\*1}_i\delta^\star_i f(x) - \inner{(M^\top(x))_i}{\nabla^\star f(x)}, \nonumber
+    \end{align}
+    that is, $(L \grad^\star - \grad^\star L) f = \left( \diag\{M\*1\} - M^\top \right) \grad^\star f$ holds for any $x\in \Omega$.
+\end{proof}
+
+
+
+
+\subsection{Sufficient condition for SGE} \label{sec:SGE_boolean_hypercube}
+
+\begin{theorem}[SGE under canonical transition rates and weights]
+\label{thm:SGE_boolean_hypercube}
+    Let $\mu$ be a distribution on $\Omega = \{\pm 1\}^n$ with full support. Let $M,D: \Omega \to \R^{n \times n}$ be two matrix fields where $M$ is defined by \Cref{eq:local-matrix} and $D$ is defined by, for each $x \in \Omega$,
+    \begin{align}\label{eq:def-D}
+        D(x) := \diag\left\{\sqrt{\frac{\mu(x)}{\mu(x^i)}}\right\}_{i\in[n]}.
+    \end{align}
+    Then, under the canonical transition rates and weights, \ref{eq:SGE} holds with constant
+    \begin{align*}
+        \rho = \min_{x \in \Omega} \;
+        \lambda_{\min}\left( D(x) + \diag\{M(x)\*1\} - \frac{1}{2}\left( M(x) + M(x)^\top \right) \right),
+    \end{align*}
+    where $\lambda_{\min}(A)$ denotes the minimum eigenvalue of a symmetric matrix $A$.
+\end{theorem}
+
+\begin{proof}
+    By \Cref{prop:equivalence_BE_GE}, it is sufficient to establish the \ref{eq:rBE} condition.
+    Specifically, for any function $f: \Omega \to \R$, we aim to show the following pointwise inequality:
+    \begin{align*}
+        \Gamma^\star_2(f) - \Gamma(\sqrt{\Gamma^\star(f)}) \ge \rho \cdot \Gamma^\star(f),
+    \end{align*}
+    where we recall that $\Gamma$ is the unweighted carr\'e du champ operator with respect to the canonical rates $q^\star$.
+    By \Cref{lem:gamma2-formula}, we have
+    \begin{align}
+        \Gamma^\star_2(f) - \Gamma(\sqrt{\Gamma^\star(f)}) 
+        = \sqrt{\Gamma^\star(f)} L \sqrt{\Gamma^\star(f)} - \Gamma^\star(f,Lf) 
+        = \norm{\nabla^\star f}_2 L \norm{\nabla^\star f}_2 - \inner{\nabla^\star f}{\nabla^\star Lf}. \label{eq:first-rBE}
+        %&= \tp{ \norm{\nabla^\star f}_2 L \norm{\nabla^\star f}_2 - \inner{\nabla^\star f}{L \nabla^\star f} } + \inner{\nabla^\star f}{(L \nabla^\star - \nabla^\star L) f}.
+    \end{align}
+
+    
+    Fix $x\in \Omega$. For the first term, we have that
+    \begin{align}
+        \norm{\nabla^\star f}_2 L \norm{\nabla^\star f}_2 (x)
+        &= \norm{\nabla^\star f(x)}_2 \sum_{i=1}^n q^\star_i(x) \tp{\norm{\nabla^\star f(x^i)}_2 - \norm{\nabla^\star f(x)}_2} \nonumber \\
+        &= \sum_{i=1}^n q^\star_i(x) \tp{\norm{\nabla^\star f(x)}_2 \norm{\nabla^\star f(x^i)}_2 - \norm{\nabla^\star f(x)}_2^2}. \label{eq:norm-L-norm}
+    \end{align}
+    We then deduce from the Cauchy--Schwarz inequality that
+    \begin{align}
+        \norm{\nabla^\star f(x)}_2 \norm{\nabla^\star f(x^i)}_2
+        &\ge \inner{\nabla^\star f(x)}{\nabla^\star f(x^i)} + 2|\delta^\star_i f(x)| |\delta^\star_i f(x^i)| \nonumber\\
+        &= \inner{\nabla^\star f(x)}{\nabla^\star f(x^i)} + 2 \frac{q^\star_i(x^i)}{q^\star_i(x)} (\delta^\star_i f(x))^2. \label{eq:cauchy-schwarz}
+    \end{align}
+    where we crucially use the fact that $\delta^\star_i f(x) = q^\star_i(x) (f(x^i)-f(x))$ and $\delta^\star_i f(x^i) = q^\star_i(x^i) (f(x)-f(x^i))$ have opposite sign.
+    Combining \Cref{eq:norm-L-norm,eq:cauchy-schwarz},
+    \begin{align*}
+        \norm{\nabla^\star f}_2 L \norm{\nabla^\star f}_2 (x)
+        &\ge \sum_{i=1}^n q^\star_i(x) \tp{ \inner{\nabla^\star f(x)}{\nabla^\star f(x^i)} + 2 \frac{q^\star_i(x^i)}{q^\star_i(x)} (\delta^\star_i f(x))^2 - \inner{\nabla^\star f(x)}{\nabla^\star f(x)} } \\
+        &= \sum_{i=1}^n 2 q^\star_i(x^i) (\delta^\star_i f(x))^2 + \sum_{i=1}^n q^\star_i(x) \inner{\nabla^\star f(x)}{\nabla^\star f(x^i) - \nabla^\star f(x)} \\
+        &= \inner{\grad^\star f}{D \grad^\star f} (x) + \inner{\nabla^\star f}{L \nabla^\star f} (x).
+    \end{align*}
+    Plugging into \Cref{eq:first-rBE} and combining \Cref{lem:commutator}, we deduce
+    \begin{align*}
+        \Gamma^\star_2(f) - \Gamma(\sqrt{\Gamma^\star(f)}) 
+        &\ge \inner{\grad^\star f}{D \grad^\star f} + \inner{\nabla^\star f}{(L \nabla^\star - \nabla^\star L) f} \\
+        &= \inner{\grad^\star f}{\left( D + \diag\{M\*1\} - M^\top \right) \grad^\star f}
+        \ge \rho \norm{\grad^\star f}_2^2 = \rho \cdot \Gamma^\star(f),
+    \end{align*}
+    where the last inequality holds for any constant $\rho \le \lambda_{\min} \left( D + \diag\{M\*1\} - \frac{1}{2}(M+M^\top) \right)$ uniformly at all points $x \in \Omega$.
+\end{proof}
+
+\subsection{Sufficient condition for CSGE} 
+\label{sec:CSGE_boolean_hypercube}
+
+\begin{theorem}[CSGE under canonical transition rates and weights]
+\label{thm:CSGE_boolean_hypercube_w=q}
+    Let $\mu$ be a distribution on $\Omega = \{\pm 1\}^n$ with full support. Let $M,D: \Omega \to \R^{n \times n}$ be two matrix fields defined by \Cref{eq:local-matrix,eq:def-D}, respectively. Let $M^\star := (\sup_x|M_{ij}(x)|)_{i,j \in [n]}$ and $D^\star = (\inf_x D_{ij}(x))_{i,j \in [n]}$ denote the entrywise uniform upper and lower bound on $\abs{M}$ and $D$, respectively. 
+    Then, under the canonical transition rates and weights, for any $\tau \in \R_+$, \ref{eq:CSGE} holds with constant
+    \begin{align*}
+        \rho =
+        \lambda_{\min}\left( D^\star - \diag\{M^\star\*1\} - \frac{1}{2}\left( M^\star + (M^\star)^\top \right) \right),
+    \end{align*}
+    where $\lambda_{\min}(A)$ denotes the minimum eigenvalue of a symmetric matrix $A$.
+\end{theorem}
+
+\ZC{How to deal with that $F_s$ is not differentiable at $s$?}
+
+\ZJ{Does the following idea work?
+
+$F_s$ is not differentiable at $s$ implies that there exists $i\in [n], x\in \Omega$, $\delta_i^\star P_{t-s}f(x) = 0$?
+Fix $i$ and $x$, let $g(s) = P_{t-s}f(x)$.
+% Since $g$ is in $C^\infty$ and $g_s(x) = \sum_{k=0}^\infty \frac{(t-s)^k}{k!}(L^k f)(x)$ converges, $g$ is an analytic function.
+For any $s,s_0\in [0,t]$, $g(s) = \sum_{i=0}^{\infty} \frac{(L^i P_{t-s_0} f(x))}{i!} (s_0-s)^i$ converges.
+Therefore, $g$ is an analytic function. (?)
+Then $s\mapsto \delta_i^\star P_{t-s}f(x)$ is also an analytic function.
+There are finitely many zeros for an analytic function $h$ in a closed interval unless $h\equiv 0$.
+Therefore, $F_s$ is differentiable almost everywhere.
+}
+
+\begin{proof}
+    Fix an arbitrary function $f: \Omega \to \R$ and real numbers $\tau, t \ge 0$.
+    Our goal is to show \ref{eq:CSGE} under the canonical rates and weights, namely, 
+    \begin{align}\label{eq:goal-CSGE}
+        \norm{P_\tau \abs{\nabla^\star}P_t f}_2 \leq e^{-\rho t} \norm{P_{\tau+t} \abs{\nabla^\star}f}_2. 
+    \end{align}
+    Define $F_s = e^{-2\rho s} \norm{P_{\tau+s}\abs{\nabla^\star} P_{t-s} f}_2^2$; hence, \Cref{eq:goal-CSGE} is equivalent to $F_0 \le F_t$.
+    It is sufficient to show that $\frac d{ds} F_s \geq 0$ for all $s \in [0,t]$.
+    
+    Fix $s \in [0,t]$. To ease the notation, let $g = P_{t-s} f$.
+    Taking the derivative of $F_s$ gives 
+    \begin{align}
+        \frac d{ds} F_s &= 2 e^{-2\rho s} \left( - \rho \norm{P_{\tau+s} |\grad^\star| g}_2^2 
+        + \inner{P_{\tau+s} |\grad^\star| g}{\frac{d}{ds} P_{\tau+s} |\grad^\star| g}
+        \right).
+        %\\&=2e^{-2\rho s}\inner{P_{\tau+s} |\grad^\star| g}{P_{\tau+s}\left(-\rho |\grad^\star| g + L |\grad^\star| g - \sgn(\grad^\star g)\otimes \grad^\star Lg\right)}.
+        \label{eq:CSGE_potential_function_derivative}
+    \end{align}
+    Since $P_{\tau+s} = e^{(\tau+s)L}$ and $g = P_{t-s} f = e^{(t-s)L} f$, we have that
+    \begin{align}
+    \label{eq:derivative-CSGE}
+        \frac d{ds} P_{\tau+s} |\grad^\star| g
+        &= P_{\tau+s} \left( L + \frac{d}{ds} \right) |\grad^\star| g 
+        = P_{\tau+s} \left( L |\grad^\star| - \sgn(\grad^\star g) \odot \grad^\star L \right) g,
+    \end{align}
+    where $\sgn(\cdot)$ denotes the entrywise absolute value of a vector, and $\odot$ denotes the entrywise product of two vectors.
+    To calculate this, we need an adapted version of \Cref{lem:commutator}, which is stated below and proved afterward.
+
+    \begin{lemma}
+    \label{lem:abs-commutator}
+        Let $\mu$ be a distribution supported on $\Omega = \{\pm 1\}^n$.
+        Let $M,D: \Omega \to \R^{n \times n}$ be two matrix fields defined by \Cref{eq:local-matrix,eq:def-D}, respectively, and let $|M| := (|M_{ij}|)_{i,j \in [n]}$ be the entrywise absolute value of $M$.
+        For any function $g: \Omega \to \R$, it holds
+        \begin{align*}
+            \left( L |\grad^\star| - \sgn(\grad^\star g) \odot \grad^\star L \right) g \ge \left( D + \diag\{M\*1\} - |M|^\top \right) |\grad^\star| g.
+        \end{align*}
+        % \ZC{I got
+        % \begin{align*}
+        %     \left( L |\grad^\star| - \sgn(\grad^\star g) \odot \grad^\star L \right) g \ge \left( D + \diag\{M\*1\} - |M|^\top \right) |\grad^\star| g,
+        % \end{align*}
+        % }
+        % \ZJ{We can use this tighter version, although I don't think it can improve the final conclusion.} \ZC{Agree!}
+    \end{lemma}
+    
+    Combining \Cref{eq:derivative-CSGE,lem:abs-commutator}, 
+    we deduce that
+    \begin{align*}
+        \inner{P_{\tau+s} |\grad^\star| g}{\frac{d}{ds} P_{\tau+s} |\grad^\star| g}
+        &\geq \inner{P_{\tau+s} |\grad^\star| g}{P_{\tau+s} \left( D + \diag\{M\*1\} - |M|^\top \right) |\grad^\star| g}
+        \\&\geq \inner{P_{\tau+s} |\grad^\star| g}{ \left( D^\star - \diag\{M^\star\*1\} -( M^\star)^\top \right) P_{\tau+s}|\grad^\star| g}.
+    \end{align*}
+    % \ZC{
+    % Call $A := D + \diag\{M\*1\} - |M|^\top$, which is a matrix field $A: \Omega \to \R^{n \times n}$.
+    % It is an operator acting on a vector field $v: \Omega \to \R^n$ via pointwise product:
+    % \begin{align*}
+    %     (Av)(x) := A(x) v(x), \quad\forall x \in \Omega.
+    % \end{align*}
+    % Meanwhile, $P_{\tau+s}$ is another operator acting on vector fields entrywisely:
+    % \begin{align*}
+    %     P_{\tau+s} v := (P_{\tau+s} v_1, \dots, P_{\tau+s} v_n).
+    % \end{align*}
+    % Your proof seems to claim they commute:
+    % \begin{align*}
+    %     P_{\tau+s} A v = A P_{\tau+s} v.
+    % \end{align*}
+    % Do you have a proof? This feels suspicious.\\
+    % A possible fix is to define $A$ uniformly:
+    % \begin{align*}
+    %     A_{ij} := 
+    %     \begin{cases}
+    %         \min_{x \in \Omega} D_{ii}(x) + \sum_{j=1}^n M_{ij}(x), & i = j \\
+    %         - \max_{x \in \Omega} |M_{ji}(x)|, & i \neq j 
+    %     \end{cases}
+    % \end{align*}
+    % I would keep the statement in \Cref{lem:abs-commutator} the same except adding
+    % \begin{align*}
+    %         \left( L |\grad^\star| - \sgn(\grad^\star g) \odot \grad^\star L \right) g 
+    %         \ge \left( D + \diag\{M\*1\} - |M|^\top \right) |\grad^\star| g 
+    %         \ge A |\grad^\star| g.
+    %     \end{align*}
+    % }
+    We conclude that 
+    $$
+        \frac{d}{ds}F_s \geq \tp{P_{\tau+s} |\grad^\star| g}^\top\tp{D^\star - \diag\{M^\star\*1\}-\frac{1}{2}(M^\star+(M^\star)^\top) - \rho I}\tp{P_{\tau+s} |\grad^\star| g} .
+    $$
+    Therefore, the coordinate-wise strong gradient estimate (\ref{eq:CSGE}) holds with constant $\rho = \lambda_{\min}(D^\star-\diag\{M^\star\*1\} - \frac{1}{2}(M^\star+(M^\star)^\top))$ at all $x \in \Omega$.
+\end{proof}
+
+\begin{proof}[Proof of \Cref{lem:abs-commutator}]
+    % \ZC{Update the proof.}
+    Define $H_{ij}(x) = \frac{q_i(x^j)}{q_i(x)}$.
+    By \Cref{fact:square}, we have that $H_{ij}(x) = \frac{q_i(x^j)}{q_i(x)} = \frac{q_j(x^i)}{q_j(x)} = H_{ji}(x)$.
+    For notational convenience, we occasionally omit the dependence on $x$, writing, for example, $q_i^\star$ instead of $q_i^\star(x)$.
+    For $i,j\in[n]$ with $i\neq j$, the following is deduced from $H_{ij}=H_{ji}$:
+    \begin{align}
+        (\delta_j^\star \abs{\delta_i^\star} - \sgn(\delta^\star_i g(x))\delta_i^\star \delta_j^\star) g(x)
+        &=  q_j^\star q_i^\star\tp{H_{ij}\abs{g(x^{ij}) - g(x^j)} - \abs{g(x^i) - g(x)}} \nonumber
+        \\&- \sgn(\delta^\star_i g) q_i^\star q_j^\star(H_{ji}(g(x^{ij})-g(x^i)) - g(x^j)+g(x))\nonumber
+        \\&=q_i^\star q_j^\star H_{ij}\tp{\abs{g(x^{ij}) - g(x^j)} - \sgn(\delta^\star_i g)(g(x^{ij}) - g(x^j))} \label{eq:abs-commutator_second_term}
+        \\&+q_i^\star q_j^\star\tp{-\frac{\abs{\delta^\star_i} g}{q_i^\star} - \sgn(\delta^\star_i g)\tp{H_{ij}(g(x^j) - g(x^i)) - \frac{\delta^\star_jg}{q_j^\star}}}. \label{eq:abs-commutator_eq}
+    \end{align}
+    Since $\abs{a}-\sgn(b)a \geq 0$ holds for any $a,b\in\R$, \Cref{eq:abs-commutator_second_term} is non-negative, resulting in the callcelation of the second derivative term in the commutator.
+    Therefore, by \Cref{eq:abs-commutator_eq}, 
+    \begin{align}
+        (\delta_j^\star \abs{\delta_i^\star} - \sgn(\delta^\star_i g(x))\delta_i^\star \delta_j^\star) g(x)
+        &\geq - q_j^\star\abs{\delta^\star_i g} - \sgn(\delta^\star_i g)\tp{H_{ij}q_i^\star q_j^\star(\frac{\delta_j^\star g}{q_j^\star} - \frac{\delta_i^\star g}{q_i^\star}) - q_i^\star\delta^\star_jg} \nonumber
+        \\&= (H_{ij} - 1)q_j^\star\abs{\delta^\star_i}g - \sgn(\delta^\star_i g) \tp{H_{ij} - 1}q_i^\star\delta^\star_j g \nonumber
+        \\&\geq (H_{ij} - 1)q_j^\star\abs{\delta^\star_i}g - \abs{H_{ji} - 1}q_i^\star\abs{\delta^\star_j}g \label{eq:CSGE_commutator_term}
+    \end{align}
+    For the non-commutator term, we have that
+    \begin{align} \label{eq:CSGE_non-commutator_term}
+        (\delta_i^\star \abs{\delta_i^\star} - \sgn(\delta^\star_i g(x))\delta_i^\star \delta_i^\star)g(x) &= q_i^\star(x) \tp{\abs{\delta_i^\star}g(x^i) - \sgn(\delta^\star_i g(x))\delta_i^\star g(x^i)} \nonumber
+        \\&= 2 q_i^\star(x) \abs{\delta_i^\star}g(x^i)
+        = 2 q_i^\star(x^i) \abs{\delta_i^\star}g(x)
+        = \frac 1{2q_i^\star(x)} \abs{\delta_i^\star}g(x),
+    \end{align}
+    where we use the fact that for any $i\in[n]$, $x^{ii} = x$ and $\sgn(\delta^\star_i g(x)) = \sgn(g(x^i) - g(x)) = - \sgn(g(x) - g(x^i)) = -\sgn(\delta^\star_i g(x^i))$.
+    Combine \Cref{eq:CSGE_commutator_term,eq:CSGE_non-commutator_term} together, we conclude the following inequality,
+    \begin{align*}
+        (L\abs{\delta_i^\star} - \sgn(\delta^\star_i g(x))\delta_i^\star L) g(x) &\geq \frac{1}{2q_i^\star}\abs{\delta^\star_i} g + \sum_{j\neq i} (H_{ij} - 1)q_j^\star\abs{\delta^\star_i} g - \abs{H_{ji} - 1}q_i^\star\abs{\delta^\star_j} g
+        \\&= (D_{ii} + (M_i)^\top \*1)\abs{\delta^\star_i} g - \inner{(\abs{M}^\top)_i}{\abs{\nabla^\star} g}, 
+    \end{align*}
+    where the last equality follows from $\abs{H_{ij}-1}p_j^\star = \abs{M_{ij}}$.
+    This is exactly
+    \[
+        \left( L |\grad^\star| - \sgn(\grad^\star g) \odot \grad^\star L \right) g \ge \left( D + \diag\{M\*1\} - |M|^\top \right) |\grad^\star| g. \qedhere
+    \]
+\end{proof}
+
+
+\subsection{Dobrushin condition}
+In this section, we state our isoperimetric inequalities under the conditions of the Dobrushin matrix and marginal bounds. 
+In addition to the CSGE condition that we establish in the above, we also require that hypercontractivity holds from \Cref{sec:boolean}.
+
+It turns out that the largest eigenvalue of $D$ and $M$ can be controlled by suitable norms of Dobrushin influence matrix with some additional bounds associated with the canonical transition rates.
+Consequently, a general and easy way to check the CSGE condition is to establish an upper bound the norms of the Dobrushin matrix and check the marginal bounds of the distribution $\mu$.
+The following is the definition of the Dobrushin matrix.
+\begin{definition}[Dobrushin influence]
+    For finite space $\+X$, the Dobruhsin influence matrix of distribution $\mu$ over $\+X^n$ is defined as follows,
+    \begin{align}\label{eq:def_Dobrushin_matrix}
+        R = (R_{ij})_{i,j\in[n]},\quad R_{ij} = \sup_{x,y,x_{-j}=y_{-j}}\TV{\mu_i(\cdot\mid x_{-i})}{\mu_i(\cdot\mid y_{-i})} .
+    \end{align}
+    We say a distribution satisfies the Dobrushin condition if $\norm{R(\mu)}_2 < 1$.
+    \ZC{Are we defining $R$ in the wrong way? $R \gets R^\top$}
+    \ZJ{I saw different definitions, the current definition is the same as the definition from Frederic's \href{chrome-extension://efaidnbmnnnibpcajpcglclefindmkaj/https://frkoehle.github.io/stat31512-s2024/lecture10.pdf}{lecture notes}.}
+\end{definition}
+
+\begin{lemma}[]\label{lem:Dobrushin_upper_bound_CSGE}
+     If $w_i^\star(x) \in [b,1/b]$ for any $x\in \{\pm 1\}^n$ and $i\in[n]$, then under the canonical transition rates and weights, \ref{eq:CSGE} holds with constant $\rho = b - \frac{(1+b^2)^2}{4b^3}(\norm{R}_2 + \norm{R}_1)$.
+\end{lemma}
+\begin{proof}
+    The entries of the Dobrushin influence matrix can be expressed in terms of the canonical transition rates as follows:
+    $$
+        R_{ij} = \begin{cases}
+            \sup_x \frac{4\abs{q_i^\star(x^j)^2-q_i^\star(x)^2}}{(1+4q_i^\star(x)^2)(1 + 4q_i^\star(x^j)^2)} &, i\neq j
+            \\ 0 &, i = j
+        \end{cases} .
+    $$
+    Then the Dobrushin matrix give an entry-wise upper bound of $M^\star = (\sup_x \abs{M_{ij}(x)})_{i,j\in[n]}$.
+    That is, for any $i, j\in[n]$ and $i\neq j$,
+    \begin{align}\label{eq:Dobrushin_to_CSGE_constant}
+        R_{ij} \geq \tp{\inf_{u,v\in [b,1/b]}\frac{u+v}{(1+u^2)(1+v^2)}}\sup_{x\in \Omega}2\abs{q_i^\star(x)-q_i^\star(x^j)} \geq \frac{4b^3}{(1+b^2)^2}M^\star_{ji} .
+    \end{align}
+    % \ZC{Our goal is to show: 
+    % \begin{align}
+    %     A - \diag\{B\*1\}-\rho I- \frac{B+B^{\top}}{2}\succeq 0.
+    % \end{align}
+    % Why do we need $K$?
+    % I think we have 
+    % \begin{align}
+    %     A \succeq c_1 I, \quad \diag\{B\*1\} \preceq c_2 I, \quad B+B^{\top} \preceq c_3 \lambda_{\max}(D+D^\top) \cdot I.
+    % \end{align}
+    % }
+    Since $D^\star_{ii} = \inf_x w_i(x^i)$ for $i\in[n]$, $D^\star\geq_{\-{ew}} bI$.
+    Therefore, by symmetry of matrices and \Cref{eq:Dobrushin_to_CSGE_constant}, we have that
+    \begin{align*}
+        \lambda_{\min}(D^\star-\diag\{M^\star\*1\}-\frac{1}{2}(M^\star+(M^\star)^\top)) &\geq \lambda_{\min}(D^\star) - \lambda_{\max}(\diag\{M^\star\*1\}) - \lambda_{\max}(\frac{1}{2}(M^\star+(M^\star)^\top)) 
+        \\&\geq b - \frac{(1+b^2)^2}{4b^3}(\norm{R}_2 + \norm{R}_1)  \geq \rho.
+    \end{align*}
+    By \Cref{thm:CSGE_boolean_hypercube_w=q}, we complete the proof.
+\end{proof}
+
+The following theorem shows that for the discrete product space, the Dobrushin condition and the one-site conditional marginal lower bound are sufficient to derive \ref{eq:LSI} constant and hypercontractivity. 
+\begin{theorem}[{\cite[Theorem 1.14 and Corollary 1.11]{marton2019logarithmic}}]\label{thm:marton_Dobrushin_to_LSI}
+Let $\+X$ be a finite space.
+Suppose the distribution $\mu$ on $\Omega = \+X^n$ satisfies the Dobrushin condition $\norm{R}_2 < 1$ and the one-site conditional marginal lower bound $\alpha = \inf_x \mu(x_i\mid x_{-i})$, then for Gibbs sampler $G = \frac 1 n\sum_{i=1}^n K_i$ where $K_i(z\mid y) = \ind[z_{-i}=y_{-i}]\mu(z_i\mid z_{-i})$, the log-Sobolev inequality holds as follows,
+$$
+    \forall f\in \R^\Omega, \frac 1n\Ent[\mu]{f^2} \leq \frac{2}{\alpha(1-\norm{R}_2)^2} \inner{f}{(I-G)f}_{\mu} .
+$$
+\end{theorem}
+\begin{corollary}\label{cor:Dobrushin_to_LSI}
+    Suppose $w_i^\star(x)\in [b,1/b]$ for any $x\in \{\pm 1\}^n$ and $i\in[n]$, then \ref{eq:LSI} holds with constant $\frac{b^2(1 - \norm{R}_2)^2}{1+b^2}$ with respect to the canonical transition rates $q^\star$.
+\end{corollary}
+\begin{proof}
+    This immediately follows from
+    \[
+        \inner{f}{(I-G)f}_{\mu} = \E[\mu]{\frac 12\sum_{i=1}^n \frac{2q_i^\star(x)}{n(1/w_i^\star(x)+w_i^\star(x))}(f(x^i)-f(x))^2}
+        \leq \frac 1n\E[\mu]{\Gamma(f,f)} . \qedhere
+    \]
+\end{proof}
+By \Cref{thm:CSGE_boolean_hypercube_w=q}, \Cref{cor:Dobrushin_to_LSI} and \cref{sec:boolean}, we conclude the following theorem about isoperimetric inequalities.
+\begin{theorem}\label{thm:Dobrushin_to_isoperimetric}
+    Let $\mu$ be a distribution on $\{\pm 1\}^n$ with full support.
+    Let the transition rates and weights to be the canonical ones defined in \Cref{eq:canonical-r-w}.
+    Suppose that for any $x\in \{\pm 1\}^n$ and $i\in[n]$, $w_i^\star(x)\in [b,1/b]$ and $\max\{\norm{R}_1,\norm{R}_2\}\leq C$ for some constants $b,C$, where $R$ is the Dobrushin influence matrix defined in \Cref{eq:def_Dobrushin_matrix}.
+    Then the local Bobkov inequality \eqref{eq:local_bobkov} holds.
+
+    Furthermore, if the Dobrushin condition holds, the $L^1$--$L^2$ Talagrand inequality \eqref{eq:l1_l2_talagrand_2}, the KKL inequality \eqref{eq:} and the Eldan-Gross inequality \eqref{eq:eldan_gross} holds with constant depending on $\norm{R}_1$, $\norm{R}_2$ and $b$.
+\end{theorem}
+\subsection{Application to Ising model}
+A distribution $\mu$ over $\{\pm 1\}^n$ is called an \emph{Ising model} with interaction matrix $J \in \R^{n\times n}$ and external field $h\in \R^n$ if 
+$$
+    \forall x\in \{\pm 1\}^n, \mu(x) \propto \exp(\frac 12 x^\top J x + h^\top x),
+$$
+where $J$ is a symmetric matrix.
+Note that the diagonals of $J$ do not affect the distribution, hence we can assume that $J_{ii} = 0$ for $i\in[n]$.
+\ZJ{previous results.}
+
+In the following theorem, we establish a new criterion for high temperature Ising model to prove the isoperimetric inequalities under a Dobrushin-type condition by \cref{thm:Dobrushin_to_isoperimetric}.
+\begin{theorem}\label{thm:Ising}
+    Suppose that $\mu$ is an Ising model parameterized by zero external field $h = \*0$ and interaction matrix $J$ satisfying $\norm{J}_2 < 1$ and $\norm{J}_1\leq C$ for some constant $C > 0$.
+    Let the transition rates and weights to be the canonical ones defined in \Cref{eq:canonical-r-w}.
+    Then the local Bobkov inequality \eqref{eq:local_bobkov}, the $L^1$--$L^2$ Talagrand inequality \eqref{eq:l1_l2_talagrand_2}, the KKL inequality \eqref{eq:} and the Eldan-Gross inequality \eqref{eq:eldan_gross} holds with constant depending on $\norm{J}_2$ and $C$.
+\end{theorem}
+
+
+\begin{proof}
+    Let $b = e^{-\norm{J}_1}$.
+    For any $i,x$, $w_i^\star(x) = \exp(-x_iJ_i^\top x) \in [b,1/b]$.
+    Fix $x\in \Omega$ and $i,j\in [n]$ with $i\neq j$.
+    Define $\alpha = \sum_{k\neq i,j}J_{ik} x_k$ and $\beta = \abs{J_{ij}}$ .
+    We have that 
+    \begin{align*}
+        \TV{\mu_i(\cdot\mid x)}{\mu_i(\cdot\mid x^j)} &= \abs{\mu(x_i=+1\mid x_j=+1,x_{-i,j}) - \mu(x_i=+1\mid x_j=-1,x_{-i,j})}
+        \\&= \frac 12\abs{\tanh(\alpha+\beta) - \tanh(\alpha-\beta)}
+        = \frac{2\abs{\sinh(\beta)\cosh(\beta)}}{\cosh(2\alpha)+\cosh(2\beta)}
+        \\&\leq \frac{2\abs{\sinh(\beta)\cosh(\beta)}}{1+\cosh(2\beta)} = \tanh(\beta) \leq \beta.
+    \end{align*}
+    Therefore, $R \leq_{\-{ew}} \abs{J}$ and $\norm{R}_2\leq \norm{\abs{J}}_2 < 1$.
+    We have that $\norm{J}_2 \leq \sqrt{\norm{J}_1\norm{J}_{\infty}} = \norm{J}_1$ follows from symmetry. 
+    By \cref{thm:Dobrushin_to_isoperimetric}, since $\max\{\norm{R}_1,\norm{R}_2\}\leq \norm{J}_1 \leq C$, all the isopermetric inequalities in \cref{sec:boolean} hold.
+\end{proof}
+
+
+

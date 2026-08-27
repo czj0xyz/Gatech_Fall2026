@@ -1,0 +1,511 @@
+\documentclass[11pt]{article}
+\pagestyle{plain}
+
+% \pgfplotsset{compat=1.18}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amsfonts,amssymb,amsthm}
+\usepackage[ruled,vlined,linesnumbered,commentsnumbered]{algorithm2e}
+\SetKwInput{KwIn}{Input}
+\SetKwInput{KwOut}{Output}
+\SetKwInput{KwGlobal}{Global variable}
+\SetKwInput{KwOracle}{Oracle}
+\SetKwComment{Comment}{// }{}
+\usepackage{graphicx}
+\usepackage{enumerate}
+\usepackage{bbm}
+\usepackage{verbatim}
+\usepackage{hyperref,color}
+\usepackage[capitalize,nameinlink]{cleveref}
+\usepackage[dvipsnames]{xcolor}
+\hypersetup{
+	colorlinks=true,
+	pdfpagemode=UseNone,
+	citecolor=OliveGreen,
+	linkcolor=NavyBlue,
+	urlcolor=Magenta,
+	pdfstartview=FitW
+}
+\usepackage{appendix}
+\usepackage{makecell}
+\usepackage{tablefootnote}
+\crefname{appsec}{Appendix}{Appendices}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{xifthen}
+\usepackage{subcaption}
+\usepackage{hhline}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{problem}[theorem]{Problem}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{fact}[theorem]{Fact}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{observation}[theorem]{Observation}
+\newtheorem{assumption}[theorem]{Assumption}
+\newtheorem*{assumption*}{Assumption}
+\newtheorem{condition}[theorem]{Condition}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\crefname{lemma}{Lemma}{Lemmas}
+\crefname{theorem}{Theorem}{Theorems}
+\crefname{definition}{Definition}{Definitions}
+\crefname{fact}{Fact}{Facts}
+\crefname{claim}{Claim}{Claims}
+\crefname{proposition}{Proposition}{Propositions}
+
+
+\newcommand{\dif}{\,\mathrm{d}}
+%\newcommand{\E}{\mathbb{E}}
+%\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\Cov}{\mathrm{Cov}}
+\newcommand{\MI}{\mathrm{I}}
+%\newcommand{\Ent}{\mathrm{Ent}}
+\newcommand{\ind}{\mathbbm{1}}
+\newcommand{\allone}{\mathbf{1}}
+\newcommand{\tr}{\mathrm{tr}}
+\newcommand{\wt}{\mathrm{weight}}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\newcommand{\TV}[2]{\left\|#1 - #2\right\|_{\mathrm{TV}}}
+\newcommand{\ceil}[1]{\left\lceil #1 \right\rceil}
+\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
+\newcommand{\ip}[2]{\left\langle #1 , #2 \right\rangle}
+\newcommand{\grad}{\nabla}
+\newcommand{\hessian}{\nabla^2}
+\newcommand{\trans}{\intercal}
+\newcommand{\diag}{\mathrm{diag}}
+\newcommand{\poly}{\mathrm{poly}}
+\newcommand{\dist}{\mathrm{dist}}
+\newcommand{\sgn}{\mathrm{sgn}}
+\newcommand{\fpras}{\mathsf{FPRAS}}
+\newcommand{\fpaus}{\mathsf{FPAUS}}
+\newcommand{\fptas}{\mathsf{FPTAS}}
+
+\newcommand{\pll}{\parallel}
+\newcommand{\eps}{\varepsilon}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+
+\renewcommand{\AA}{\mathcal{A}}
+\newcommand{\BB}{\mathcal{B}}
+\newcommand{\CC}{\mathcal{C}}
+\newcommand{\DD}{\mathcal{D}}
+\newcommand{\EE}{\mathcal{E}}
+\newcommand{\FF}{\mathcal{F}}
+\newcommand{\GG}{\mathcal{G}}
+\newcommand{\HH}{\mathcal{H}}
+\newcommand{\II}{\mathcal{I}}
+\newcommand{\JJ}{\mathcal{J}}
+\newcommand{\KK}{\mathcal{K}}
+\newcommand{\LL}{\mathcal{L}}
+\newcommand{\MM}{\mathcal{M}}
+\newcommand{\NN}{\mathcal{N}}
+\newcommand{\OO}{\mathcal{O}}
+\newcommand{\PP}{\mathcal{P}}
+\newcommand{\QQ}{\mathcal{Q}}
+\newcommand{\RR}{\mathcal{R}}
+\renewcommand{\SS}{\mathcal{S}}
+\newcommand{\TT}{\mathcal{T}}
+\newcommand{\UU}{\mathcal{U}}
+\newcommand{\VV}{\mathcal{V}}
+\newcommand{\WW}{\mathcal{W}}
+\newcommand{\XX}{\mathcal{X}}
+\newcommand{\YY}{\mathcal{Y}}
+\newcommand{\ZZ}{\mathcal{Z}}
+
+\newcommand{\KL}[2]{D_{\mathrm{KL}} \left( #1 \,\Vert\, #2 \right)}
+\newcommand{\KLbig}[2]{D_{\mathrm{KL}} \left( #1 \,\big\Vert\, #2 \right)}
+\newcommand{\KLBig}[2]{D_{\mathrm{KL}} \left( #1 \,\Big\Vert\, #2 \right)}
+
+\newcommand{\SKL}[2]{D_{\mathrm{SKL}} \left( #1 \,\Vert\, #2 \right)}
+\newcommand{\SKLbig}[2]{D_{\mathrm{SKL}} \left( #1 \,\big\Vert\, #2 \right)}
+\newcommand{\SKLBig}[2]{D_{\mathrm{SKL}} \left( #1 \,\Big\Vert\, #2 \right)}
+
+\newcommand{\qandq}{\quad\text{and}\quad}
+\newcommand{\supp}{\mathrm{supp}}
+
+\newcommand{\DKL}[2]{\-D_{\-{KL}}\left(#1 \parallel #2\right)}
+\newcommand{\DTV}[2]{\-D_{\mathrm{TV}}\left({#1},{#2}\right)}
+% \newcommand{\dist}{\mathrm{dist}}
+\newcommand{\e}{\mathrm{e}}
+\renewcommand{\epsilon}{\varepsilon}
+\renewcommand{\emptyset}{\varnothing}
+% \newcommand{\norm}[1]{\left\Vert#1\right\Vert}
+\newcommand{\set}[1]{\left\{#1\right\}}
+\newcommand{\tuple}[1]{\left(#1\right)} 
+% \newcommand{\eps}{\varepsilon}
+\newcommand{\inner}[2]{\left\langle #1,#2\right\rangle}
+\newcommand{\tp}{\tuple}
+\newcommand{\ol}{\overline}
+\newcommand{\abs}[1]{\left\vert#1\right\vert}
+\newcommand{\ctp}[1]{\left\lceil#1\right\rceil}
+\newcommand{\ftp}[1]{\left\lfloor#1\right\rfloor}
+\newcommand{\Ind}[1]{\-{Ind}_{#1}}
+\newcommand{\todo}[1]{{\color{red} TODO: #1}}
+
+\newcommand{\Cor}{\Psi^{\mathrm{sym}}}
+\newcommand{\cor}{\Psi^{\-{cor}}}
+\newcommand{\Inf}{\Psi}
+% \newcommand{\diag}{\-{diag}}
+
+\def\*#1{\boldsymbol{#1}} % Use \*A for \mathbf{A}
+\def\+#1{\mathcal{#1}} % Use \+A for \mathcal{A}
+\def\-#1{\mathrm{#1}} % Use \-A for \mathrm{A}
+\def\=#1{\mathbb{#1}} % Use \^A for \mathbb{A}
+\def\!#1{\mathfrak{#1}} % Use \!A for \mathfrak{A}
+
+\newcommand*\diff{\mathop{}\!\mathrm{d}}
+
+% probability
+% \DeclareMathOperator*{\oPr}{\mathbf{Pr}}
+\def\oPr{\mathop{\mathrm{Pr}}}
+\renewcommand{\Pr}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oPr\left[#2\right]}
+  {\oPr_{#1}\left[#2\right]} } % Use \Pr[a]{b} for \mathbf{Pr}_a[b], \Pr{b} for  \mathbf{Pr}[b]
+
+% expectation: relies on the package "dsfont"
+% \DeclareMathOperator*{\oE}{\mathbb{E}}
+\def\oE{\mathop{\mathbb{E}}}
+\newcommand{\E}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oE\left[#2\right]}
+  {\oE_{#1}\left[#2\right]} }
+
+% variance
+%\DeclareMathOperator*{\oVar}{\mathbf{Var}}
+\def\oVar{\mathrm{Var}}
+\newcommand{\Var}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oVar\left[#2\right]}
+  {\oVar_{#1}\left[#2\right]} }
+
+% entropy
+% \DeclareMathOperator*{\oEnt}{\mathbf{Ent}}
+\def\oEnt{\mathrm{Ent}}
+\newcommand{\Ent}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oEnt\left[#2\right]}
+  {\oEnt_{#1}\left[#2\right]} }
+
+\newcommand{\PhiEnt}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oEnt^\Phi\left[#2\right]}
+  {\oEnt^\Phi_{#1}\left[#2\right]} }
+
+
+\newenvironment{Exampleparagraph}[1][]
+{
+    \par 
+    \noindent 
+    \textbf{\color{blue} #1}
+    \par 
+    \vspace{0.5em} 
+    \itshape 
+}
+{
+    \par 
+    \vspace{1em} 
+}
+
+%\input{local-macro}
+
+\newcommand{\RED}[1]{\textcolor{red}{#1}}
+\newcommand{\zc}[1]{\textcolor{red}{ZC: #1}}
+
+\newcommand{\bern}[1]{\mathrm{Bern}\left(#1\right)}
+
+
+
+
+\title{Second-order $\Phi$-Entropic Stability}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+Recall that $\mu_1 = \mu$ and $\mu_0 = \delta_\phi$.
+We define
+\begin{align*}
+    G(\theta) = \E[\tau \sim \mu_\theta]{ \PhiEnt[\mu^{\theta,\tau}_1]{f} }.
+\end{align*}
+Notice that
+$G(1) = 0$ and $G(0) = \PhiEnt[\mu]{f} $.
+
+
+\section{First-order $\Phi$-Entropic Stability}
+
+\begin{definition}
+For any $\theta \in [0, 1)$ and any pinning $\tau$, it holds
+    \begin{align*}
+        \lim_{h \to 0^+} \frac{1}{h} \PhiEnt[\sigma \sim \mu_{\theta+h}^{\theta,\tau}]{ \E[\mu_1^{\theta+h,\sigma}]{f} } 
+        \le \frac{C(\theta)}{1-\theta} \PhiEnt[\mu_1^{\theta,\tau}]{f}.
+    \end{align*}
+\end{definition}
+
+Observe that
+\begin{align*}
+    -G'(\theta) 
+    &= \lim_{h \to 0^+} \frac{1}{h} \left( \E[\tau \sim \mu_{\theta}]{ \PhiEnt[\mu_1^{\theta,\tau}]{f}} - \E[\sigma \sim \mu_{\theta+h}]{ \PhiEnt[\mu_1^{\theta+h,\sigma}]{f} } \right) \\
+    & = \lim_{h \to 0^+} \frac{1}{h} \E[\tau \sim \mu_\theta] { \PhiEnt[\sigma \sim \mu_{\theta+h}^{\theta,\tau}]{ \E[\mu_1^{\theta+h,\sigma}]{f} } } \\
+    & = \E[\tau \sim \mu_\theta] { \lim_{h \to 0^+} \frac{1}{h} \PhiEnt[\sigma \sim \mu_{\theta+h}^{\theta,\tau}] {\E[\mu_1^{\theta+h,\sigma}]{f}} }.
+\end{align*}
+
+Therefore,
+\begin{align*}
+    & \text{First-order $\Phi$-Entropic Stability} \\
+    \implies &
+    -G'(\theta) \le \frac{C(\theta)}{1-\theta} G(\theta) \\
+    \implies &
+    G(0) \le \exp \left( \int^{\theta}_{0} \frac{C(\eta)}{1-\eta} \dif \eta \right) G(\theta)
+\end{align*}
+
+
+\section{Second-order $\Phi$-Entropic Stability}
+
+\begin{definition}
+For any $\theta \in [0, 1)$ and any pinning $\tau$, it holds
+    \begin{multline*}
+        \lim_{h \to 0^+} \frac{1}{h^2} \left( \PhiEnt[\mu_1^{\theta,\tau}]{f} - 2 \E[\sigma \sim \mu_{\theta+h}^{\theta,\tau}]{ \PhiEnt[\mu_1^{\theta+h,\sigma}]{f}} + \E[\rho \sim \mu_{\theta+2h}^{\theta,\tau}]{ \PhiEnt[\mu_1^{\theta+2h,\rho}]{f} } \right) \\
+        \le \frac{C(\theta)}{1-\theta} \lim_{h \to 0^+} \frac{1}{h} \PhiEnt[\sigma \sim \mu_{\theta+h}^{\theta,\tau}]{ \E[\mu_1^{\theta+h,\sigma}]{f}}.
+    \end{multline*}
+\end{definition}
+
+Observe that
+\begin{align*}
+    G''(\theta) = \E[\tau \sim \mu_\theta]{\lim_{h \to 0^+} \frac{1}{h^2} \left( \PhiEnt[\mu_1^{\theta,\tau}]{f} - 2 \E[\sigma \sim \mu_{\theta+h}^{\theta,\tau}]{ \PhiEnt[\mu_1^{\theta+h,\sigma}]{f}} + \E[\rho \sim \mu_{\theta+2h}^{\theta,\tau}] { \PhiEnt[\mu_1^{\theta+2h,\rho}]{f} } \right) }.
+\end{align*}
+
+Therefore,
+\begin{align*}
+    & \text{Second-order $\Phi$-Entropic Stability} \\
+    \implies &
+    G''(\theta) \le -\frac{C(\theta)}{1-\theta} G'(\theta) \\
+    \implies &
+    G(0) \le [\cdots]\; G(\theta)
+\end{align*}
+
+\subsection{Spectral Stability}
+Define $f_\eta(x) = \E[Q_{\eta\to 1}(x,\cdot)]{f} = \E[\mu_{1}^{\eta,x}]{f}$ and $\mu_\eta$ to be the distribution of $Y_\eta$.
+% \begin{definition}[Second order of $\phi$-Entropic Stability]
+%     For any $\theta \in [0,1)$ and any pinning $\tau$, it holds
+%     \begin{align*}
+%         &\lim_{h\to 0^+} \frac 1{h^2}\left(\PhiEnt[\mu_1^{\theta,\tau}]{f} - 2\E[\sigma\sim \mu_{\theta+h}^{\theta,\tau}]{\PhiEnt[\mu_{1}^{\theta+h,\sigma}]{f}} + \E[\rho\sim \mu_{\theta+2h}^{\theta,\tau}]{\PhiEnt[\mu_{1}^{\theta+2h,\rho}]{f}}\right) \\\leq&C(\theta) \lim_{h\to 0^+}\frac 1h \PhiEnt[\sigma\sim \mu_{\theta+h}^{\theta,\tau}]{f_{\theta+h}(\sigma)} .
+%     \end{align*}
+% \end{definition}
+We take $\phi = x^2$ and $P/Q$ be the down/up walk in field dynamics as example.
+Thus, we have that 
+$$
+    \forall y\subseteq x, P_{1\to \theta}(x,y) = \theta^{y}(1-\theta)^{x-y}
+$$
+$$
+    \forall y\subseteq x, Q_{\theta \to 1}(y,x) = \Pr{Y_1 = x\mid Y_\theta = y} = \theta^y(1-\theta)^{x-y} \frac{\Pr{Y_1=x}}{\Pr{Y_\theta=y}} \propto ((1-\theta)*\mu) (y).
+$$
+$$
+    P_{\eta + h \to \eta}(x,y) = \left(\frac{\eta}{\eta+h}\right)^{y}\left(\frac{h}{\eta+h}\right)^{x-y} = \begin{cases}
+        1-\frac{h|x|}{\eta} + o(h) &, x=y
+        \\ \frac{h}{\eta} + o(h) &, y=x-1
+        \\o(h) &, o.w.
+    \end{cases}.
+$$
+$$
+    Q_{\eta\to \eta+h}(x,y) = \Pr{Y_\eta = x\mid Y_{\eta+h} = y}\frac{\Pr{Y_{\eta+h} = y}}{\Pr{Y_{\eta} = x}} = \begin{cases}
+        1 - \frac{h}{\eta}\sum_{i\notin x}\frac{\Pr{Y_\eta = x+i}}{\Pr{Y_\eta = x}} + o(h)&, x=y
+        \\ \frac{\Pr{Y_\eta = y}}{\Pr{Y_\eta = x}}\cdot\frac{h}{\eta} + o(h) &, y - x = 1
+        \\ o(h) &, o.w.
+    \end{cases} .
+$$
+And we have that
+\begin{align*}
+    \Pr{Y_{\eta+h} = y} &= \sum_{x\subseteq y} \Pr{Y_{\eta} = x}Q_{\eta\to \eta+h}(x,y) 
+    \\&= \Pr{Y_\eta = y} - \frac h\eta\sum_{i\notin y}\Pr{Y_\eta = y+i}+\frac h\eta\sum_{i\in y} \Pr{Y_{\eta} = y}  + o(h).
+    \\&=\Pr{Y_\eta = y} - \frac h\eta\sum_{i\notin y}\Pr{Y_\eta = y+i}+\frac {h|y|}\eta\Pr{Y_{\eta} = y}  + o(h).
+\end{align*}
+Therefore we have the following lemma.
+\begin{lemma}\label{lem:first_order}
+We have that for $\eta \in [0,1)$ and pinning $x$,
+$$
+    \lim_{h\to 0^+} \frac 1h \Var[Q_{\eta\to \eta+h}(x,\cdot)]{f_{\eta+ h}} = \frac 1\eta \sum_{i\notin x} \frac{\mu_\eta(x+i)}{\mu_\eta(x)}(f_\eta(x+i) - f_\eta(x))^2 .
+$$
+\end{lemma}
+\begin{proof}
+    The following should be true,
+    \begin{align*}
+        \Var[Q_{\eta\to \eta+h}(x,\cdot)]{f_{\eta+h}} &= \sum_{x\subseteq y} Q_{\eta\to \eta+h}(x,y) (f_{\eta+h}(y) - \E[Q_{\eta\to \eta+h}(x,\cdot)]{f_{\eta+h}})^2
+        \\&= o(h) + \sum_{i\notin x} Q_{\eta\to \eta+h}(x,x+i) (f_{\eta+h}(x+i) - f_{\eta}(x))^2
+        \\&= o(h) + \frac{h}{\eta} \sum_{i\notin x} \frac{\Pr{Y_\eta = x+i}}{\Pr{Y_\eta = x}}(f_{\eta}(x+i) - f_{\eta}(x))^2, 
+    \end{align*}
+    where $f_{\eta+h}(x) = (1+O(h))f_\eta(x)$. 
+\end{proof}
+For fixed pinning $x$, we want to compute
+\begin{align*}
+    \frac{1}{(\eta + h)\eta}\left(\eta\sum_{i\notin x} \frac{\Pr{Y_{\eta+h} = x+i}}{\Pr{Y_{\eta+h} = x}}(f_{\eta+h}(x+i) - f_{\eta+h}(x))^2 - (\eta+h)\sum_{i\notin x} \frac{\Pr{Y_\eta = x+i}}{\Pr{Y_\eta = x}}(f_\eta(x+i) - f_\eta(x))^2\right).
+\end{align*}
+% $$
+%     \Pr{Y_{\eta+h} = x} = \sum_{y\subseteq x} \Pr{Y_{\eta} = y}Q_{\eta\to \eta+h}(y,x)
+% $$
+% The first term is that
+% $$
+%     -\frac{h}{\eta^2}\sum_{i\notin x} \frac{\Pr{Y_{\eta} = x+i}}{\Pr{Y_{\eta} = x}}(f_{\eta}(x+i) - f_{\eta}(x))^2 .
+% $$
+% The second term is that
+% $$
+%     \frac{h}{\eta}
+% $$
+The second derivative is that
+\begin{align*}
+    \frac 1\eta\sum_{i\notin x}\left([h]\frac{\Pr{Y_{\eta+h} = x+i}}{\Pr{Y_{\eta+h} = x}}\right)(f_{\eta}(x+i) - f_{\eta}(x))^2 &+ \sum_{i\notin x}\frac 1\eta\left(\frac{\Pr{Y_{\eta} = x+i}}{\Pr{Y_{\eta} = x}}\right)[h](f_{\eta+h}(x+i) - f_{\eta+h}(x))^2
+    \\& - \frac 1{\eta^2}\sum_{i\notin x} \frac{\Pr{Y_\eta = x+i}}{\Pr{Y_\eta = x}}(f_\eta(x+i) - f_\eta(x))^2 .
+\end{align*}
+Note that 
+\begin{align*}
+    Q_{\eta+h \to 1}(x,y) &= \sum_{x\subseteq z} Q_{\eta\to \eta+h}^{-1}(x,z)Q_{\eta\to 1}(z,y)
+    \\&= Q_{\eta\to \eta+h}^{-1}(x,x)Q_{\eta\to 1}(x,y) + \sum_{i\notin x} Q_{\eta\to \eta+h}^{-1}(x,x+i)Q_{\eta\to 1}(x+i,y)  + o(h)
+    \\&= Q_{\eta\to 1}(x,y) + \frac h\eta\sum_{i\notin x} \frac{\Pr{Y_{\eta} = x+i}}{\Pr{Y_\eta = x}} (Q_{\eta\to 1}(x,y) - Q_{\eta\to 1}(x+i,y)) + o(h),
+\end{align*}
+since $(I+Lh+o(h))^{-1} = I - Lh + o(h)$.
+Therefore, 
+\begin{align*}
+    f_{\eta+h}(x) - f_\eta(x) &= \sum_{x\subseteq y} (Q_{\eta+h\to 1} - Q_{\eta\to 1} )(x,y)f(y) 
+    \\&= \frac{h}{\eta}\sum_{y:x\subseteq y}\sum_{i\notin x} \frac{\Pr{Y_{\eta} = x+i}}{\Pr{Y_\eta = x}} (Q_{\eta\to 1}(x,y) - Q_{\eta\to 1}(x+i,y)) f(y)  + o(h)
+    \\&= \frac{h}{\eta}\sum_{i\notin x}\frac{\Pr{Y_{\eta} = x+i}}{\Pr{Y_\eta = x}}(\sum_{y:x\subseteq y}Q_{\eta\to 1}(x,y) f(y) - \sum_{y:x\subseteq y}  Q_{\eta\to 1}(x+i,y) f(y) )  + o(h),
+    \\&= \frac{h}{\eta}\sum_{i\notin x}\frac{\Pr{Y_{\eta} = x+i}}{\Pr{Y_\eta = x}}(f_\eta(x) - f_\eta(x+i)) + o(h),
+\end{align*}
+Thus, 
+\begin{align*}
+    [h](f_{\eta+h}(x+i) - f_{\eta+h}(x))^2 &= \frac {2}\eta(f_{\eta}(x+i) - f_{\eta}(x))(\sum_{j\notin x+i}\frac{\Pr{Y_{\eta} = x+j+i}}{\Pr{Y_\eta = x+i}}(f_\eta(x+i) - f_\eta(x+j+i)) 
+    \\&\qquad\qquad\qquad\qquad\qquad - \sum_{j\notin x}\frac{\Pr{Y_{\eta} = x+j}}{\Pr{Y_\eta = x}}(f_\eta(x) - f_\eta(x+j))) .
+\end{align*}
+For the first term, since $\frac{A+Bh}{C+Dh} =\frac{A}{C} +  \frac{CB-AD}{C^2}h+o(h)$,
+\begin{align*}
+    [h]\frac{\Pr{Y_{\eta+h} = x+i}}{\Pr{Y_{\eta+h} = x}} &= -\frac{\Pr{Y_{\eta} = x }\Pr{Y_{\eta} = x+i}}{\eta\Pr{Y_\eta = x}^2}\Bigg(\sum_{j\notin x+i}\frac{\Pr{Y_{\eta} = x+j+i}}{\Pr{Y_\eta = x+i}} - |x+i|
+    \\&\qquad\qquad\qquad\qquad\qquad\qquad\qquad-\left(\sum_{j\notin x}\frac{\Pr{Y_{\eta} = x+j}}{\Pr{Y_\eta = x}} - |x|\right)\Bigg)
+    \\&= \frac{\Pr{Y_{\eta} = x+i}}{\eta\Pr{Y_\eta = x}}\left(1-\sum_{j\notin x+i} \frac{\Pr{Y_\eta= x+i+j}}{\Pr{Y_\eta = x+i}} + \sum_{j\notin x}\frac{\Pr{Y_\eta = x+j}}{\Pr{Y_\eta = x}}\right)&
+\end{align*}
+% $$
+%     \Pr{Y_{\eta+h} = x + i} =  \Pr{Y_\eta = x + i} + \sum_{j\in x + i} \frac{h\Pr{Y_{\eta} = x + i}}{\eta\Pr{Y_{\eta} = x + i - j}}(\Pr{Y_\eta = x+i-j} - \Pr{Y_\eta = x+i}).
+% $$
+% $$
+%     \Pr{Y_{\eta+h} = x } =  \Pr{Y_\eta = x } + \sum_{j\in x } \frac{h\Pr{Y_{\eta} = x }}{\eta\Pr{Y_{\eta} = x  - j}}(\Pr{Y_\eta = x-j} - \Pr{Y_\eta = x}).
+% $$
+
+
+In conclusion, the second derivative is that
+\begin{align*}
+    \frac{1}{\eta^2}\sum_{i\notin x} \frac{\Pr{Y_\eta = x+i}}{\Pr{Y_\eta = x}}(f_\eta(x+i) - f_\eta(x))^2(&\left(1-\sum_{j\notin x+i} \frac{\Pr{Y_\eta= x+i+j}}{\Pr{Y_\eta = x+i}} + \sum_{j\notin x}\frac{\Pr{Y_\eta = x+j}}{\Pr{Y_\eta = x}}\right)
+    \\&+2\Bigg(\sum_{j\notin x+i}\frac{\Pr{Y_{\eta} = x+j+i}}{\Pr{Y_\eta = x+i}}\frac{f_\eta(x+i) - f_\eta(x+j+i)}{f_\eta(x+i) - f_\eta(x)} 
+    \\&\qquad\ \  + \sum_{j\notin x}\frac{\Pr{Y_{\eta} = x+j}}{\Pr{Y_\eta = x}}\frac{f_\eta(x+j) - f_\eta(x)}{f_\eta(x+i) - f_\eta(x)} \Bigg)
+    \\&- 1)
+\end{align*}
+That is, after simplification, the second derivative is that
+\begin{align*}
+\frac{1}{\eta^2}\sum_{i\notin x} \frac{\Pr{Y_\eta = x+i}}{\Pr{Y_\eta = x}}(f_\eta(x+i) - f_\eta(x))\Bigg(&\sum_{j\notin x+i}\frac{\Pr{Y_\eta= x+i+j}}{\Pr{Y_\eta = x+i}}\left(f_\eta(x)+f_\eta(x+i)-2f_\eta(x+i+j)\right)
+\\&+\sum_{j\notin x}\frac{\Pr{Y_{\eta} = x+j}}{\Pr{Y_\eta = x}}\left(2f_\eta(x+j)+f_\eta(x+i)-3f_\eta(x)\right)\Bigg)
+\end{align*}
+Let $\Delta_i(x) = f_\eta(x+i) - f_\eta(x)$, $r_i(x) = \frac{\Pr{Y_\eta = x+i}}{\Pr{Y_\eta = x}}$, $S(x) = \sum_{i\notin x} r_i(x)$ and $T(x) = \sum_{i\notin x} r_i(x)\Delta_i(x)$, then the second derivative is that
+\begin{equation}\label{eq:second_derivative}
+    \frac 1{\eta^2}\sum_{i\notin x} r_i(x)\left(\Delta_i(x)^2(S(x)-S(x+i)) + 2\Delta_i(x)(T(x)-T(x+i))\right) .
+\end{equation}
+Note that the first derivative is that
+$$
+\frac 1\eta \sum_{i\notin x} \frac{\Pr{Y_\eta = x+i}}{\Pr{Y_\eta = x}}(f_\eta(x+i) - f_\eta(x))^2 = \frac 1\eta \sum_{i\notin x} r_i(x)\Delta_i(x)^2 .
+$$
+\begin{example}[$\eta = 0$]
+    When $\eta = 0$, only $x = \emptyset$ makes sense.
+    We omit $(\emptyset)$ for simplicity.
+    We have that
+    $$
+        \lim_{\eta\to 0}\frac{r_i}\eta = \lim_{\eta \to 0}
+        \frac {\eta\mu(\{i\})}{\eta Z(\eta*\mu)} = \frac{\mu(\{i\})}{\mu(\emptyset)},
+    $$
+    since $\Pr{Y_0 = \emptyset} = 1$.
+    Thus, Equation \ref{eq:second_derivative} is as follows,
+    \begin{align*}
+        \sum_{i=1}^n \frac{\mu(\{i\})}{\mu(\emptyset)}\Bigg(&\Delta_i(\emptyset)^2\left(\frac{\mu(\{i\})}{\mu(\emptyset)} + \sum_{j\neq i}\frac{\mu(\{j\})^2 - \mu(\{i,j\})\mu(\emptyset)}{\mu(\emptyset)\mu(\{j\})}\right) 
+        \\&+ 2\Delta_i(\emptyset)\left(\frac{\mu(\{i\})\Delta_i(\emptyset)}{\mu(\emptyset)} + \sum_{j\neq i}\frac{\mu(\{j\})^2\Delta_j(\emptyset) - \mu(\{i,j\})\mu(\emptyset)\Delta_j(\{i\})}{\mu(\emptyset)\mu(\{j\})}\right)\Bigg) 
+    \end{align*}
+\end{example}
+
+
+\subsection{$\*{f}$ is a linear function}
+Let $f(x) = \inner{\alpha}{x}$, we have that 
+$$
+    f_\eta(x) = \E[Q_{\eta\to 1}(x,y)]{\inner{\alpha}{y}} = \inner{\*m((1-\eta) * \mu_x)}{\alpha} .
+$$
+Let $\nu_x = Q_{\eta\to 1}(x,\cdot) = (1-\eta)*\mu_x$.
+Since for $i\notin x$,
+$$
+    \nu_x(y\mid i\in y) = \frac{\ind [x+i\subseteq y]\nu_x(y)}{\*m(\nu_x)_i} \propto \ind [x+i\subseteq y](1-\eta)^{|y|}\mu(y) = \nu_{x+i}(y),
+$$
+Therefore, 
+$$
+    \Delta_i(x) = \sum_{j\notin x}(\nu_x(j\in y\mid i\in y) - \nu_x(j\in y))\alpha_j = \frac{1}{\nu_x(i\in y)} \inner{\Cov(\nu_x)_i}{\alpha} .
+$$
+By the law of $Y_\eta$, we have that 
+$$
+    r_i(x) = \frac{\Pr{Y_\eta=x+i}}{\Pr{Y_\eta = x}}  = \frac{\sum_{x+i\subseteq y} \mu(y) \eta^{|x+i|} (1-\eta)^{|y|-|x+i|}}{\sum_{x\subseteq y} \mu(y) \eta^{|x|} (1-\eta)^{|y|-|x|}} = \frac{\eta}{1-\eta} \nu_x(i\in y).
+$$
+Plugging all the above, the first derivative is as follows,
+$$
+    \frac 1{1 - \eta} \alpha^\top \Cov(\nu_x)\diag\{\*m(\nu_x)\}^{\dagger} \Cov(\nu_x)\alpha^\top 
+$$
+\begin{proposition}
+    If $f$ is a pure linear function, then $\lim_{h \to 0^+} \frac{1}{h} \Var[Q_{\eta \to \eta + h}(x,\cdot)]{f_{\eta + h}} \le \frac{C(\eta)}{1-\eta} \cdot \Var[Q_{\eta \to 1}(x,\cdot)]{f}$ is equivalent to $\Cov(\nu_x)\preceq C(\eta)\cdot \diag\{\*m(\nu_x)\}$ .
+\end{proposition}
+\begin{proof}
+    We complete the proof by the following equality.
+    \begin{align*}
+        \Var[Q_{\eta \to 1}(x,\cdot)]{f} &= \E[y\sim \nu_x]{\inner{\alpha}{y}^2} - \inner{\*m(\nu_x)}{\alpha}^2
+       \\&= \alpha^\top \left(\E[y\sim \nu_x]{yy^\top} - \*m(\nu_x)\*m(\nu_x)^\top \right)\alpha = \alpha^\top \Cov(\nu_x)\alpha . \qedhere
+    \end{align*}
+\end{proof}
+Following the same way, we have that
+$$
+    T(x) = \frac{\eta}{1-\eta}\*1^\top \Cov(\nu_x)\alpha, S(x) = \frac{\eta}{1-\eta}\E[y\sim \nu_x]{|y| - |x|} .
+$$
+Define 
+$$
+    M_x = \begin{pmatrix}
+    \vdots\\\*1^\top (I-\Cov(\nu_{x+i})\Cov(\nu_x)^{-1})\\
+    \vdots
+    \end{pmatrix}_{i\notin x} .
+$$
+Then the second derivative is as follows,
+\begin{align*}
+    \alpha^\top \frac1{(1-\eta)^2}\Bigg(&\Cov(\nu_x)\diag\{\*m(\nu_x)\}^\dagger\diag\{\E[y\sim \nu_x]{|y|}-\E[y\sim \nu_{x+i}]{|y|} + 1\}_i\Cov(\nu_x)
+    \\+&\Cov(\nu_x)M_x\Cov(\nu_x) + \Cov(\nu_x)M_x^\top \Cov(\nu_x)\Bigg)\alpha .
+\end{align*}
+We have the following proposition, which shows the equivalent version of second-order spectral stability.
+\begin{proposition}[Second-order spectral stability for linear function]
+If $f$ is some pure linear function, then $\text{Second derivative}\leq C(\eta)\cdot \text{First derivative}$ is equivalent to
+\begin{equation}\label{eq:SleqF}
+   \Pi_x^{1/2}(M_x + M_x^\top)\Pi_x^{1/2} \preceq (1-\eta)C(\eta)I + \diag\{\E[y\sim \nu_{x+i}]{|y|}-\E[y\sim \nu_x]{|y|} - 1\}_i .
+\end{equation}
+where $\Pi_x = \diag\{\*m(\nu_x)\}^{1/2}$.
+\end{proposition}
+\begin{example}
+    Consider $\Omega = 2^{[n]}$ and the underlying distribution $\mu$ satisfies that $\mu(S) \propto \lambda^{|S|}$. Suppose the pinning $x = \emptyset$ and let $\lambda' = (1-\eta)\lambda$.
+    We have that 
+    $$
+        \*m(\nu_x) = \frac{\lambda'}{1+\lambda'}, \Cov(\nu_x) = \frac{\lambda'}{(1+\lambda')^2} I, \*1^\top (I-\Cov(\nu_{x+i})\Cov(\nu_x)^{-1}) = e_i.
+    $$
+    $$
+        \E[y\sim \nu_{x+i}]{|y|}-\E[y\sim \nu_x]{|y|} - 1 = - \frac{\lambda'}{1+\lambda'}.
+    $$
+    In this case, Equation \ref{eq:SleqF} is a follows,
+    $$
+         2I \preceq (1-\eta)C(\eta)\frac{1+\lambda'}{\lambda'}I - I \implies C(\eta)\geq \frac{3\lambda}{1+(1-\eta)\lambda} .
+    $$
+\end{example}
+\end{document}

@@ -1,0 +1,657 @@
+\section{Extension to Schreier Graphs}
+In this section, we extend the framework from the Boolean hypercube $\Omega=\{\pm 1\}^n$ to Schreier graphs. This more general setting was also considered in~\cite{ODonnellWimmer13,ODonnellWimmerSharp13,CorderoErausquinLedoux12}, which established a KKL theorem for Schreier graphs given a log-Sobolev constant. Here, we derive an Eldan--Gross inequality in this setting under a slightly stronger assumption.
+
+\subsection{Basic definitions}
+Let $G$ be a group acting on a finite set $X$, and $U$ be a generating set for $G$ that is symmetric, i.e., $U^{-1} = U$. The \emph{Schreier graph} $\Sch(G,X,U)$ is a graph with vertex set $V = X$ and edge set $E = \{(x,gx) \mid x \in X, g \in U\}$. Suppose that $U = \bigcup_{i=1}^n U_i$ where each $U_i$ is symmetric, i.e., $U_i^{-1} = U_i$. We remark that $\{U_i\}$ is not necessarily a partition of $U$. {\color{red} Though, each group element $u \in U$ will appears exactly in $r$ subsets $U_i$ for some $r \ge 1$.}
+
+Schreier graphs encompass a broad range of discrete structures, including product spaces such as $[q]^d$ and slices of the Boolean hypercube such as $\binom{[n]}{k}$.
+\begin{example}\label{example:SGraph}
+    Let $G = X = \Z_m^n$ and $U_i = \{k e_i: k \in [m-1]\}$. The Schreier graph $\Sch(G,X,U)$ is a Hamming graph.
+\end{example}
+
+\begin{example}
+    Let $G = S_n$, $X = \binom{[n]}{k}$ and $U_i = \{(ij) \mid j \in [n] \setminus \{i\}\}$. The Schreier graph $\Sch(G,X,U)$ is the exchange graph on the Boolean slice $\binom{[n]}{k}$, and the corresponding random walk is the standard exchange walk.
+\end{example}
+
+Similar to the Boolean hypercube case, we define the carr\'e du champ operators, and influences as well as surface area of Boolean functions for the Schreier graphs.
+
+\begin{definition}[$\Gamma$-calculus]
+Let $\Sch(G,X,U)$ be a Schreier graph with $U = \bigcup_{i=1}^n U_i$. Given the transition rates $\{q_u: \Omega \to \mathbb{R}_{+}\}_{u \in U}$ and weights $\{w_u: \Omega \to \mathbb{R}_+\}_{u \in U}$, we define the operator $L_w$ and carr\'e du champ operators as follows:
+\begin{itemize}
+    \item The operator $L_w$ on functions $f: X \to \mathbb{R}$ satisfies
+    \begin{align*}
+        L_w f(x) = \sum_{u \in U} w_u(x) q_u(x) (f(x^u) - f(x)),
+    \end{align*}
+    where $x^u = ux$, and we omit the subscript $w$ if $w \equiv 1$.
+    \item For any $f,g : X \to \mathbb{R}$, the carr\'e du champ operator $\Gamma_w$ is defined as
+    \begin{align*}
+        \Gamma_w (f,g) = \frac{1}{2}\tp{L_w (fg) - f L_w g - g L_w f}.
+    \end{align*}
+    By a straightforward calculation,
+    \begin{align*}
+        \Gamma_w(f,g)(x) = \frac{1}{2r} \sum_{i \in [n]} \sum_{u \in U_i} w_u(x) q_u(x) \tp{f(x^u) - f(x)}\tp{g(x^u)-g(x)}.
+    \end{align*}
+    Hence, the operator $\Gamma_{w,i}$ for the $i$-th ``coordinate'' is defined as
+    \begin{align*}
+    \Gamma_{w,i} (f,g) (x) = \frac{1}{2 r}\sum_{u \in U_i} w_u(x) q_u(x) \tp{f(x^u) - f(x)}\tp{g(x^u)-g(x)}.
+    \end{align*}
+\end{itemize}
+\end{definition}
+
+Similar to~\Cref{def:weighted-gradient}, we define the absolute weighted discrete gradient.
+\begin{definition}
+    For any function $f:X \to \R_+$, the absolute weighted discrete gradient is given by
+    \begin{align*}
+        \abs{\nabla_w} f = (\abs{\delta_{w,i}} f)_{i \in [n]}, \quad \text{where $\abs{\delta_{w,i}} f = \sqrt{\Gamma_{w,i}(f)}$}.
+    \end{align*}
+\end{definition}
+
+With above definitions, we are now ready to define the influences and surface area.
+
+
+\begin{definition}
+    Let $f: X \to \mathbb{R}$ be a function.
+
+    \begin{enumerate}[(1)]
+        \item The \textit{total influence} of $f$ is defined as
+        \begin{align*}
+            I_w(f) := \E[\mu]{\Gamma_{w}(f)} = \E[\mu]{\norm{\abs{\nabla_w} f}^2_2}.
+        \end{align*}
+        Also, let $I_{w,i}(f) := \E[\mu]{\Gamma_{w,i}(f)}$ denote the influence of the $i$-th coordinate.
+
+        \item The \textit{(Boolean) surface area} of $f$ is defined as
+        \begin{align*}
+            A_w(f) := \E[\mu]{\sqrt{\Gamma_wf}} = \E[\mu]{\norm{\abs{\nabla_w} f}_2}.
+        \end{align*}
+
+        \item The \textit{total squared influence} of $f$ is defined as
+        \begin{align*}
+            J_{w}(f) := \sum_{i=1}^n \tp{\E[\mu]{\abs{\delta_{w,(i)}} f}}^2 = \norm{\E[\mu]{|\nabla_w| f}}^2_2.
+        \end{align*}
+    \end{enumerate}
+\end{definition}
+
+
+Finally, we define the gradient estimates for Schreier graphs.
+
+\begin{definition}[Gradient estimates]
+    Let $\mu$ be a distribution supported on $X$ and $\{q_u: X \mapsto \R_+\}_{u\in U}$ be transition rates reversible for $\mu$.
+    Suppose $\{w_u:\Omega \to \R_+\}_{u\in U}$ is a collection of weight functions. 
+    \begin{itemize}
+        \item We say that the \emph{Weak Gradient Estimate (WGE)} holds with constant $\rho_{\WGE} > 0$ if for any function $f:\Omega \to \R$ and $t\geq 0$, 
+        \begin{align}\label{eq:WGE-2}
+            \Gamma_w(P_t f) \leq e^{-2\rho_{\WGE} t} P_t(\Gamma_w(f)) \quad\iff\quad \norm{\abs{\nabla_w} P_t f}^2_2 \leq e^{-2\rho_{\WGE} t} P_t(\norm{\abs{\nabla_w} f}^2_2); \tag{WGE}
+        \end{align}
+        \item We say that the \emph{Strong Gradient Estimate (SGE)} holds with constant $\rho_{\SGE} > 0$ if for any function $f: \Omega \to \R$ and $t\geq 0$, 
+        \begin{align}\label{eq:SGE-2}
+            \sqrt{\Gamma_w(P_t f)} \leq e^{-\rho_{\SGE} t} P_t  \sqrt{\Gamma_w(f)} \quad\iff\quad \norm{\abs{\nabla_w} P_t f}_2 \leq e^{-\rho_{\SGE} t} P_t(\norm{\abs{\nabla_w} f}_2); \tag{SGE}
+        \end{align}
+        \item  We say that the \emph{Coordinate-wise Strong Gradient Estimate (CSGE)} holds with constant $\rho_{\CSGE} > 0$ if for any $\tau \in [0,\infty]$, any function $f: \Omega \to \R$, and $t\geq 0$, 
+        \begin{align}\label{eq:CSGE-2}
+            \norm{P_\tau \abs{\nabla_w}P_t f}_2 \leq e^{-\rho_{\CSGE} t}\norm{P_{\tau+t} \abs{\nabla_w}f}_2. \tag{CSGE}
+        \end{align}
+    \end{itemize}
+\end{definition}
+
+
+% \subsection{Basic definitions: Gammas, BE, Gradient estimates, etc.}
+% Let $\Sch(G,X,U)$ denote a Schreier graph where $U$ is a generating set for $G$ that is symmetric, i.e., $U^{-1} = U$.
+
+% Suppose that
+% \begin{align*}
+%     U = \bigcup_{i=1}^n U_i
+% \end{align*}
+% where each $U_i$ is symmetric, i.e., $U_i^{-1} = U_i$.
+% We remark that $\{U_i\}$ is not necessarily a partition of $U$.
+
+
+% \begin{example}\label{example:SGraph}
+%     \begin{itemize}
+%         \item $X = G = \Z_m^n$ and $U_i = \{k e_i: k \in [m-1] \}$. ($r=1$) 
+
+%         \item $X = \binom{[n]}{k}$, $G = S_n$, and $U_i = \{(ij): j \in [n]\setminus\{i\}\}$. ($r=2$)
+%     \end{itemize}
+% \end{example}
+
+% \bigskip
+
+% \paragraph{Key definitions:}
+% \begin{itemize}
+%     \item 
+%     \begin{align*}
+%         \Gamma_{w,i}f(x) := \frac 12 \sum_{u \in U_i} w_u(x)q_u(x)(f(x^u) - f(x))^2.
+%     \end{align*}
+
+%     \item 
+%     \begin{align*}
+%         \Gamma_w f = \frac{1}{r} \sum_{i=1}^n \Gamma_{w,i} f
+%         = \frac 12 \sum_{u \in U} w_u(x)q_u(x)(f(x^u) - f(x))^2.
+%     \end{align*}
+
+%     \item 
+%     \begin{align*}
+%         I_w(f) := \E[\mu]{\Gamma_{w}(f)}.
+%     \end{align*}
+
+%     \item 
+%     \begin{align*}
+%         A_w(f) := \E[\mu]{\sqrt{\Gamma_wf}}.
+%     \end{align*}
+
+%     \item 
+%     \begin{align*}
+%         J_{w}(f) := \frac{1}{r} \sum_{i=1}^n \tp{\E[\mu]{\sqrt{\Gamma_{w,i} f}}}^2.
+%     \end{align*}
+
+%     \item 
+%         \begin{align}%\label{eq:WGE}
+%             \Gamma_w P_t f \leq e^{-2\rho_{\mathrm{GE}} t} P_t \Gamma_w f \tag{WGE}
+%         \end{align}
+%         \item 
+%         \begin{align}%\label{eq:SGE}
+%             \sqrt{\Gamma_w P_t f} \leq e^{-\rho_{\mathrm{SGE}} t} P_t  \sqrt{\Gamma_w f}  \tag{SGE}
+%         \end{align}
+%         \item 
+%         \begin{align}%\label{eq:CSGE}
+%             \sum_{i=1}^n \left( P_\tau \sqrt{\Gamma_{w,i} P_t f} \right)^2 \leq e^{-2\rho_{\mathrm{CSGE}} t} \sum_{i=1}^n \left( P_{\tau+t} \sqrt{\Gamma_{w,i} f} \right)^2 \tag{CSGE($\tau$)}
+%         \end{align}
+% \end{itemize}
+
+\subsection{Isoperimetric inequalities via gradient estimates}\label{sec:SGraph_iso_ineq}
+
+In this section, we extend the isoperimetric inequalities from~\Cref{sec:Bool} to Schreier graphs. With the exception of Bobkov's inequality, the proofs do not rely on the explicit form of the operator $L_w$ and therefore carry over directly to this setting. We thus only prove Bobkov's inequality from scratch and state the remaining results without proof.
+
+\begin{theorem}[Bobkov inequality]\label{lem:local_bobkov-sch}
+    Let $\Sch(G,X,U)$ be a connected Schreier graph. Let $\mu$ be a distribution supported on $X$ and $\{q_u: X \to \R_+\}_{u \in U}$ be transition rates reversible for $\mu$. 
+    Assume $\{w_u:X \to \R_+\}_{u\in U}$ is a collection of weight functions that are $b$-bounded for some $b \in (0,1]$. 
+    
+    If the strong gradient estimate holds with constant $\rho > 0$,
+    then, for any $f:X \to [0,1]$ and $t\geq 0$, it holds
+    \begin{align}\label{eq:local_bobkov-sch}
+        \+I(P_t f)\leq P_t\tp{\sqrt{\+I(f)^2 + \gamma(t) \Gamma_w(f)}},
+    \end{align}
+    where $\gamma(t) = \frac{2(1-e^{-2\rho t})}{b \rho}$ and $\+I:[0,1] \to \R$ denotes the Gaussian isoperimetric function.
+
+    In particular, by taking $t \to +\infty$ on both sides, it holds
+    \begin{align*}
+        \+I(\E[\mu]{f}) \le \E[\mu]{\sqrt{I(f)^2 + \frac{2}{b \rho} \Gamma_w(f)}}.
+    \end{align*}
+    % \ZC{In particular, ...(add the version with $t = \infty$)
+    % }
+\end{theorem}
+
+\begin{proof}
+    Fix $f : \Omega \to [0,1]$ and $t \ge 0$.
+    By applying the argument to $f_\varepsilon:=\varepsilon+(1-2\varepsilon)f$, where $0<\varepsilon<1/2$, and then letting $\varepsilon\downarrow0$, we may assume that $f$ takes values in $(0,1)$.
+    Following a similar argument in~\Cref{lem:local_bobkov}, it only remains to show
+    \begin{align}\label{eq:dPsi-7-sch}
+        L \+I^2(P_{t-s} f) - 2 \+I(P_{t-s} f) \+I'(P_{t-s} f) P_{t-s} L f+ \frac{4}{b}\Gamma_w(P_{t-s} f) - 2 \Gamma(\+I(P_{t-s} f)) \ge 0.
+    \end{align}
+    By definition of $L$ and $\Gamma_w$, the left-hand-side of the above inequality satisfies
+    \begin{align*}
+    \text{LHS of~\eqref{eq:dPsi-7-sch}}(x) &= \sum_{i=1}^n \sum_{u \in U_i} q_u(x) \tp{\+I^2(P_{t-s} f)(x^u) - \+I^2(P_{t-s} f)(x)}\\
+    &- 2 \sum_{i=1}^n \sum_{u \in U_i} q_u(x) \+I(P_{t-s} f)(x) \+I'(P_{t-s} f)(x) ((P_{t-s} f)(x^u) - P_{t-s}(f)(x))\\
+    &+ \frac{2}{b}\sum_{i=1}^n \sum_{u \in U_i} q_u(x) w_u(x) \tp{P_{t-s} f(x^u) - P_{t-s} f(x)}^2\\
+    &-\sum_{i=1}^n \sum_{u \in U_i} q_u(x) (\+I(P_{t-s} f)(x^u) - \+I(P_{t-s} f)(x))^2,
+    \end{align*}
+    which is non-negative by $w_u(x) \ge b$ and
+    \begin{align*}
+        \+I(x)\tp{\+I(y) - \+I(x) - \+I'(x)(y-x)} + (y-x)^2 \ge 0,
+    \end{align*}
+    for all $x,y \in (0,1)$.
+\end{proof}
+
+\begin{theorem}[$L^1$--$L^2$ Talagrand inequality]\label{lem:l1_l2_talagrand_sch}
+     Let $\Sch(G,X,U)$ be a connected Schreier graph.
+     Let $\mu$ be a distribution supported on $X$ and $\{q_u: X \mapsto \R_+\}_{u \in U}$ be transition rates reversible for $\mu$.
+    Assume~\eqref{eq:0-CSGE} holds with constant $\rho_{\CSGE} > 0$, and $\{w_u:\Omega \to \mathbb{R}_+\}_{u \in U}$ is a collection of weight functions that are $b$-bounded for some $b \in (0,1]$. Furthermore, suppose the log-Sobolev inequality holds for constant $\rho_{\LSI} > 0$.
+    The following inequality holds for any $f:X \to \R$:
+    \begin{align}\label{eq:l1_l2_talagrand_2_sch}
+        \Var[\mu]{f} \leq C_1(b,\rho_{\LSI},\rho_{\CSGE}) \cdot \sum_{i=1}^n \frac{I_{w,i} (f)}{1 + \log\tp{\sqrt{I_{w,i}(f)} / \E[\mu]{\abs{\delta_{w,i}} f}}}.
+    \end{align}
+    A summand is interpreted as zero when $I_{w,i}(f)=0$.
+    Furthermore, we have that
+    \begin{align}\label{eq:l1_l2_talagrand_3_sch}
+        I(f) \geq C_2(b,\rho_{\LSI},\rho_{\CSGE})\cdot \Var[\mu]{f}\tp{1 + \log \frac{I_w(f)}{J_w(f)}} .
+    \end{align}
+\end{theorem}
+
+\begin{theorem}[Eldan--Gross inequality]\label{thm:eldan_gross_sch}
+      Let $\Sch(G,X,U)$ be a connected Schreier graph.
+     Let $\mu$ be a distribution supported on $X$ and $\{q_u: \Omega \mapsto \R_+\}_{u\in[n]}$ be transition rates reversible for $\mu$.
+    Assume both~\eqref{eq:0-CSGE} and~\eqref{eq:infty-CSGE} holds with constant $\rho_{\CSGE} > 0$, and $\{w_i:X \to \mathbb{R}_+\}_{i \in [n]}$ is a collection of weight functions that are $b$-bounded for some $b \in (0,1]$. Furthermore, suppose the log-Sobolev inequality holds for constant $\rho_{\LSI} > 0$.
+    For any Boolean function $f:X \to \{\pm 1\}$, it holds
+   \begin{align}\label{eq:eldan_gross-sch}
+        A_w(f) %\E[\mu]{\norm{\nabla_w f}_2}
+        \geq C(\rho_{\LSI},\rho_{\CSGE},b) \cdot \Var[\mu]{f}\sqrt{\log\tp{1 + \frac e{J_w(f)}}}.
+   \end{align}
+
+\end{theorem}
+
+\subsection{Establishing CSGE}
+Similar to the Boolean hypercube case, we also define the canonical transition rates and weights for Schreier graphs as follows,
+\begin{equation}\label{eq:canonical_SGraph}
+    \forall u\in U, x\in X, q_u^\star(x) = \frac 1{2}\sqrt{\frac{\mu(x^u)}{\mu(x)}}\quad \text{and}\quad w_u^\star(x) = 2q_u^\star(x) = \sqrt{\frac{\mu(x^u)}{\mu(x)}}.
+\end{equation}
+Under the canonical transition rates and weights the associated semigroup is reverseible with respect to $\mu$ and in most cases, providing easy forms of gradients and weighted carr\'e du champ operators.
+We introduce the following notations for the canonical transition rates and weights,
+$$
+    \delta^\star_u f(x) = \frac{q_u^\star(x)}{\sqrt r}(f(x^u) - f(x)), 
+    \quad \grad_i^\star f(x) = (\delta^\star_u f(x))_{u\in U_i};
+$$
+$$
+    \quad \abs{\delta^\star_i} f(x) = \norm{\grad_i^\star f(x)}_2,
+    \quad \abs{\nabla^\star} f(x) = (\abs{\delta_i^\star} f(x))_{i\in[n]};
+$$
+$$
+    \Gamma_i^\star f(x) = \Gamma_{w^\star,i} f(x)=  \sum_{u\in U_i} \delta_u^\star f(x)^2, \quad L f = \sqrt r\sum_{u\in U} \delta^\star_u f.
+$$
+Here we follow the notation in \Cref{sec:CSGE_boolean_hypercube} and superscript $\star$ to denote operators associated with canonical transition rates and weights.
+
+We define $I(u) := \{i\in [n]\mid u\in U_i\}$ to be the indices of conjugacy classes to which the operator $u$ belongs and $N(S) :=  \{u\in U\mid \exists v\in S, I(u)\cap I(v) \neq \emptyset\}$ to be operators that are incident to $S$.
+We interpret $I(u)$ as the set of indices that can be influenced by $u$.
+Accordingly, one natural commutativity assumption about the operators is that,
+\begin{equation}\label{eq:commutativity_assumption_CSGE}
+    \forall u,v\in U, x\in X, I(u)\cap I(v) = \emptyset \implies x^{uv} = x^{vu},
+\end{equation}
+where we use $x^{uv}$ to denote $(x^u)^v$.
+Under this assumption, we have the similar square property for distribution $\mu$ over Schreier graphs.
+\begin{fact}\label{fact:square_property_SGraph}
+    Suppose \Cref{eq:commutativity_assumption_CSGE} holds for Schreier graph $(G,X,U)$.
+    For any $u,v\in U$ with $I(u)\cap I(v) = \emptyset$, we have that
+    $$
+        q_u^\star(x)q_v^\star(x^u) = q_v^\star(x)q_u^\star(x^v).
+    $$
+    holds for any $x\in X$.
+\end{fact}
+
+
+In this section, we generalize the sufficient condition of CSGE from boolean hyperbube to Schreier graphs.
+By decomposing the relevant quantity into the local curvature term and other influence terms, we can derive a matrix-based upper bound for CSGE.
+As in the Boolean hypercube setting, with the canonical transition rates and weights, the matrix can be entry-wisely upper bounded by Dobrushin influence matrix and marginal bounds.
+In the more general Schreier graph setting, however, an additional lower bound on the local curvature is required.
+\begin{theorem}\label{thm:SGraph_CSGE_general}
+Suppose \Cref{eq:commutativity_assumption_CSGE} holds for Schreier graph $(G,X,U)$.
+Let $\mu$ be a distribution on $X$ with full support. 
+Let $M^\star,D^\star,D^\star_{\-{loc}}\in \R^{n \times n}$ be matrix fields satisfying that
+\begin{equation}\label{eq:def_M_star_Sgraph}
+    M^\star := \tp{\sup_x\norm{\tp{\frac{\ind[v\notin N(U_i)]}{2r}\tp{\sqrt{\frac{\mu(x^{uv})}{\mu(x^v)}}-\sqrt{\frac{\mu(x^u)}{\mu(x)}}}}_{u\in U_i, v\in U_j}}_2}_{i,j\in[n]};
+\end{equation}
+\begin{equation}\label{eq:def_D_star_Sgraph}
+    D^\star := \diag\left\{\inf_{x\in X,u\in U_i} \frac {1}{2}\sum_{v\in U\setminus N(U_i)} \tp{\sqrt{\frac{\mu(x^{uv})}{\mu(x^u)}} - \sqrt{\frac{\mu(x^v)}{\mu(x)}}}\right\}_{i\in[n]}.
+\end{equation}
+\begin{equation}\label{eq:def_D_star_loc_Sgraph}
+    D^\star_{\-{loc}} := \diag\left\{\inf_{f,x} \frac{\tp{\sqrt{\Gamma_i^\star f}L_{N(U_i)}\sqrt{\Gamma_i^\star f} - \Gamma_i^\star(f,L_{N(U_i)}f)}(x)}{\Gamma_{i}^\star f (x)} \right\}_{i\in[n]} \quad\text{where}\quad L_S(f) = \sqrt r\sum_{u\in S} \delta_u^\star f.
+\end{equation}
+Then, under the canonical transition rates and weights, for any $\tau \in \R_+$, \ref{eq:CSGE-2} holds with constant
+\begin{align*}
+    \rho =
+    \lambda_{\min}\left( D_{\-{loc}}^\star + D^\star - \frac{1}{2}\left( M^\star + (M^\star)^\top \right) \right),
+\end{align*}
+where $\lambda_{\min}(A)$ denotes the minimum eigenvalue of a symmetric matrix $A$.
+\end{theorem}
+
+We first prove the following lemma, which provides a lower bound for the commutator-type term arising in the proof.
+\begin{lemma}\label{lem:abs-commutator-Sgraph}
+    Suppose \Cref{eq:commutativity_assumption_CSGE} holds for Schreier graph $(G,X,U)$.
+    Let $M^\star,D^\star,D^\star_{\-{loc}}$ be matrix fields defined in \Cref{thm:SGraph_CSGE_general}.
+    For any function $g: X \to \R$, it holds that for any $i\in [n]$,
+    \begin{align*}
+        L \abs{\delta^\star_i} g -  \frac{\inner{\grad_i^\star g}{\grad_i^\star L g}}{\abs{\delta^\star_i} g} \geq ((D^\star_{\-{loc}})_{ii}+D^\star_{ii})\abs{\delta_i^\star} g - \sum_{j\neq i} M^\star_{ij} \abs{\delta_j^\star} g 
+    \end{align*}
+\end{lemma}
+\begin{proof}[Proof of \Cref{lem:abs-commutator-Sgraph}]
+    Fix $i\in [n]$.
+    Recall that the definition of $D_{\-{loc}}^\star$ in \Cref{eq:def_D_star_loc_Sgraph} derives
+    \begin{equation}\label{eq:local_term_Sgraph}
+        \abs{\delta_i^\star} g\cdot L_{N(U_i)} \abs{\delta_i^\star} g - \inner{\nabla_i^\star g}{\nabla^\star_i L_{N(U_i)}g} \geq (D_{\-{loc}}^\star)_{ii}\cdot(\abs{\delta_i^\star} g)^2.
+    \end{equation}
+    Let $Q = U\setminus N(U_i)$.
+    It is sufficient to lower bound the non-local term $\abs{\delta_i^\star} g\cdot L_{Q} \abs{\delta_i^\star} g - \inner{\nabla_i^\star g}{\nabla^\star_i L_Qg}$.
+    
+    For notational convenience, we occasionally omit the dependence on $x$.
+    Define $H_{uv}(x) = \frac{q_u^\star(x^v)}{q_u^\star(x)}$.
+    By \Cref{fact:square_property_SGraph}, for any $u,v\in U$ with $I(u)\cap I(v) = \emptyset$, $H_{uv}(x) = H_{vu}(x)$ holds.
+    Fix $u,v\in U$ with $I(u)\cap I(v) = \emptyset$ and $x\in X$, since $x^{uv} = x^{vu}$ and $H_{uv}(x) = H_{vu}(x)$, we have that
+    \begin{align}
+        (\delta_v^\star \delta_u^\star - \delta_u^\star \delta_v^\star)g &= \frac{q_v^\star q_u^\star}{r}\tp{H_{uv}(g(x^{uv}) - g(x^v)) - (g(x^u)-g(x))} \nonumber
+        \\&-\frac{q_v^\star q_u^\star}{r}\tp{H_{vu}(g(x^{vu}) - g(x^u)) - (g(x^v)-g(x))} \nonumber
+        \\&= \frac{q_v^\star q_u^\star}{r}(H_{uv}-1)(g(x^u) - g(x^v)) \nonumber
+        \\&= \frac{H_{uv}-1}{\sqrt r}(q_v^\star \delta_u^\star - q_u^\star  \delta_v^\star) g. \label{eq:commutator-SGraph}
+    \end{align}
+    Let $Q = U\setminus N(U_i)$.
+    Hence, we have that for any $v\in Q$,
+    \begin{align}
+        |\delta_i^\star| g \cdot \delta_v^\star |\delta_i^\star| g - \inner{\nabla_i^\star g}{\nabla_i^\star \delta_v^\star g}
+        &= \frac{q_v^\star}{\sqrt r} (|\delta_i^\star| g\cdot  |\delta_i^\star| g(x^v) - \inner{\nabla_i^\star g}{\nabla_i^\star g(x^v)}) \nonumber
+        \\&- \inner{\grad_i^\star g}{\grad_i^\star \delta_v g  + \frac{q_v^\star}{\sqrt r}(\grad_i^\star g - \grad_i^\star g(x^v))} \nonumber
+        \\&\geq \sum_{u\in U_i} \delta_u^\star g \cdot \tp{\delta_v^\star \delta_u^\star - \delta_u^\star \delta_v^\star} g  \nonumber
+        \\&\geq \frac 1{\sqrt r}\sum_{u\in U_i} \delta^\star_u g \cdot (H_{uv}-1)(q_v^\star \delta_u^\star - q_u^\star  \delta_v^\star) g,
+    \end{align}
+    where the first inequality follows from Cauchy-Schwarz inequality and the secound inequality follows from \Cref{eq:commutator-SGraph}.
+    Now it is sufficient to lower bound 
+    \begin{align}
+        &\abs{\delta^\star_i} g\cdot L_Q \abs{\delta^\star_i} g -  \inner{\grad_i^\star g}{\grad_i^\star L_Q g} \nonumber
+        \\\geq &\sum_{v\in Q}\sum_{u\in U_i} \delta^\star_u g \cdot (H_{uv}-1)\tp{q_v^\star \delta_u^\star g - q_u^\star  \delta_v^\star g} \nonumber
+        \\\geq & D^\star_{ii}(\abs{\delta_i^\star} g)^2 - \frac{1}{r}\sum_{j\neq i}\sum_{v\in U_j}\sum_{u\in U_i}\ind[v\notin N(U_i)](q_u^\star(x^v)-q_u^\star) \delta^\star_u g \cdot \delta^\star_v g \nonumber
+        \\\geq &D^\star_{ii}(\abs{\delta_i^\star} g)^2 - \sum_{j\neq i} M^\star_{ij} \abs{\delta_i^\star} g\cdot \abs{\delta_j^\star} g , \label{eq:non-local_term_Sgraph}
+    \end{align}
+    where $D^\star$ and $M^\star$ are define in \Cref{eq:def_D_star_Sgraph,eq:def_M_star_Sgraph} respectively.
+    We conclude this lemma by \Cref{eq:local_term_Sgraph,eq:non-local_term_Sgraph}.
+\end{proof}
+
+Now we prove \Cref{thm:SGraph_CSGE_general}.
+\begin{proof}[Proof of \Cref{thm:SGraph_CSGE_general}]
+    Fix $f: X \to \R$ and $\tau, t\geq 0$.
+    In the same way as in the proof of \Cref{thm:CSGE_boolean_hypercube_w=q}, it is sufficient to prove that $\frac d{ds}F_s \geq 0$ for any $s\in [0,t]$, where $F_s := e^{-2\rho s}\norm{P_{\tau+s}\abs{\nabla^\star}P_{t-s}f}_2^2$.
+
+    Fix $s\in [0,t]$ and let $g = P_{t-s}f$.
+    We have the following equation for the derivative of $F_s$,
+    \begin{align}
+        \frac d{ds} F_s &= 2 e^{-2\rho s} \left( - \rho \norm{P_{\tau+s} |\grad^\star| g}_2^2 
+        + \inner{P_{\tau+s} |\grad^\star| g}{\frac{d}{ds} P_{\tau+s} |\grad^\star| g}
+        \right) ;
+        \label{eq:CSGE_potential_function_derivative-SGraph}
+    \end{align}
+    \begin{align}\nonumber
+        \frac d{ds} P_{\tau+s} |\delta^\star_i| g
+        &= P_{\tau+s} \left( L \abs{\delta^\star_i} g -  \frac{\inner{\grad_i^\star g}{\grad_i^\star L g}}{\abs{\delta^\star_i} g}\right).
+    \end{align}
+    By \Cref{lem:abs-commutator-Sgraph} and symmetry, we have that 
+    \begin{align}
+    \label{eq:derivative-CSGE-Sgraph}
+        \frac d{ds} P_{\tau+s} |\delta^\star_i| g
+        &\geq (D^\star_{\-{loc}}+D^\star - \frac{M^\star + (M^\star)^\top}2)P_{\tau+s}\abs{\nabla^\star}g .
+    \end{align}
+    Therefore, \Cref{eq:CSGE_potential_function_derivative-SGraph,eq:derivative-CSGE-Sgraph} shows that
+    $$
+        \frac d{ds} F_s \geq 2 e^{-2\rho s} (P_{\tau+s}\abs{\nabla^\star}g)^\top  (D^\star_{\-{loc}}+D^\star - \frac{M^\star + (M^\star)^\top}2 - \rho I)(P_{\tau+s}\abs{\nabla^\star}g) .
+    $$
+    Therefore, the coordinate-wise strong gradient estimate (\ref{eq:CSGE-2}) holds with constant $\rho \leq \lambda_{\min}(D_{\-{loc}}^\star+D^\star - \frac{1}{2}(M^\star+(M^\star)^\top))$ at all $x \in X$.
+\end{proof}
+
+
+\subsection{Application to $k$-slice}
+In this section, we take the uniform distribution over $k$-slice as an example and derive isopermetric inequalites under canonical transition rates and weights through the log-concavity and \ref{eq:CSGE-2} condition.
+% By \cref{thm:SGraph_CSGE_general} we have the following lemma for $k$-slice.
+\begin{example}[uniform distribution on $\binom{[n]}k$]\label{example:CSGE_uniform_k_slice}
+    If $\mu$ is the uniform distribution, then $M^\star = D^\star = \*0$ and $q=\frac 12, w=1$.
+    Since for any $u\in U$ and $x\in \binom{[n]}k$,
+    \begin{align*}
+        2\sqrt 2 \cdot \delta_u^\star L f(x) = Lf(x^u) - Lf(x) &= 
+        -Lf(x) + \frac 12\sum_{u^{-1}vu \in U}f(x^{uu^{-1}vu})-f(x^u)
+        \\&= -Lf(x) + \frac 12\sum_{v \in U}f(x^{vu})-f(x^u) = 2\sqrt 2 \cdot L\delta_u^\star f(x),
+    \end{align*}
+    we conclude that
+    \begin{align*}
+        2\Gamma_{i}^\star(f,Lf)(x) &= \sum_{u\in U_i}\delta_u^\star f(x) \delta_u^\star Lf(x)
+        = \sum_{u\in U_i}\delta_u^\star f(x) L\delta_u^\star f(x)
+        \\&= \sum_{v\in U}\tp{\inner{\nabla_i^\star f(x)}{\nabla_i^\star f(x^v)} - \norm{\nabla_i^\star f(x)}_2^2}.
+    \end{align*}
+    Therefore, we have that for any $x\in \binom{[n]}k$ and $i\in[n]$,
+    \begin{align*}
+        \frac{\sqrt{\Gamma_i^\star f(x)}L\sqrt{\Gamma_i^\star f}(x) - \Gamma_i^\star(f,Lf)(x)}{\Gamma_i^\star f(x)}
+        &= \sum_{v\in U}\frac{\norm{\nabla_i^\star f(x^v)}_2\norm{\nabla_i^\star f(x)}_2 - \inner{\nabla_i^\star f(x)}{\nabla_i^\star f(x^v)}}{\norm{\nabla_i^\star f(x)}_2^2}
+        \\&\geq \sum_{v\in U_i}\frac{\norm{\nabla_i^\star f(x^v)}_2\norm{\nabla_i^\star f(x)}_2 - \inner{\nabla_i^\star f(x)}{\nabla_i^\star f(x^v)}}{\norm{\nabla_i^\star f(x)}_2^2}
+        \\&\geq \sum_{v\in U_i}\frac{2(\delta_v^\star f(x))^2}{\norm{\nabla_i^\star f(x)}_2^2} = 2,
+    \end{align*}
+    where the last inequality follows from $\delta_u^\star f(x^u) = -\delta_u^\star f(x)$ and Cauchy-Schwarz inequality.
+    Hence, $2\leq \lambda_{\min}(D^\star_{\-{loc}} + D^\star - \frac{M^\star+(M^\star)^\top}{2})$ and the CSGE constant is $2$.
+\end{example}
+\begin{theorem}[\cite{lee1998logarithmic}]
+    The log-Sobolev constant of unidform distribution and Schreier graph on $\binom{[n]}{k}$ is as follows,
+    $$
+        \rho = \Theta\tp{\frac n{\log(1/\nu(k))}},
+    $$
+    where $\nu(k) = \nu(n-k) = k(n-k)/\binom{n}2$.
+\end{theorem}
+Plugging the above example and \ref{eq:LSI} into \cref{thm:SGraph_CSGE_general} and \cref{sec:SGraph_iso_ineq} respectively, we conclude the isoperimetric inequalities for uniform distribution on $k$ slices.
+\begin{theorem}\label{thm:k_slice_isoperimetric}
+    Let $\mu$ be the uniform distribution over $\binom{[n]}k$.
+    Suppose the transition rates and weights are the canonical transition rates and weights we define in \eqref{eq:canonical_SGraph}.
+    Then the local Bobkov inequality \eqref{eq:}, the $L^1-L^2$ Talagrand inequality \eqref{eq:}, the KKL inequality \eqref{eq:} and the Eldan-Gross inequality \eqref{eq:} holds with constant depending on $k$.
+\end{theorem}
+
+
+\subsection{Application to hypergrid}
+% \begin{lemma}[CSGE distributions on hypergrid {$[m]^n$}]
+%     Let the Scherier graph be Hamming graph we defined in \Cref{example:SGraph}.
+%     Take transition rate and weight to be the canonical transition rates and weights we define in \eqref{eq:canonical_SGraph}.
+%     Then CSGE condition holds ($\rho > 0$) if $\norm{K := C^{-1/2} (A+\frac{B+B^\top}{2}) C^{-1/2}}_2 < 1$ where
+%     $$
+%         A := \diag\left\{\sup_{x,k_1\in [Q-1]} \sum_{j\neq i}\sum_{k_2\in [Q-1]}\abs{\sqrt{\frac{\mu(x^{k_2e_j})}{\mu(x)}}-\sqrt{\frac{\mu(x^{k_1e_i,k_2e_j})}{\mu(x^{k_1e_i})}}}\right\}_{i\in[n]},
+%     $$
+%     $$
+%         B := \tp{\ind[i\neq j]\sup_x\norm{\tp{\abs{\sqrt{\frac{\mu(x^{k_1e_i})}{\mu(x)}}-\sqrt{\frac{\mu(x^{k_1e_i,k_2e_j})}{\mu(x^{k_2e_j})}}}}_{k_1,k_2\in [m-1]}}_2}_{i,j\in[n]},
+%     $$
+%     $$
+%         C := \diag\left\{\inf_{f,x} \frac{\sqrt{\Gamma_{w,i}f}L_{U_i}\sqrt{\Gamma_{w,i}f} - \Gamma_{w,i}(f,L_{U_i}f)}{\Gamma_{w,i} f} \right\}_{i\in[n]}.
+%     $$
+% \end{lemma}
+% \begin{remark}
+%     For each $i\in[n]$, the diagonal entry $C_{ii}$ coincides with the reinforced Bakry--Émery condition \eqref{eq:rBE} at the coordinate $i$.
+% \end{remark}
+
+Similarly in \Cref{sec:CSGE_boolean_hypercube}, we can upper bound matrix $M^\star$ and $D^\star$ by marginal bounds and Dobrushin matrix we defiened in \Cref{def:}.
+
+\begin{lemma}\label{lem:hyper_grid_Dobrushin_to_AB_in_CSGE}
+    Suppose the Scherier graph is the Hamming graph and the transition rates and weights are the canonical transition rates and weights we define in \eqref{eq:canonical_SGraph}.
+    If $w_u(x)^\star \in [b,1/b]$ for $x\in X$ and $u\in U$, then
+    we have that
+    $$
+        D^\star \geq_{\-{ew}}-\frac{(m+2b)(b^2+m-1)}{4b^3}\cdot  \diag\{R^\top \*1\}
+        \qquad \text{and} \qquad M^\star \leq_{\-{ew}}\frac{(m-1)(b^2+m-1)(b+1)}{4b^3} \cdot R .
+    $$
+\end{lemma}
+\begin{proof}
+    Fix $x\in X$, $i\neq j$ and $k_1\in [m-1]$.
+    WLOG, assume $x_i = 0$.
+    Let $\alpha$ be the marginal distribution $\mu_j(\cdot\mid x_{-j})$, that is, $\alpha_k = \mu(X_j = k\mid X_{-j}=x_{-j})$.
+    In the same way, let $\beta$ be the marginal distribution of $\mu_j(\cdot\mid x_{-j}^{k_1 e_i})$.
+    The marginal lower bound is as follows,
+    $$
+        \forall k\in \{0\}\cup [m-1], \min\{\beta_k,\alpha_k\} \geq \frac{1}{1 + (m-1)/b^2}.
+    $$
+    Therefore, for any $k_2\in [m-1]$,
+    \begin{align}
+        2\abs{q_{k_2 e_j}^\star(x) - q_{k_2 e_j}^\star(x^{k_1 e_i})}
+        &= \abs{\sqrt{\frac{\alpha_{k_2}}{\alpha_0}} - \sqrt{\frac{\beta_{k_2}}{\beta_0}}} 
+        \leq \abs{\sqrt{\frac{\alpha_{k_2}}{\alpha_0}} - \sqrt{\frac{\beta_{k_2}}{\alpha_0}}} + \abs{\sqrt{\frac{\beta_{k_2}}{\alpha_0}} - \sqrt{\frac{\beta_{k_2}}{\beta_0}}} \nonumber
+        \\&\leq \frac{\abs{\alpha_{k_2} - \beta_{k_2}}}{\sqrt{\alpha_{0}\alpha_{k_2}}+\sqrt{\alpha_0\beta_{k_2}}} + \sqrt{\frac{\beta_{k_2}}{\beta_0}}\frac{\abs{\alpha_0 - \beta_0}}{\alpha_0 + \sqrt{\alpha_0\beta_0}} \nonumber
+        \\&\leq \frac{b^2+m-1}{2b^2}\abs{\alpha_{k_2} - \beta_{k_2}} + \frac{b^2+m-1}{2b^3}\abs{\alpha_0 - \beta_0} , \label{eq:Dobrushin_upper_bound_AB}
+    \end{align}
+    where the last inequality follows from the marginal bounds.
+    Note that in Hamming graph, 
+    $$
+        \forall i\in[n], D^\star_{ii} = \inf_{x\in X, k_1\in [m-1]} \sum_{j\neq i}\sum_{k_2\in [m-1]}(q_{k_2 e_j}(x^{k_1 e_i}) - q_{k_2 e_j}(x)).
+    $$
+    Therefore, given $x,k_1$, we have that by \Cref{eq:Dobrushin_upper_bound_AB},
+    \begin{align*}
+        \sum_{j\neq i}\sum_{k_2}\abs{q_{k_2 e_j}(x) - q_{k_2 e_j}(x^{k_1 e_i})}
+        \leq \frac 12\sum_{j\neq i} \tp{\frac{b^2+m-1}{b^2} + \frac{m(b^2+m-1)}{2b^3}}\TV{\mu(\cdot\mid x_{-j})}{\mu(\cdot\mid x_{-j}^{k_1 e_i})}.
+    \end{align*}
+    This implies that $D^\star \geq_{\-{ew}} -\frac{(m+2b)(b^2+m-1)}{4b^3}\diag\{R^\top \*1\}$.
+    On the other hand, \Cref{eq:Dobrushin_upper_bound_AB} shows that
+    for any $x \in X$,
+    $$
+        \tp{\abs{\sqrt{\frac{\mu(x^{k_1e_i})}{\mu(x)}}-\sqrt{\frac{\mu(x^{k_1e_i,k_2e_j})}{\mu(x^{k_2e_j})}}}}_{k_1,k_2\in [m-1]} \leq_{\-{ew}} \frac{(b^2+m-1)(b+1)}{2b^3}\cdot R_{ij} J,
+    $$
+    where $J$ is the all one matrix.
+    Hence, $M^\star \leq_{\-{ew}} \frac{(m-1)(b^2+m-1)(b+1)}{4b^3} \cdot R$.
+\end{proof}
+
+\begin{lemma}[Local curvature lower bound]\label{lem:local_curvature}
+    Suppose the Scherier graph is the Hamming graph and the transition rates and weights are the canonical transition rates and weights we define in \eqref{eq:canonical_SGraph}.
+    If $w_u(x)^\star \in [b,1/b]$ for $x\in X$ and $u\in U$, then we have that
+    $$
+        \inf_{f,x} \frac{\sqrt{\Gamma_{w,i}f}L_{U_i}\sqrt{\Gamma_{w,i}f} - \Gamma_{w,i}(f,L_{U_i}f)}{\Gamma_{w,i} f} \geq b(\sqrt{m-1}+1)-(m-1)(\frac 1b-b).
+    $$
+\end{lemma}
+\begin{proof}
+    Fix $i\in[n]$ and $f\in \R^\Omega$.
+    We use $q_{k} = q_{k e_i}$ to simplify the notation.
+    Also, we omit $(x)$ for simplicity.
+    Let $d_k = f(x^{k e_i}) - f(x)$.
+    For the first part $\sqrt{\Gamma_{w,i} f}L_{U_i}\sqrt{\Gamma_{w,i} f}$, we have the following,
+    \begin{align}
+        \sum_{k=1}^{m-1} q_k\sqrt{\frac{\Gamma_{w,i} f(x^k)}{\Gamma_{w,i}f}} 
+        &= \sum_{k=1}^{m-1}q_k\sqrt{\frac{\sum_{\ell = 1}^{m-1}q_\ell(x^k)^2(f(x^{(k+\ell)e_i}) - f(x^{k e_i}))^2}{\sum_{\ell=1}^{m-1}q_\ell^2d_\ell^2}} \nonumber
+        \\& = \sum_{k=1}^{m-1}\sqrt{\tp{\sum_{\ell = 1}^{m}q_\ell^2(d_\ell - d_k)^2} / \tp{\sum_{\ell=1}^{m-1}q_\ell^2d_\ell^2}} &&(\text{Rearrange}) \nonumber
+        \\&\geq \sqrt{\tp{\sum_{\ell = 1}^m q_\ell^2\tp{\sum_{k=1}^{m-1} d_\ell - d_k}^2 }/ \tp{\sum_{\ell=1}^{m-1}q_\ell^2d_\ell^2}} &&(\text{Triangle ineq.}) \nonumber
+        \\&\geq b\sqrt{\tp{\sum_{\ell = 1}^m \tp{\sum_{k=1}^{m-1} d_\ell - d_k}^2 }/ \tp{\sum_{\ell=1}^{m-1}d_\ell^2}} &&(\forall \ell,k,q_\ell/q_k \in [b,1/b]) \nonumber
+        \\&= b\sqrt{(m-1)^2 - (m-2)\tp{\sum_{k=1}^{m-1}d_k}^2/\tp{\sum_{k=1}^{m-1}d_k^2}} \nonumber
+        \\&\geq b\sqrt{(m-1)}. &&(\text{AM-GM}) \label{eq:Local_curvature_part1}
+    \end{align}
+    Define $Q = \sum_{k=1}^{m-1} q_k$.
+    Therefore, 
+    $$
+        \frac{\sqrt{\Gamma_{w,i} f}L_{U_i}\sqrt{\Gamma_{w,i} f}}{\Gamma_{w,i} f} \geq b\sqrt{m-1} - Q.
+    $$
+    For the second part $-\Gamma_{w,i}(f,L_{U_i} f)$, it is lower bounded as follows,
+    \begin{align}
+        -2\Gamma_{w,i}(f,L_{U_i} f)
+        &= -\sum_{k=1}^{m-1} q_k^2 d_k \sum_{\ell=1}^{m-1} \tp{q_l(x^k)(f(x^{(k+\ell)e_i}) - f(x^k)) - q_\ell d_\ell} \nonumber
+        \\&=\sum_{k=1}^{m-1}\sum_{\ell=1}^{m-1}q_k^2q_\ell d_kd_\ell
+        + \sum_{k=1}^{m-1}\sum_{\ell=1}^m q_kq_\ell d_k^2
+        - \sum_{k=1}^{m-1}\sum_{\ell=1}^m q_kq_\ell d_k d_\ell \nonumber
+        \\&= (qd)^\top (q\*1^\top + (Q+1)\cdot \diag\{q\}^{-1} - \*1\*1^\top)  (qd) \nonumber
+        \\&\geq \norm{qd}_2^2 \lambda_{\min}\tp{\frac{(q-\*1)\*1^\top + \*1(q-\*1)^\top}{2} + (Q+1)\cdot \diag\{q\}^{-1}} \label{eq:Local_curvature_part2} .
+    \end{align}
+    Since $\lambda_{\min}(A+B)\geq \lambda_{\min}(A)+\lambda_{\min}(B)$ holds for symmetric matrices $A,B$, we have that,
+    $$
+        \lambda_{\min}\tp{\frac{(q-\*1)\*1^\top + \*1(q-\*1)^\top}{2} + (Q+1)\cdot \diag\{q\}^{-1}} \geq \frac{\inner{q-\*1}{\*1}-\sqrt{m-1}\norm{q-\*1}_2}{2} + b(Q+1) .
+    $$
+    Since $2\Gamma_{w,i} f = \norm{qd}_2^2$, by \Cref{eq:Local_curvature_part1} and \Cref{eq:Local_curvature_part2}, we conclude that,
+    \begin{align*}
+        &\frac{\sqrt{\Gamma_{w,i} f}L_{U_i}\sqrt{\Gamma_{w,i} f} - \Gamma_{w,i}(f,L_{U_i} f)}{\Gamma_{w,i} f}
+        \\\geq& b\sqrt{m-1} - Q +  \frac{Q-(m-1)-\sqrt{m-1}\norm{q-\*1}_2}{2} + b(Q+1)
+        \\=& b\sqrt{m-1} -\frac{m-1-2b}{2} + (b-\frac{1}{2})Q - \frac{\sqrt{m-1}\norm{q-\*1}_2}{2} 
+        \\\geq& b\sqrt{m-1} -\frac{m-1-2b}{2} + (m-1)\min\{b^2-\frac{b}{2},1-\frac{1}{2b}\} - \frac{(m-1)(1-b)}{2b} 
+        \\\geq& b\sqrt{m-1} -\frac{m-1-2b}{2} + (m-1)(b-\frac 1{2b}) - \frac{(m-1)(1-b)}{2b} 
+        \\=& b(\sqrt{m-1}+1)-(m-1)(\frac 1b-b),
+    \end{align*}
+    \ZC{Formatting.}
+    where the second inequality follows from $Q \in [(m-1)b,\frac {m-1}b]$ and $\norm{q}_2 \leq \sqrt{m-1}(1-b)/b$.
+\end{proof}
+
+
+\Cref{lem:hyper_grid_Dobrushin_to_AB_in_CSGE} and \Cref{lem:local_curvature} immediately gives the upper bound of $\norm{K}_2$.
+\begin{lemma}\label{lem:hyper_grid_Dobrushin_to_CSGE_K}
+    Let $w = q$ with $q_u(x) = \sqrt{\mu(x^u)/\mu(x)} \in [b,1/b]$ for any $x\in [m]^n$ and $i\in [n]$. 
+    If $m\geq 2$ and $b>\sqrt{\frac{m-1}{m+\sqrt{m-1}}}$, we have that $\norm{K}_2 \leq C_{cons}\cdot (\norm{D}_1 + \norm{D}_2)$, where
+    \begin{equation}\label{eq:hyper_grid_CSGE_C_cons}
+        C_{cons} = \frac{m(b^2+m-1)(b+1)}{2b^2(b^2(m+\sqrt{m-1})-m+1)} .
+    \end{equation}
+\end{lemma}
+\begin{proof}
+    By \Cref{lem:local_curvature}, $C \geq_{\-{ew}} b(\sqrt{m-1}+1)-(m-1)(\frac 1b-b) I$.
+    Therefore, by \Cref{lem:hyper_grid_Dobrushin_to_AB_in_CSGE}, 
+    we have that
+    $$
+        K \leq_{\-{ew}} \tp{b(m+\sqrt{m-1}) - \frac{m-1}{b}}^{-1}\frac{m(b^2+m-1)(b+1)}{2b^3}\tp{\diag\{D^\top \*1\} + \frac{D+D^\top}{2}}.
+    $$
+    Hence, $\norm{K}_2 \leq C_{cons}\cdot(\norm{D}_1 + \norm{D}_2)$.
+\end{proof}
+\begin{corollary}
+    Let $w = q$ with $q_u(x) = \sqrt{\mu(x^u)/\mu(x)} \in [b,1/b]$ for any $x\in [m]^n$ and $i\in [n]$. 
+    If $m\geq 2$ and $b>\sqrt{\frac{m-1}{m+\sqrt{m-1}}}$, the coordinate-wise strong gradient estimate \eqref{eq:CSGE} holds with constant $\rho \leq b(m+\sqrt{m-1})-(m-1)/b-\frac{m(b^2+m-1)(b+1)}{2b^3}\tp{\norm{D}_1+\norm{D}_2}$.
+\end{corollary}
+
+Recall that \Cref{thm:marton_Dobrushin_to_LSI} gives an \ref{eq:LSI} constant for the Gibbs sampler in terms of the Dobrushin matrix.
+For hypergrid, the discrepancy between the Gibbs generator and our generator can be bounded by one-site marginal bounds.
+Therefore, together with the upper bound on $\norm{K}_2$, we conclude the following theorem: under suitable Dobrushin conditions and marginal bounds, the isopermetric inequalities in \ref{sec:SGraph_iso_ineq} hold.
+\begin{theorem}\label{thm:hyper_grid_Dobrushin_to_iso}
+    Consider the Schreier Graph defined in the first item in \Cref{example:SGraph}.
+    Let $\mu$ be a distribution on $[m]^n$ with full support.
+    Take the transition rate to be $q_i(x) = \sqrt{\mu(x^i)/\mu(x)}$ and set $w = q$.
+    Suppose that for any $x\in [m]^n, i\in[n]$, $q_i(x)\in [b,1/b]$ with 
+    \begin{equation}\label{eq:hyper_grid_iso_cond}
+        b > \sqrt{\frac{m-1}{m+\sqrt{m-1}}}\quad \text{and}\quad C_{cons}\cdot(\norm{D}_2 + \norm{D}_1) < 1,
+    \end{equation}
+    where $C_{cons}$ is defined in \Cref{eq:hyper_grid_CSGE_C_cons} .
+    Then the local Bobkov inequality \eqref{eq:}, the $L^1-L^2$ Talagrand inequality \eqref{eq:}, the KKL inequality \eqref{eq:} and the Eldan-Gross inequality \eqref{eq:} holds with constant depending on $\norm{D}_1$, $\norm{D}_2$ and $b$.
+\end{theorem}
+\begin{proof}
+    Since $C_{cons}(\norm{D}_2 + \norm{D}_1) < 1$, $C_{cons}\geq \frac{m(m-1)}{2(1+\sqrt{m-1})} > 1$ for $m\geq 3$ and $C_{cons}\geq 2$ for $m=2$, $\norm{D}_2 < 1$ holds.
+    By \Cref{thm:marton_Dobrushin_to_LSI}, since
+    $$
+        \inner{f}{(I-G)f}_\mu = \E[\mu]{\frac 1{2n}\sum_{i=1}^n  \sum_{k=1}^{m-1} \frac{q_{k e_i}(x)^2}{1 + \sum_{\ell=1}^{m-1}q_{\ell e_i}(x)^2}\tp{f(x^{k e_i}) - f(x)}^2}
+        \leq \frac 1{nmb^2}\E[\mu]{\Gamma(f,f)},
+    $$
+    the \ref{eq:LSI} holds with constant $\frac{mb^4(1-\norm{D}_2)^2}{m-1+b^2}$.
+    Therefore, both CSGE condition and hypercontractivity holds.
+    By \Cref{sec:SGraph_iso_ineq}, all the isopermetric inequalities hold.
+\end{proof}
+
+\subsubsection{Zero-field Potts model}
+As an application, let us consider the zero-field Potts model.
+A distribution $\mu$ over $[m]^n$ is a Potts model with interaction matrix $J\in \R^{n\times n}$ if
+$$
+    \forall x\in [m]^n, \mu(x)\propto \exp\tp{\sum_{1\leq i<j\leq n}J_{ij}\ind[x_i = x_j]} ,
+$$
+where $J$ is a symmetric matrix and ahs zero diagonal.
+The interaction between each pair of sites depends only on whether their spins agree.
+
+In the following theorem, we establish the isopermetric inequalities in \Cref{sec:SGraph_iso_ineq} under an explicit smallness condition on the induced $1$-norm of the interaction matrix.
+\begin{theorem}[zero-field Potts model]\label{thm:Potts}
+    Suppose that $\mu$ is an zero-field Potts model parameterized by an interaction matrix $J$ satisfying 
+    \begin{equation}\label{eq:Potts_cond}
+        t < \log\tp{1+\frac{1+\sqrt{m-1}}{m-1}}
+        \quad \text{and} \quad \frac{tm(e^{-t}+m-1)(e^{-t/2}+1)}{2e^{-t}(e^{-t}(m+\sqrt{m-1})-m+1)} < 1,
+    \end{equation}
+    where $t := \norm{J}_1$.
+    Take the transition rate to be $q_i(x) = \sqrt{\mu(x^i)/\mu(x)}$ and set $w = q$.
+    Then the local Bobkov inequality \eqref{eq:local_bobkov-sch}, the $L^1$--$L^2$ Talagrand inequality \eqref{eq:}, the KKL inequality \eqref{eq:l1_l2_talagrand_2_sch} and the Eldan--Gross inequality \eqref{eq:eldan_gross-sch} holds with constant depending on $\norm{J}_1$.
+\end{theorem}
+\begin{proof}
+    By \Cref{thm:hyper_grid_Dobrushin_to_iso}, it is sufficient to check \Cref{eq:hyper_grid_iso_cond}.
+    Since for any $x\in [m]^n$ and $ke_i\in U$,
+    $$
+        \sqrt{\frac{\mu(x^{ke_i})}{\mu(x)}}
+        = \exp\tp{\frac 12\sum_{j\neq i} J_{ij}(-\ind[x_j=x_i] + \ind[x_j\equiv x_i+k \mod m]) }
+        \in \left[e^{-t/2},e^{t/2}\right] ,
+    $$
+    we can set the marginal bound $b = e^{-t/2}$.
+    
+    Fix $x\in [m]^n$ and $ke_j\in U$, define 
+    $$
+        \varphi(a) = \frac{\mu_i(x_i=a\mid x_{-i}^{k e_j})}{\mu(x_i=a\mid x_{-i})} = \exp\tp{J_{ij}(\ind[x_j+k=a]-\ind[x_j=a])}.
+    $$
+    Therefore, for any $S\in 2^m$,
+    $$
+        \frac{\mu_i(x_i\in S\mid x_{-i}^{k e_j})}{\mu(x_i\notin S\mid x_{-i}^{k e_j})}
+        \leq e^{2\abs{J_{ij}}}\frac{\mu_i(x_i\in S\mid x_{-i})}{\mu(x_i\notin S\mid x_{-i})}
+    $$
+    $$
+        \implies \mu_i(x_i\in S\mid x_{-i}^{k e_j}) - \mu_i(x_i\in S\mid x_{-i})
+        \leq \frac{e^{2\abs{J_{ij}}}}{e^{2\abs{J_{ij}}}-1+1/\mu_i(x_i\in S\mid x_{-i})} - \mu_i(x_i\in S\mid x_{-i}) .
+    $$
+    Since given $a > 1$, $\sup_{b\in [0,1]}\frac{a}{a-1+1/b}-b = \frac{\sqrt a - 1}{\sqrt a + 1}$, $\mu_i(x_i\in S\mid x_{-i}^{k e_j}) - \mu_i(x_i\in S\mid x_{-i}) \leq \tanh(\frac {\abs{J_{ij}}}2)$.
+    Therefore,
+    $$
+        \TV{\mu_i(\mid x_{-i}^{k e_j})}{\mu_i(\mid x_{-i})} = \sup_S \mu_i(i\in S\mid x_{-i}^{k e_j}) - \mu_i(i\in S\mid x_{-i}) \leq \tanh(\frac{\abs{J_{ij}}}{2}) .
+    $$
+    We have that $D \leq_{\-{ew}} \tanh(\abs{J/2}) \leq_{\-{ew}} \abs{J}/2$ and $\max\{\norm{D}_1,\norm{D}_2\} \leq t/2$.
+    Therefore, \Cref{eq:hyper_grid_iso_cond} is implied by \Cref{eq:Potts_cond}.
+\end{proof}
+\begin{remark}
+    For some specific numbers, the resulting numerical thresholds are summarized in the following table.
+    \ZC{Remove it? Too AI.}
+    \begin{table}[htbp]
+    \centering
+    \begin{tabular}{c|ccc}
+        \hline
+        $m$ & Positivity threshold & CSGE threshold $\rho_{CSGE}>0$
+            & Isoperimetric threshold \\
+        \hline
+        $2$ & $1.098612$ & $0.287314$ & $\norm{J}_1<0.287314$ \\
+        $3$ & $0.791683$ & $0.175290$ & $\norm{J}_1<0.175290$ \\
+        $4$ & $0.647461$ & $0.121790$ & $\norm{J}_1<0.121790$ \\
+        $5$ & $0.559616$ & $0.090917$ & $\norm{J}_1<0.090917$ \\
+        $6$ & $0.499085$ & $0.071131$ & $\norm{J}_1<0.071131$ \\
+        \hline
+    \end{tabular}
+    \caption{Numerical sufficient conditions for the zero-field Potts model.}
+    \label{tab:potts-thresholds}
+\end{table}
+\end{remark}

@@ -1,0 +1,1379 @@
+\documentclass[11pt]{article}
+\pagestyle{plain}
+
+% \pgfplotsset{compat=1.18}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amsfonts,amssymb,amsthm}
+\usepackage[ruled,vlined,linesnumbered,commentsnumbered]{algorithm2e}
+\SetKwInput{KwIn}{Input}
+\SetKwInput{KwOut}{Output}
+\SetKwInput{KwGlobal}{Global variable}
+\SetKwInput{KwOracle}{Oracle}
+\SetKwComment{Comment}{// }{}
+\usepackage{graphicx}
+\usepackage{enumerate}
+\usepackage{bbm}
+\usepackage{verbatim}
+\usepackage{hyperref,color}
+\usepackage[capitalize,nameinlink]{cleveref}
+\usepackage[dvipsnames]{xcolor}
+\hypersetup{
+	colorlinks=true,
+	pdfpagemode=UseNone,
+	citecolor=OliveGreen,
+	linkcolor=NavyBlue,
+	urlcolor=Magenta,
+	pdfstartview=FitW
+}
+\usepackage{appendix}
+\usepackage{makecell}
+\usepackage{tablefootnote}
+\crefname{appsec}{Appendix}{Appendices}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{xifthen}
+\usepackage{subcaption}
+\usepackage{hhline}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{problem}[theorem]{Problem}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{fact}[theorem]{Fact}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{observation}[theorem]{Observation}
+\newtheorem{assumption}[theorem]{Assumption}
+\newtheorem*{assumption*}{Assumption}
+\newtheorem{condition}[theorem]{Condition}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\crefname{lemma}{Lemma}{Lemmas}
+\crefname{theorem}{Theorem}{Theorems}
+\crefname{definition}{Definition}{Definitions}
+\crefname{fact}{Fact}{Facts}
+\crefname{claim}{Claim}{Claims}
+\crefname{proposition}{Proposition}{Propositions}
+
+
+\newcommand{\dif}{\,\mathrm{d}}
+%\newcommand{\E}{\mathbb{E}}
+%\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\Cov}{\mathrm{Cov}}
+\newcommand{\MI}{\mathrm{I}}
+%\newcommand{\Ent}{\mathrm{Ent}}
+\newcommand{\ind}{\mathbbm{1}}
+\newcommand{\allone}{\mathbf{1}}
+\newcommand{\tr}{\mathrm{tr}}
+\newcommand{\wt}{\mathrm{weight}}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\newcommand{\TV}[2]{\left\|#1 - #2\right\|_{\mathrm{TV}}}
+\newcommand{\ceil}[1]{\left\lceil #1 \right\rceil}
+\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
+\newcommand{\ip}[2]{\left\langle #1 , #2 \right\rangle}
+\newcommand{\grad}{\nabla}
+\newcommand{\hessian}{\nabla^2}
+\newcommand{\trans}{\intercal}
+\newcommand{\diag}{\mathrm{diag}}
+\newcommand{\poly}{\mathrm{poly}}
+\newcommand{\dist}{\mathrm{dist}}
+\newcommand{\sgn}{\mathrm{sgn}}
+\newcommand{\fpras}{\mathsf{FPRAS}}
+\newcommand{\fpaus}{\mathsf{FPAUS}}
+\newcommand{\fptas}{\mathsf{FPTAS}}
+
+\newcommand{\eps}{\varepsilon}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+
+\renewcommand{\AA}{\mathcal{A}}
+\newcommand{\BB}{\mathcal{B}}
+\newcommand{\CC}{\mathcal{C}}
+\newcommand{\DD}{\mathcal{D}}
+\newcommand{\EE}{\mathcal{E}}
+\newcommand{\FF}{\mathcal{F}}
+\newcommand{\GG}{\mathcal{G}}
+\newcommand{\HH}{\mathcal{H}}
+\newcommand{\II}{\mathcal{I}}
+\newcommand{\JJ}{\mathcal{J}}
+\newcommand{\KK}{\mathcal{K}}
+\newcommand{\LL}{\mathcal{L}}
+\newcommand{\MM}{\mathcal{M}}
+\newcommand{\NN}{\mathcal{N}}
+\newcommand{\OO}{\mathcal{O}}
+\newcommand{\PP}{\mathcal{P}}
+\newcommand{\QQ}{\mathcal{Q}}
+\newcommand{\RR}{\mathcal{R}}
+\renewcommand{\SS}{\mathcal{S}}
+\newcommand{\TT}{\mathcal{T}}
+\newcommand{\UU}{\mathcal{U}}
+\newcommand{\VV}{\mathcal{V}}
+\newcommand{\WW}{\mathcal{W}}
+\newcommand{\XX}{\mathcal{X}}
+\newcommand{\YY}{\mathcal{Y}}
+\newcommand{\ZZ}{\mathcal{Z}}
+
+\newcommand{\KL}[2]{D_{\mathrm{KL}} \left( #1 \,\Vert\, #2 \right)}
+\newcommand{\KLbig}[2]{D_{\mathrm{KL}} \left( #1 \,\big\Vert\, #2 \right)}
+\newcommand{\KLBig}[2]{D_{\mathrm{KL}} \left( #1 \,\Big\Vert\, #2 \right)}
+
+\newcommand{\SKL}[2]{D_{\mathrm{SKL}} \left( #1 \,\Vert\, #2 \right)}
+\newcommand{\SKLbig}[2]{D_{\mathrm{SKL}} \left( #1 \,\big\Vert\, #2 \right)}
+\newcommand{\SKLBig}[2]{D_{\mathrm{SKL}} \left( #1 \,\Big\Vert\, #2 \right)}
+
+\newcommand{\qandq}{\quad\text{and}\quad}
+\newcommand{\supp}{\mathrm{supp}}
+
+\newcommand{\DKL}[2]{\-D_{\-{KL}}\left(#1 \parallel #2\right)}
+\newcommand{\DTV}[2]{\-D_{\mathrm{TV}}\left({#1},{#2}\right)}
+% \newcommand{\dist}{\mathrm{dist}}
+\newcommand{\e}{\mathrm{e}}
+\renewcommand{\epsilon}{\varepsilon}
+\renewcommand{\emptyset}{\varnothing}
+% \newcommand{\norm}[1]{\left\Vert#1\right\Vert}
+\newcommand{\set}[1]{\left\{#1\right\}}
+\newcommand{\tuple}[1]{\left(#1\right)} 
+% \newcommand{\eps}{\varepsilon}
+\newcommand{\inner}[2]{\left\langle #1,#2\right\rangle}
+\newcommand{\tp}{\tuple}
+\newcommand{\ol}{\overline}
+\newcommand{\abs}[1]{\left\vert#1\right\vert}
+\newcommand{\ctp}[1]{\left\lceil#1\right\rceil}
+\newcommand{\ftp}[1]{\left\lfloor#1\right\rfloor}
+\newcommand{\Ind}[1]{\-{Ind}_{#1}}
+\newcommand{\todo}[1]{{\color{red} TODO: #1}}
+
+\newcommand{\Cor}{\Psi^{\mathrm{sym}}}
+\newcommand{\cor}{\Psi^{\-{cor}}}
+\newcommand{\Inf}{\Psi}
+% \newcommand{\diag}{\-{diag}}
+
+\def\*#1{\boldsymbol{#1}} % Use \*A for \mathbf{A}
+\def\+#1{\mathcal{#1}} % Use \+A for \mathcal{A}
+\def\-#1{\mathrm{#1}} % Use \-A for \mathrm{A}
+\def\=#1{\mathbb{#1}} % Use \^A for \mathbb{A}
+\def\!#1{\mathfrak{#1}} % Use \!A for \mathfrak{A}
+
+\newcommand*\diff{\mathop{}\!\mathrm{d}}
+
+% probability
+% \DeclareMathOperator*{\oPr}{\mathbf{Pr}}
+\def\oPr{\mathop{\mathrm{Pr}}}
+\renewcommand{\Pr}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oPr\left[#2\right]}
+  {\oPr_{#1}\left[#2\right]} } % Use \Pr[a]{b} for \mathbf{Pr}_a[b], \Pr{b} for  \mathbf{Pr}[b]
+
+% expectation: relies on the package "dsfont"
+% \DeclareMathOperator*{\oE}{\mathbb{E}}
+\def\oE{\mathop{\mathbb{E}}}
+\newcommand{\E}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oE\left[#2\right]}
+  {\oE_{#1}\left[#2\right]} }
+
+% variance
+%\DeclareMathOperator*{\oVar}{\mathbf{Var}}
+\def\oVar{\mathrm{Var}}
+\newcommand{\Var}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oVar\left[#2\right]}
+  {\oVar_{#1}\left[#2\right]} }
+
+% entropy
+% \DeclareMathOperator*{\oEnt}{\mathbf{Ent}}
+\def\oEnt{\mathrm{Ent}}
+\newcommand{\Ent}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oEnt\left[#2\right]}
+  {\oEnt_{#1}\left[#2\right]} }
+
+\newcommand{\PhiEnt}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oEnt^\phi\left[#2\right]}
+  {\oEnt^\phi_{#1}\left[#2\right]} }
+
+
+\newenvironment{Exampleparagraph}[1][]
+{
+    \par 
+    \noindent 
+    \textbf{\color{blue} #1}
+    \par 
+    \vspace{0.5em} 
+    \itshape 
+}
+{
+    \par 
+    \vspace{1em} 
+}
+
+%\input{local-macro}
+
+\newcommand{\RED}[1]{\textcolor{red}{#1}}
+\newcommand{\zc}[1]{\textcolor{red}{ZC: #1}}
+
+\newcommand{\bern}[1]{\mathrm{Bern}\left(#1\right)}
+
+
+
+\title{Local Bobkov inequality and Eldan-Gross inequality}
+\date{\today}
+
+\pgfplotsset{compat=1.18} 
+\begin{document}
+
+\maketitle
+
+\section*{Disclaimer}
+Calculations in this note are done by GPT and codex.
+
+\section{Local Bobkov inequality for general measure}
+
+Local Bobkov inequality:
+\begin{align*}
+    I(P_t f) \le P_t \tp{\sqrt{I(f)^2 + M (1-\e^{-\rho t}) \abs{\grad f}^2}}.
+\end{align*}
+
+Let $\mu$ be a measure on $\{-1,+1\}^n$ and $Lf (x) = \sum_{i \in [n]} p_i(x) \tp{f(x^{\oplus i}) - f(x)}$ be the generator, where $p_i(x) = p(x,x^{\oplus i})$ denotes the transition rate from $x$ to $x^{\oplus i}$.
+Define the gradient $\nabla f(x)$ as follows:
+\begin{align*}
+    \nabla f(x) = \tp{\partial_i f(x)}_{i \in [n]} = \tp{p_i(x) (f(x^{\oplus i}) - f(x))}_{i \in [n]}.
+\end{align*}
+Let $u_s=f_{t-s}=P_{t-s}f$ and $a_s=\sqrt{M(1-\e^{-\rho s})}$. Define
+\begin{align*}
+    F_s(x) = \sqrt{I(u_s(x))^2+a_s^2\abs{\nabla u_s(x)}^2},
+    \qquad
+    V_s(x) = \tp{I(u_s(x)), a_s\partial_1u_s(x), \ldots, a_s\partial_nu_s(x)}.
+\end{align*}
+By a similar calculation, we have
+\begin{align*}
+    L F_s(x) = \frac{\inner{V_s}{L V_s}}{\abs{V_s}}(x) + \sum_{i \in [n]} p_i(x) \underbrace{\tp{\abs{V_s}(x^{\oplus i}) - \frac{\inner{V_s(x)}{V_s(x^{\oplus i})}}{\abs{V_s}(x)}}}_{:=D_i(x)}.
+\end{align*}
+Therefore, we have
+\begin{align*}
+    (\partial_s + L) F_s(x) = \frac{\inner{V_s}{(\partial_s + L) V_s}}{\abs{V_s}(x)} + \sum_{i \in [n]} p_i(x) D_i(x).
+\end{align*}
+The second term can be bounded as follows. Since
+\begin{align*}
+    (V_s(x^{\oplus i}))_i
+    = -\frac{p_i(x^{\oplus i})}{p_i(x)}(V_s(x))_i,
+\end{align*}
+we have
+\begin{align*}
+    D_i(x)
+    &\ge \frac{2 p_i(x^{\oplus i})}{p_i(x)} \frac{(V_{s}^2(x))_i}{\abs{V_s}(x)},\\
+    p_i(x)D_i(x)
+    &\ge 2 p_i(x^{\oplus i}) \frac{(V_{s}^2(x))_i}{\abs{V_s}(x)}.
+\end{align*}
+By a straightforward calculation, the first term satisfies
+\begin{align*}
+    ((\partial_s + L) V_s)_0(x)
+    &= L I(u_s)(x)-I'(u_s(x))Lu_s(x),\\
+    ((\partial_s + L) V_s)_i(x)
+    &= \frac{M\rho\e^{-\rho s}}{2a_s}\partial_i u_s(x)
+    +a_s\tp{L\partial_i-\partial_i L}u_s(x)\\
+    &= \frac{M\rho\e^{-\rho s}}{2a_s}\partial_i u_s(x)
+    -a_s[\partial_i,L]u_s(x)\\
+    &= \frac{M\rho\e^{-\rho s}}{2a_s}\partial_i u_s(x)
+    -a_s\sum_{j \in [n]}[\partial_i,\partial_j]u_s(x),
+    \qquad i \in [n],
+\end{align*}
+where $[A,B]=AB-BA$. Writing $\delta_i u_s(x)=u_s(x^{\oplus i})-u_s(x)$, the zeroth component is bounded by
+\begin{align*}
+    I(u_s(x))((\partial_s+L)V_s)_0(x)
+    &= I(u_s(x))\sum_{i \in [n]}p_i(x)\tp{I(u_s(x^{\oplus i}))-I(u_s(x))-I'(u_s(x))\delta_i u_s(x)}\\
+    &\ge -\sum_{i \in [n]}p_i(x)\tp{\delta_i u_s(x)}^2,
+\end{align*}
+where we use
+\begin{align*}
+    I(a)\tp{I(b)-I(a)-I'(a)(b-a)}\ge -(b-a)^2.
+\end{align*}
+Combining this with the bounds on $D_i(x)$, it holds
+\begin{align*}
+    (\partial_s+L)F_s(x)
+    &\ge \frac{1}{\abs{V_s(x)}}\Bigg[
+    -\sum_{i \in [n]}p_i(x)\tp{\delta_i u_s(x)}^2
+    +\frac{M\rho\e^{-\rho s}}{2}\sum_{i \in [n]}\tp{\partial_i u_s(x)}^2\\
+    &\qquad
+    +M(1-\e^{-\rho s})\sum_{i \in [n]}\partial_i u_s(x)
+    \tp{L\partial_i-\partial_i L}u_s(x)\\
+    &\qquad
+    +2M(1-\e^{-\rho s})\sum_{i \in [n]}p_i(x^{\oplus i})
+    \tp{\partial_i u_s(x)}^2
+    \Bigg].
+\end{align*}
+Equivalently, on edges with $p_i(x)>0$,
+\begin{align*}
+    (\partial_s+L)F_s(x)
+    &\ge \frac{1}{\abs{V_s(x)}}\Bigg[
+    \sum_{i \in [n]}\tp{\frac{M\rho\e^{-\rho s}}{2}
+    +2M(1-\e^{-\rho s})p_i(x^{\oplus i})
+    -\frac{1}{p_i(x)}}\tp{\partial_i u_s(x)}^2\\
+    &\qquad
+    +M(1-\e^{-\rho s})\sum_{i \in [n]}\partial_i u_s(x)
+    \tp{L\partial_i-\partial_i L}u_s(x)
+    \Bigg].
+\end{align*}
+
+
+
+\paragraph{Special choice of rates.}
+Suppose now that
+\begin{align*}
+    p_i(x)=\sqrt{\frac{\mu(x^{\oplus i})}{\mu(x)}}.
+\end{align*}
+Then the products along the two paths of any square agree:
+\begin{align*}
+    p_j(x)p_i(x^{\oplus j})
+    =
+    \sqrt{\frac{\mu(x^{\oplus j})}{\mu(x)}}
+    \sqrt{\frac{\mu(x^{\oplus i\oplus j})}{\mu(x^{\oplus j})}}
+    =
+    p_i(x)p_j(x^{\oplus i}).
+\end{align*}
+Thus the second-order term in the commutator cancels. Indeed, for $i \neq j$,
+\begin{align*}
+    [\partial_j,\partial_i]u_s(x)
+    &=
+    \partial_j\partial_i u_s(x)-\partial_i\partial_j u_s(x)\\
+    &=
+    \tp{p_i(x)p_j(x)-p_j(x)p_i(x^{\oplus j})}
+    \tp{u_s(x^{\oplus j})-u_s(x^{\oplus i})}\\
+    &=
+    \alpha_{ij}(x)
+    \tp{\frac{\partial_j u_s(x)}{p_j(x)}
+    -\frac{\partial_i u_s(x)}{p_i(x)}},
+\end{align*}
+where
+\begin{align*}
+    \alpha_{ij}(x):=p_i(x)p_j(x)-p_j(x)p_i(x^{\oplus j}).
+\end{align*}
+The square identity implies $\alpha_{ij}(x)=\alpha_{ji}(x)$.
+Consequently,
+\begin{align*}
+    (L\partial_i-\partial_i L)u_s(x)
+    =
+    \sum_{j \neq i}[\partial_j,\partial_i]u_s(x)
+    =
+    \sum_{j \neq i}\alpha_{ij}(x)
+    \tp{\frac{\partial_j u_s(x)}{p_j(x)}
+    -\frac{\partial_i u_s(x)}{p_i(x)}}.
+\end{align*}
+The commutator contribution in the lower bound is therefore the following quadratic form in
+$\nabla u_s(x)$:
+\begin{align*}
+    \sum_{i \in [n]}\partial_i u_s(x)(L\partial_i-\partial_i L)u_s(x)
+    =
+    \sum_{\substack{i,j \in [n]\\ i\neq j}}
+    \alpha_{ij}(x)\partial_i u_s(x)
+    \tp{\frac{\partial_j u_s(x)}{p_j(x)}
+    -\frac{\partial_i u_s(x)}{p_i(x)}}.
+\end{align*}
+Equivalently, let
+\begin{align*}
+    g:=\tp{g_i}_{i\in[n]},\qquad
+    g_i:=\partial_i u_s(x),\qquad
+    r_i:=p_i(x),\qquad
+    b_s:=1-\e^{-\rho s}.
+\end{align*}
+Since $p_i(x^{\oplus i})=1/r_i$, the lower bound above can be written as
+\begin{align*}
+    \abs{V_s(x)}(\partial_s+L)F_s(x)
+    \ge g^\intercal A_s(x)g,
+\end{align*}
+where $A_s(x)$ is the symmetric matrix given by
+\begin{align*}
+    (A_s(x))_{ii}
+    &=
+    \frac{M\rho\e^{-\rho s}}{2}
+    +\frac{2Mb_s-1}{r_i}
+    -Mb_s\sum_{j\neq i}\frac{\alpha_{ij}(x)}{r_i},
+    \\
+    (A_s(x))_{ij}
+    &=
+    \frac{Mb_s}{2}\alpha_{ij}(x)
+    \tp{\frac{1}{r_i}+\frac{1}{r_j}},
+    \qquad i\neq j.
+\end{align*}
+Indeed, the commutator part can be symmetrized as
+\begin{align*}
+    \sum_{i \in [n]}g_i(L\partial_i-\partial_i L)u_s(x)
+    =
+    -\sum_{i<j}\alpha_{ij}(x)
+    \tp{g_i-g_j}
+    \tp{\frac{g_i}{r_i}-\frac{g_j}{r_j}}.
+\end{align*}
+
+
+\subsection{Zero-field Ising model}
+
+\begin{claim}[Zero-field Ising model]
+Use the $\frac12 x^\intercal Jx$ convention and assume
+\begin{align*}
+    \mu(x)=\frac{1}{Z}\exp\tp{\frac12\sum_{i,j=1}^n J_{ij}x_ix_j},
+    \qquad J=J^\intercal,\qquad J_{ii}=0,
+\end{align*}
+where $x\in\{-1,+1\}^n$. Let
+\begin{align*}
+    B:=\max_i\sum_j |J_{ij}|.
+\end{align*}
+If $2B\e^{2B}<1$, then for the rates
+\begin{align*}
+    p_i(x)=\sqrt{\frac{\mu(x^{\oplus i})}{\mu(x)}}
+\end{align*}
+one may choose
+\begin{align*}
+    M\ge \frac{1}{2(1-2B\e^{2B})},
+    \qquad
+    \rho\ge \frac{2\e^B}{M},
+\end{align*}
+so that $A_s(x)\succeq0$ for all $s\ge0$ and all $x$. Consequently,
+\begin{align*}
+    I(P_t f)
+    \le
+    P_t\tp{\sqrt{I(f)^2+M\tp{1-\e^{-\rho t}}\abs{\nabla f}^2}}.
+\end{align*}
+\end{claim}
+
+\begin{proof}
+Let
+\begin{align*}
+    q:=\max_i\sum_{j\neq i}\tp{1-\e^{-2|J_{ij}|}},
+    \qquad
+    r_i(x):=p_i(x).
+\end{align*}
+Then
+\begin{align*}
+    r_i(x)=\exp\tp{-x_i\sum_jJ_{ij}x_j},
+    \qquad
+    \e^{-B}\le r_i(x),\, r_i(x)^{-1}\le \e^B.
+\end{align*}
+For $i\neq j$, put $\theta_{ij}=J_{ij}x_ix_j$ and
+$H_i^{(j)}=\sum_{k\neq i,j}J_{ik}x_ix_k$. Then
+\begin{align*}
+    p_i(x^{\oplus j})=r_i(x)\e^{2\theta_{ij}},
+    \qquad
+    \alpha_{ij}(x)=r_i(x)r_j(x)\tp{1-\e^{2\theta_{ij}}},
+\end{align*}
+and the zero-field cancellation gives
+\begin{align*}
+    \frac{\alpha_{ij}(x)}{r_i(x)}
+    =-2\e^{-H_j^{(i)}}\sinh(\theta_{ij}),
+    \qquad
+    \frac{\alpha_{ij}(x)}{r_j(x)}
+    =-2\e^{-H_i^{(j)}}\sinh(\theta_{ij}).
+\end{align*}
+Thus
+\begin{align}\label{eq:zero-field-alpha-bound}
+    \abs{\frac{\alpha_{ij}(x)}{r_i(x)}},
+    \abs{\frac{\alpha_{ij}(x)}{r_j(x)}}
+    \le \e^B\tp{1-\e^{-2|J_{ij}|}}.
+\end{align}
+
+Let $b_s=1-\e^{-\rho s}$. We decompose
+\begin{align*}
+    A_s(x)=(1-b_s)E(x)+b_sC(x),
+\end{align*}
+where
+\begin{align*}
+    E_{ii}=\frac{M\rho}{2}-\frac1{r_i},
+    \qquad E_{ij}=0\quad(i\neq j),
+\end{align*}
+and
+\begin{align*}
+    C_{ii}=\frac{2M-1}{r_i}-M\sum_{j\neq i}\frac{\alpha_{ij}}{r_i},
+    \qquad
+    C_{ij}=\frac{M}{2}\alpha_{ij}\tp{\frac1{r_i}+\frac1{r_j}}
+    \quad(i\neq j).
+\end{align*}
+The matrix $E$ is positive semidefinite if $\rho\ge 2\e^B/M$. For $C$, Gershgorin and
+\eqref{eq:zero-field-alpha-bound} give
+\begin{align*}
+    C_{ii}-\sum_{j\neq i}|C_{ij}|
+    &\ge
+    \frac{2M-1}{r_i}
+    -M\sum_{j\neq i}\tp{
+        \frac32\abs{\frac{\alpha_{ij}}{r_i}}
+        +\frac12\abs{\frac{\alpha_{ij}}{r_j}}
+    }\\
+    &\ge (2M-1)\e^{-B}-2M\e^Bq.
+\end{align*}
+Hence $C(x)\succeq0$ for every $x$ if
+\begin{align*}
+    \e^{2B}q<1
+    \qquad\text{and}\qquad
+    M\ge \frac{1}{2(1-\e^{2B}q)}.
+\end{align*}
+Since $q\le 2B$, the claimed condition $2B\e^{2B}<1$ implies the previous display.
+Equivalently,
+\begin{align*}
+    B<\frac12 W(1)\approx 0.28357.
+\end{align*}
+The stated choices of $M$ and $\rho$ therefore make both $E$ and $C$ positive
+semidefinite. Since $A_s=(1-b_s)E+b_sC$ and $b_s\in[0,1]$, this proves
+$A_s(x)\succeq0$ for all $s$ and $x$. The local Bobkov inequality follows from
+the preceding semigroup argument.
+\end{proof}
+
+\section{Smoothing lemma for the zero-field Ising dynamics}
+
+In this section we keep the zero-field Ising setting from the preceding
+subsection and use the same square-root rates
+\[
+    p_i(x)=\sqrt{\frac{\mu(x^{\oplus i})}{\mu(x)}},
+    \qquad
+    P_t=\e^{tL}.
+\]
+Write
+\[
+    \delta_i f(x):=f(x^{\oplus i})-f(x).
+\]
+For \(q\ge1\), define the weighted edge norm
+\[
+    \norm{h}_{q,i}:=
+    \tp{\E[\mu]{p_i(x)|h(x)|^q}}^{1/q},
+\]
+and define the \(L^1\)-influences by
+\[
+    I_i(f):=\norm{\delta_i f}_{1,i},
+    \qquad
+    W(f):=\sum_{i=1}^n I_i(f)^2.
+\]
+The Dirichlet form of \(L\) is
+\[
+    \mathcal E(g,g):=-\ip{g}{Lg}_{L^2(\mu)}
+    =\frac12\sum_i\norm{\delta_i g}_{2,i}^2.
+\]
+
+We use two standard high-temperature inputs.  First, assume that the dynamics
+with generator \(L\), and the auxiliary dynamics obtained by flipping or
+freezing one coordinate, satisfy a uniform log-Sobolev inequality: there is
+\(\alpha>0\), independent of \(n\), such that
+\[
+    \Ent[\nu]{u^2}\le \frac{2}{\alpha}\mathcal E_\nu(u,u).
+\]
+Equivalently, their semigroups satisfy hypercontractivity,
+\[
+    \norm{Q_t h}_{q,\nu}\le \norm{h}_{p,\nu},
+    \qquad
+    q-1=(p-1)\e^{2\alpha t}.
+\]
+Second, define
+\[
+    a_{ij}:=\sup_x |p_j(x^{\oplus i})-p_j(x)|,\qquad a_{ii}:=0,
+    \qquad \mathsf A=(a_{ij})_{i,j\in[n]},
+\]
+and assume
+\[
+    \norm{\mathsf A}_{\ell^2\to\ell^2}\le\eta
+\]
+for \(\eta>0\) sufficiently small.  In the zero-field Ising model,
+\[
+    p_i(x)=\exp\tp{-x_i\sum_{j\ne i}J_{ij}x_j},
+    \qquad
+    \e^{-B}\le p_i(x)\le \e^B,
+\]
+and, for \(i\ne j\),
+\[
+    p_j(x^{\oplus i})=p_j(x)\e^{2J_{ij}x_ix_j}.
+\]
+Therefore
+\[
+    a_{ij}\le \e^B(\e^{2|J_{ij}|}-1),
+    \qquad
+    \norm{\mathsf A}_{\ell^2\to\ell^2}\le \e^B(\e^{2B}-1).
+\]
+Thus the commutator assumption follows, for instance, from \(B\) sufficiently
+small.
+
+\begin{lemma}[Stability of \(L^1\)-influences]\label{lem:smooth-l1-stability}
+If \(\norm{\mathsf A}_{\ell^2\to\ell^2}\le 2\e^{-4B}\), then
+\[
+    W(P_t f)\le \e^{12B} W(f)
+\]
+for all \(t\ge0\).
+\end{lemma}
+
+\begin{proof}
+In this proof,
+\[
+    \norm{h}_{L^1(\mu)}:=\int |h|\,d\mu=\E[\mu]{|h|}
+\]
+denotes the unweighted \(L^1(\mu)\)-norm.  Since
+\(\e^{-B}\le p_i\le\e^B\),
+\[
+    \e^{-B}\norm{h}_{L^1(\mu)}
+    \le
+    \norm{h}_{1,i}
+    \le
+    \e^B\norm{h}_{L^1(\mu)}.
+\]
+Thus it is enough to control the unweighted edge \(L^1\)-norms, keeping track
+of these factors at the end.
+
+Let \(g_t:=P_t f\), and write \(p_j^{\oplus i}(x):=p_j(x^{\oplus i})\).
+A direct computation gives
+\[
+    \delta_i Lg
+    =
+    -(p_i+p_i^{\oplus i})\delta_i g
+    +\sum_{j\ne i}p_j^{\oplus i}\delta_j\delta_i g
+    +\sum_{j\ne i}(p_j^{\oplus i}-p_j)\delta_jg.
+\]
+Define
+\[
+    L^{(i)}h:=\sum_{j\ne i}p_j(x^{\oplus i})\delta_jh,
+    \qquad
+    r_i:=p_i+p_i^{\oplus i}.
+\]
+Since \(p_i^{\oplus i}=p_i^{-1}\), \(r_i\ge2\), and hence
+\[
+    \partial_t\delta_i g_t
+    =
+    (L^{(i)}-r_i)\delta_i g_t
+    +\sum_{j\ne i}(p_j^{\oplus i}-p_j)\delta_jg_t.
+\]
+
+Let \(S_t^{(i)}\) be the semigroup generated by \(L^{(i)}-r_i\).  By
+positivity and Feynman--Kac,
+\[
+    |S_t^{(i)}h|\le \e^{-2t}Q_t^{(i)}|h|,
+\]
+where \(Q_t^{(i)}\) is generated by \(L^{(i)}\).  This Markov semigroup is
+reversible with respect to \(\nu_i(x):=\mu(x^{\oplus i})\), and
+\[
+    \frac{d\nu_i}{d\mu}(x)=p_i(x)^2
+\]
+lies in \([\e^{-2B},\e^{2B}]\).  Therefore, writing
+\(w_i=d\mu/d\nu_i=p_i^{-2}\),
+\[
+    \int Q_t^{(i)}|h|\,d\mu
+    =
+    \int Q_t^{(i)}|h|\, w_i\,d\nu_i
+    \le
+    \e^{2B}\int Q_t^{(i)}|h|\,d\nu_i
+    =
+    \e^{2B}\int |h|\,d\nu_i
+    \le
+    \e^{4B}\norm{h}_{L^1(\mu)}.
+\]
+Thus, by Feynman--Kac, it holds
+\[
+    \norm{S_t^{(i)}h}_{L^1(\mu)}
+    \le \e^{4B}\e^{-2t}\norm{h}_{L^1(\mu)}.
+\]
+Duhamel's formula gives
+\[
+    \delta_i g_t
+    =
+    S_t^{(i)}\delta_i f
+    +
+    \int_0^t
+    S_{t-s}^{(i)}
+    \sum_{j\ne i}(p_j^{\oplus i}-p_j)\delta_jg_s\,ds,
+\]
+and hence
+\[
+    \norm{\delta_i g_t}_{L^1(\mu)}
+    \le
+    \e^{4B}\e^{-2t}\norm{\delta_i f}_{L^1(\mu)}
+    +
+    \e^{4B}\sum_{j\ne i}a_{ij}
+    \int_0^t\e^{-2(t-s)}\norm{\delta_jg_s}_{L^1(\mu)}\,ds.
+\]
+Set
+\[
+    Q(t):=\tp{\sum_i\norm{\delta_i g_t}_{L^1(\mu)}^2}^{1/2}.
+\]
+Equivalently, let
+\[
+    q_i(t):=\norm{\delta_i g_t}_{L^1(\mu)},
+    \qquad
+    q(t):=(q_i(t))_{i\in[n]}.
+\]
+The preceding estimate says componentwise that
+\[
+    q(t)
+    \le
+    \e^{4B}\e^{-2t}q(0)
+    +
+    \e^{4B}\int_0^t\e^{-2(t-s)}\mathsf A q(s)\,ds,
+\]
+where we use \(a_{ii}=0\) and \(a_{ij}\ge0\).  Taking the \(\ell^2\)-norm
+and applying Minkowski's integral inequality gives
+\[
+    \norm{q(t)}_2
+    \le
+    \e^{4B}\e^{-2t}\norm{q(0)}_2
+    +
+    \e^{4B}\int_0^t\e^{-2(t-s)}
+    \norm{\mathsf A q(s)}_2\,ds.
+\]
+Since \(Q(t)=\norm{q(t)}_2\) and
+\(\norm{\mathsf A q(s)}_2\le\norm{\mathsf A}_{2\to2}Q(s)\), this yields
+\[
+    Q(t)
+    \le
+    \e^{4B}\e^{-2t}Q(0)
+    +
+    \e^{4B}\norm{\mathsf A}_{2\to2}
+    \int_0^t\e^{-2(t-s)}Q(s)\,ds.
+\]
+Multiplying by \(\e^{2t}\) and applying Gronwall,
+\[
+    Q(t)
+    \le
+    \e^{4B}
+    \e^{-(2-\e^{4B}\norm{\mathsf A}_{2\to2})t}Q(0).
+\]
+The assumed bound \(\norm{\mathsf A}_{2\to2}\le2\e^{-4B}\) gives
+\[
+    Q(t)\le \e^{4B}Q(0).
+\]
+Finally,
+\[
+    W(P_t f)
+    =
+    \sum_i\norm{\delta_i g_t}_{1,i}^2
+    \le
+    \e^{2B}Q(t)^2
+    \le
+    \e^{10B}Q(0)^2
+    \le
+    \e^{12B}W(f),
+\]
+where the last inequality uses
+\(\norm{\delta_i f}_{L^1(\mu)}\le\e^B\norm{\delta_i f}_{1,i}\).
+\end{proof}
+
+\paragraph{Constants used in the smoothing argument.}
+The constants \(M\) and \(\rho\) in the local Bobkov inequality above are
+chosen from the pointwise matrix condition \(A_s(x)\succeq0\).  They are not
+the constants used to run the smoothing argument below.  From the
+commutator estimate we get the gradient-decay margin
+\[
+    \lambda:=2-\e^{4B}\norm{\mathsf A}_{2\to2}.
+\]
+The log-Sobolev constant is the constant \(\alpha\) in the
+hypercontractive relation \(q-1=(p-1)\e^{2\alpha t}\).  It enters the
+remaining constants only through
+\[
+    \beta:=\tanh\alpha,
+\]
+because the interpolation exponent below is \(\tanh(\alpha t)\).  For the
+two results below assume \(\lambda>0\), and set
+\[
+    C_{\mathrm{int}}
+    :=
+    \frac{\e^B}{2\lambda}
+    +2+\frac1\beta
+    +\frac{1}{2\lambda}\max\left\{1,\frac{1}{2\beta}\right\},
+    \qquad
+    C_{\mathrm{Tal}}:=\e^{11B}C_{\mathrm{int}}.
+\]
+
+\begin{lemma}[Talagrand-type variance inequality]\label{lem:smooth-talagrand}
+Under the log-Sobolev assumption with constant \(\alpha\) and \(\lambda>0\),
+every \(g:X\to\R\) satisfies
+\[
+    \Var[\mu]{g}
+    \le
+    C_{\mathrm{Tal}}\sum_i
+    \frac{\norm{\delta_i g}_{2,i}^2}
+    {1+\log_+\tp{\norm{\delta_i g}_{2,i}/\norm{\delta_i g}_{1,i}}}.
+\]
+Here \(C_{\mathrm{Tal}}=\e^{11B}C_{\mathrm{int}}\), with
+\(C_{\mathrm{int}}\) defined above.  Thus \(C_{\mathrm{Tal}}\) depends on
+\(\alpha\) only through \(\beta=\tanh\alpha\), and
+\[
+    C_{\mathrm{Tal}}\asymp_{B,\lambda}1+\frac1{\tanh\alpha}.
+\]
+The \(i\)-term is interpreted as \(0\) if \(\delta_i g=0\).
+\end{lemma}
+
+\begin{remark}
+    This should be essentially the same as the one in Koehler's paper. Though, the degree might be unbounded in the underlying graph.
+\end{remark}
+\begin{proof}
+We first prove that, for \(p_t:=1+\e^{-2\alpha t}\),
+\[
+    \tp{\sum_i\norm{\delta_iP_tg}_{2,i}^2}^{1/2}
+    \le
+    \e^{11B/2}\e^{-\lambda t}
+    \tp{\sum_i\norm{\delta_i g}_{p_t,i}^2}^{1/2}.
+\]
+It suffices to prove the corresponding unweighted estimate.  For
+\(1\le p\le q\le2\), the comparison between \(\mu\) and
+\(\nu_i(x)=\mu(x^{\oplus i})\), Feynman--Kac, and hypercontractivity give
+\[
+    \norm{S_s^{(i)}h}_{q,\mu}
+    \le
+    \e^{4B}\e^{-2s}\norm{h}_{p,\mu},
+    \qquad q-1=(p-1)\e^{2\alpha s}.
+\]
+
+Let \(M_{ij}\) denote multiplication by \(p_j^{\oplus i}-p_j\), with
+\(M_{ii}=0\).  The equation from \cref{lem:smooth-l1-stability} gives
+\[
+    \delta_iP_tg
+    =
+    S_t^{(i)}\delta_i g
+    +
+    \int_0^tS_{t-s}^{(i)}\sum_jM_{ij}\delta_jP_sg\,ds.
+\]
+Iterating yields a sum over paths \(i=i_0,i_1,\ldots,i_m\) and time
+increments \(\tau_0,\ldots,\tau_m\ge0\) with
+\(\tau_0+\cdots+\tau_m=t\):
+\[
+    S_{\tau_0}^{(i_0)}M_{i_0i_1}
+    S_{\tau_1}^{(i_1)}M_{i_1i_2}\cdots
+    M_{i_{m-1}i_m}S_{\tau_m}^{(i_m)}\delta_{i_m}g.
+\]
+Choosing the intermediate exponents so that, after elapsed time \(\sigma\),
+the exponent is \(1+\e^{-2\alpha(t-\sigma)}\), each path term is bounded in
+\(L^2(\mu)\) by
+\[
+    \e^{4B(m+1)}\e^{-2t}
+    \tp{\prod_{\ell=0}^{m-1}a_{i_\ell i_{\ell+1}}}
+    \norm{\delta_{i_m}g}_{p_t}.
+\]
+After integrating over the \(m\)-simplex,
+\[
+    \norm{\delta_iP_tg}_2
+    \le
+    \e^{4B}\e^{-2t}
+    \sum_{m\ge0}\frac{(\e^{4B}t)^m}{m!}
+    \sum_j(\mathsf A^m)_{ij}\norm{\delta_jg}_{p_t}.
+\]
+Taking the \(\ell^2\)-norm in \(i\),
+\[
+    \tp{\sum_i\norm{\delta_iP_tg}_2^2}^{1/2}
+    \le
+    \e^{4B}\e^{-\lambda t}
+    \tp{\sum_i\norm{\delta_i g}_{p_t}^2}^{1/2}.
+\]
+Converting the left side to weighted \(L^2\)-edge norms costs at most
+\(\e^{B/2}\), and converting the right side from unweighted \(L^{p_t}\) to
+weighted \(L^{p_t}\)-edge norms costs at most \(\e^B\).  This proves the
+displayed weighted gradient estimate.
+
+By reversibility and irreducibility,
+\[
+    \Var[\mu]{g}
+    =
+    \int_0^\infty\sum_i\norm{\delta_iP_tg}_{2,i}^2\,dt.
+\]
+The gradient estimate gives
+\[
+    \Var[\mu]{g}
+    \le
+    \e^{11B}\int_0^\infty\e^{-2\lambda t}
+    \sum_i\norm{\delta_i g}_{p_t,i}^2\,dt.
+\]
+
+Fix \(i\), and set
+\[
+    a_i:=\norm{\delta_i g}_{1,i},\qquad b_i:=\norm{\delta_i g}_{2,i}.
+\]
+If \(b_i=0\), there is nothing to prove; otherwise \(a_i>0\).  Interpolation
+gives, for \(1\le p\le2\),
+\[
+    \norm{\delta_i g}_{p,i}
+    \le
+    a_i^{(2-p)/p}b_i^{2(p-1)/p}.
+\]
+Since \((2-p_t)/p_t=\tanh(\alpha t)\),
+\[
+    \norm{\delta_i g}_{p_t,i}^2
+    \le
+    b_i^2\tp{\frac{a_i}{b_i}}^{2\tanh(\alpha t)}.
+\]
+Write \(R_i:=b_i/a_i\).  If \(R_i<1\), then
+\[
+    a_i\le \tp{\int p_i\,d\mu}^{1/2}b_i\le \e^{B/2}b_i,
+\]
+so \(R_i\ge\e^{-B/2}\) and
+\[
+    \int_0^\infty\e^{-2\lambda t}\norm{\delta_i g}_{p_t,i}^2\,dt
+    \le
+    \frac{\e^B}{2\lambda}b_i^2.
+\]
+If \(R_i\ge1\), put \(L_i:=\log R_i\).  Since
+\(\tanh(\alpha t)\ge\beta\min\{t,1\}\),
+\[
+    \int_0^\infty\e^{-2\lambda t}R_i^{-2\tanh(\alpha t)}\,dt
+    \le
+    \frac{2+1/\beta}{1+L_i}
+    +
+    \frac{1}{2\lambda}\max\left\{1,\frac{1}{2\beta}\right\}
+    \frac{1}{1+L_i}.
+\]
+Combining the two cases gives
+\[
+    \int_0^\infty\e^{-2\lambda t}\norm{\delta_i g}_{p_t,i}^2\,dt
+    \le
+    C_{\mathrm{int}}
+    \frac{b_i^2}{1+\log_+R_i}.
+\]
+Summing over \(i\) proves the lemma.
+\end{proof}
+
+Set
+\[
+    D:=3C_{\mathrm{Tal}},
+    \qquad
+    \gamma:=\frac{1}{D(2+\log D)},
+    \qquad
+    \rho_{\mathrm{sm}}:=\frac{\gamma}{2}.
+\]
+Thus the final smoothing rate is
+\[
+    \rho_{\mathrm{sm}}
+    =
+    \frac{1}{2D(2+\log D)},
+    \qquad
+    D=3\e^{11B}C_{\mathrm{int}}.
+\]
+In particular, the log-Sobolev constant affects the final rate through
+\(\beta=\tanh\alpha\): a smaller \(\alpha\) makes \(\beta\) smaller, increases
+\(C_{\mathrm{int}}\) and \(C_{\mathrm{Tal}}\), and therefore decreases
+\(\rho_{\mathrm{sm}}\).  For fixed \(B\) and \(\lambda\),
+\[
+    \rho_{\mathrm{sm}}
+    \asymp_{B,\lambda}
+    \frac{\tanh\alpha}{1+\log(1+1/\tanh\alpha)}.
+\]
+
+\begin{theorem}[Smoothing lemma]\label{thm:smoothing-ising}
+Under the log-Sobolev assumption with constant \(\alpha\) and \(\lambda>0\),
+every Boolean \(f:X\to\{-1,+1\}\) satisfies
+\[
+    \Var[\mu]{P_t f}
+    \le
+    \e^{12B}\,W(f)^{\theta_t}\Var[\mu]{f}^{1-\theta_t},
+    \qquad
+    \theta_t=\tanh(\rho_{\mathrm{sm}}t).
+\]
+Here
+\[
+    \rho_{\mathrm{sm}}
+    =
+    \frac{1}{2D(2+\log D)},
+    \qquad
+    D=3\e^{11B}C_{\mathrm{int}},
+\]
+so, for fixed \(B\) and \(\lambda\),
+\[
+    \rho_{\mathrm{sm}}
+    \asymp_{B,\lambda}
+    \frac{\tanh\alpha}{1+\log(1+1/\tanh\alpha)}.
+\]
+\end{theorem}
+
+\begin{proof}
+If \(\Var[\mu]{f}=0\), then \(f\) is constant because \(\mu\) has full support.
+If \(W(f)=0\), then \(\delta_i f=0\) on every edge; since the hypercube is
+connected, \(f\) is again constant.  We may therefore assume
+\[
+    V:=\Var[\mu]{f}>0,
+    \qquad W(f)>0.
+\]
+
+Let
+\[
+    F(s):=\Var[\mu]{P_s f},\qquad
+    \mathcal B(s):=\sum_i\norm{\delta_iP_s f}_{2,i}^2,\qquad
+    \mathcal A(s):=\sum_i\norm{\delta_iP_s f}_{1,i}^2.
+\]
+By reversibility, \(F'(s)=-\mathcal B(s)\).  By
+\cref{lem:smooth-l1-stability},
+\[
+    \mathcal A(s)=W(P_s f)\le \e^{12B} W(f).
+\]
+
+Apply \cref{lem:smooth-talagrand} to \(g=P_s f\).  With
+\[
+    a_i:=\norm{\delta_iP_s f}_{1,i},
+    \qquad
+    b_i:=\norm{\delta_iP_s f}_{2,i},
+\]
+we get
+\[
+    F(s)\le
+    C_{\mathrm{Tal}}\sum_i\frac{b_i^2}{1+\log_+(b_i/a_i)}.
+\]
+Then \(\mathcal A(s)=\sum_i a_i^2\) and
+\(\mathcal B(s)=\sum_i b_i^2\).  Indices with \(a_i=0\) also have
+\(b_i=0\).  If \(\mathcal A(s)=0\), then \(F(s)=0\), and the claim is
+trivial.  Otherwise,
+\[
+    \sum_i\frac{b_i^2}{1+\log_+(b_i/a_i)}
+    \le
+    3\frac{\mathcal B(s)}
+    {1+\log_+\sqrt{\mathcal B(s)/\mathcal A(s)}}.
+\]
+Indeed, if \(\mathcal B(s)\le\e^4\mathcal A(s)\), then the right side is at
+least \(\mathcal B(s)\).  Otherwise split at
+\((\mathcal B(s)/\mathcal A(s))^{1/4}\):
+The large-ratio part can be bounded by
+\begin{align*}
+    \sum_{b_i / a_i \ge \tp{\+B(s)/\+A(s)}^{1/4}} \frac{b_i^2}{1+\log_+(b_i/a_i)} \le \sum_{i} \frac{2 b_i^2}{1+\log_+\tp{\sqrt{\+B(s)/\+A(s)}}} \le \frac{2\+B(s)}{1+\log_+(\sqrt{\+B(s)/A(s)})}.
+\end{align*}
+The
+small-ratio part costs at most
+\begin{align*}
+\sum_{b_i / a_i \le \tp{\+B(s)/\+A(s)}^{1/4}} \frac{(b_i/a_i)^2 a_i^2}{1+\log_+(b_i/a_i)} \le \sqrt{\frac{\+B(s)}{\+A(s)}}\sum_{i} a_i^2 = \sqrt{\+A(s) \+B(s)} \le \frac{\+B(s)}{1 + \log_+ \sqrt{\+B(s)/\+A(s)}}.
+\end{align*}
+
+
+With \(K:=\e^{12B}W(f)\), the preceding bounds give
+\[
+    F(s)
+    \le
+    D\frac{\mathcal B(s)}
+    {1+\log_+\sqrt{\mathcal B(s)/K}}.
+\]
+The elementary implication
+\[
+    y\le D\frac{x}{1+\log_+\sqrt{x/K}}
+    \quad\Longrightarrow\quad
+    x\ge \gamma\,y\tp{1+\log_+\frac{y}{K}}
+\]
+follows from \(y\le Dx\) and
+\[
+    1+\log_+\frac{y}{K}
+    \le
+    (2+\log D)\tp{1+\log_+\sqrt{x/K}}.
+\]
+Applying this with \(x=\mathcal B(s)\) and \(y=F(s)\), we obtain
+\[
+    F'(s)
+    \le
+    -\gamma F(s)\tp{1+\log_+\frac{F(s)}{K}}.
+\]
+
+If \(K\ge V\), then
+\[
+    F(t)\le V\le \e^{12B}W(f)^{\theta_t}V^{1-\theta_t}.
+\]
+Assume \(K<V\), and let \(\tau:=\inf\{s:F(s)\le K\}\).  On
+\([0,\tau)\), set \(u(s):=\log(F(s)/K)\).  Then
+\[
+    u'(s)=\frac{F'(s)}{F(s)}\le -\gamma(1+u(s))\le -\gamma u(s),
+\]
+so
+\[
+    F(s)\le K^{1-\e^{-\gamma s}}V^{\e^{-\gamma s}}
+    \qquad (0\le s<\tau).
+\]
+If \(\tau\le t\), monotonicity gives \(F(t)\le K\), which satisfies the same
+bound.  Thus, for all \(t\ge0\),
+\[
+    F(t)\le K^{1-\e^{-\gamma t}}V^{\e^{-\gamma t}}.
+\]
+Since \(\theta_t=\tanh(\rho_{\mathrm{sm}}t)=\tanh(\gamma t/2)
+\le1-\e^{-\gamma t}\) and \(K<V\),
+\[
+    F(t)
+    \le
+    K^{\theta_t}V^{1-\theta_t}
+    \le
+    \e^{12B}W(f)^{\theta_t}\Var[\mu]{f}^{1-\theta_t}.
+\]
+\end{proof}
+
+\section{Eldan--Gross inequality for high-temperature Ising}
+
+We keep the zero-field Ising notation, square-root rates, and definitions of
+\(\delta_i,\partial_i,|\nabla f|,\|\cdot\|_{q,i},I_i(f)\), and \(W(f)\) from
+the previous section.  Let \(M,\rho_{\mathrm B}\) denote the constants in the
+local Bobkov inequality, and use the smoothing estimate above with constants
+\[
+    C_0=\e^{12B},\qquad C_1=1,\qquad
+    \rho_{\mathrm{sm}}=\frac{1}{2D(2+\log D)}.
+\]
+We also use the hypercontractivity corresponding to the log-Sobolev constant
+\(\alpha\), and write \(\lambda_{\mathrm{gap}}\) for the spectral gap:
+\[
+    \Var[\mu]{P_t g}
+    \le
+    \e^{-2\lambda_{\mathrm{gap}}t}\Var[\mu]{g}.
+\]
+All these constants are dimension-free in the high-temperature regime.
+
+We first record the variance-drop consequence of local Bobkov.
+
+\begin{lemma}[Variance drop from local Bobkov]\label{lem:variance-drop-bobkov}
+There is a constant \(C_{\mathrm B}>0\), depending only on \(M\), such that
+every Boolean \(f:X\to\{-1,+1\}\) satisfies
+\[
+    \Var[\mu]{f}-\Var[\mu]{P_t f}
+    \le
+    C_{\mathrm B}
+    \sqrt{1-\e^{-\rho_{\mathrm B}t}}\,
+    \E[\mu]{|\nabla f|}.
+\]
+Consequently,
+\[
+    \Var[\mu]{f}-\Var[\mu]{P_t f}
+    \le
+    C_{\mathrm B}
+    \sqrt{\rho_{\mathrm B}t}\,
+    \E[\mu]{|\nabla f|}.
+\]
+\end{lemma}
+
+\begin{proof}
+Put \(h=(1+f)/2\).  Then \(I(h)=0\), \(P_th=(1+P_tf)/2\), and
+\(|\nabla h|=|\nabla f|/2\).  Local Bobkov gives
+\[
+    I\left(\frac{1+P_t f}{2}\right)
+    \le
+    \frac{\sqrt M}{2}
+    \sqrt{1-\e^{-\rho_{\mathrm B}t}}\,
+    P_t|\nabla f|.
+\]
+Using the universal bound
+\[
+    I\left(\frac{1+s}{2}\right)\ge c_I(1-s^2),
+    \qquad -1\le s\le1,
+\]
+and stationarity of \(P_t\), we obtain
+\[
+    c_I\E[\mu]{1-(P_t f)^2}
+    \le
+    \frac{\sqrt M}{2}
+    \sqrt{1-\e^{-\rho_{\mathrm B}t}}\,
+    \E[\mu]{|\nabla f|}.
+\]
+Since \(f^2=1\) and \(\E[\mu]{P_tf}=\E[\mu]{f}\),
+\[
+    \E[\mu]{1-(P_t f)^2}
+    =
+    \Var[\mu]{f}-\Var[\mu]{P_t f}.
+\]
+This proves the first bound with \(C_{\mathrm B}:=\sqrt M/(2c_I)\).  The
+second follows from \(1-\e^{-u}\le u\).
+\end{proof}
+
+Next we prove a preliminary lower bound which captures the
+\(\log(e/\Var f)\) contribution.
+
+\begin{lemma}[Large-variance and hypercontractive lower bound]
+\label{lem:variance-log-lower}
+There is a constant \(c_1>0\), depending only on the high-temperature
+constants, such that every Boolean \(f:X\to\{-1,+1\}\) satisfies
+\[
+    \E[\mu]{|\nabla f|}
+    \ge
+    c_1\Var[\mu]{f}
+    \sqrt{\log\left(\frac{e}{\Var[\mu]{f}}\right)}.
+\]
+\end{lemma}
+
+\begin{proof}
+Let \(V:=\Var[\mu]{f}\) and \(G:=\E[\mu]{|\nabla f|}\).  The case \(V=0\) is
+trivial.
+
+If \(V\ge\e^{-2}\), take
+\[
+    t_0:=\frac{\log 2}{2\lambda_{\mathrm{gap}}}.
+\]
+The spectral-gap estimate gives \(\Var[\mu]{P_{t_0}f}\le V/2\).  Hence
+\cref{lem:variance-drop-bobkov} implies
+\[
+    \frac V2
+    \le C_{\mathrm B}\sqrt{1-\e^{-\rho_{\mathrm B}t_0}}\,G,
+\]
+so \(G\ge cV\).  Since \(\log(e/V)\le3\) in this case, the desired bound
+follows.
+
+Assume now \(0<V<\e^{-2}\), and set \(g:=f-\E[\mu]{f}\).  For Boolean \(f\),
+\(\norm{g}_2^2=\norm{g}_1=V\).  With
+\[
+    p_t:=1+\e^{-2\alpha t},
+    \qquad
+    \eta_t:=\frac{2-p_t}{p_t}=\tanh(\alpha t),
+\]
+hypercontractivity and interpolation give
+\[
+    \Var[\mu]{P_t f}
+    =\norm{P_tg}_2^2
+    \le \norm{g}_{p_t}^2
+    \le V^{1+\eta_t}.
+\]
+Let \(L_V:=\log(1/V)\ge2\) and \(t_1:=1/(\alpha L_V)\).  Then
+\(\eta_{t_1}=\tanh(1/L_V)\ge c/L_V\), hence
+\(\Var[\mu]{P_{t_1}f}\le e^{-c}V\).  Applying
+\cref{lem:variance-drop-bobkov} at time \(t_1\),
+\[
+    cV
+    \le C_{\mathrm B}\sqrt{\rho_{\mathrm B}t_1}\,G,
+    \qquad\text{so}\qquad
+    G\ge c_1V\sqrt{L_V}.
+\]
+Since \(L_V\asymp\log(e/V)\) for \(V<\e^{-2}\), this proves the claim after
+decreasing \(c_1\).
+\end{proof}
+
+We next extract the \(W(f)\)-dependent logarithm from the smoothing lemma.
+
+\begin{lemma}[Smoothing lower bound]
+\label{lem:smoothing-log-lower}
+There are constants \(c_2>0\) and \(C_2\ge1\), depending only on the
+high-temperature constants, such that every Boolean \(f:X\to\{-1,+1\}\)
+satisfies
+\[
+    \E[\mu]{|\nabla f|}
+    \ge
+    c_2
+    \Var[\mu]{f}
+    \sqrt{
+        \log_+\left(
+            \frac{\Var[\mu]{f}}{C_2W(f)}
+        \right)
+    }.
+\]
+\end{lemma}
+
+\begin{proof}
+Let \(V:=\Var[\mu]{f}\) and \(G:=\E[\mu]{|\nabla f|}\).  If \(V=0\), or if
+\(W(f)=0\) (which forces \(f\) to be constant), there is nothing to prove.
+
+Set
+\[
+    A_0:=\max\{1,2\log(2C_0)\},
+    \qquad
+    C_2:=e^{A_0}C_1.
+\]
+If \(V\le C_2W(f)\), the right-hand side is zero.  Otherwise put
+\[
+    R:=\log\left(\frac{V}{C_1W(f)}\right)
+    =
+    \log\left(\frac{V}{C_2W(f)}\right)+A_0
+    \ge A_0,
+    \qquad
+    t_2:=\frac{A_0}{\rho_{\mathrm{sm}}R}.
+\]
+Since \(A_0/R\le1\),
+\[
+    \theta_{t_2}=\tanh(A_0/R)\ge \frac{A_0}{2R}.
+\]
+The smoothing lemma gives
+\[
+    \Var[\mu]{P_{t_2}f}
+    \le C_0V\e^{-\theta_{t_2}R}
+    \le \frac V2,
+\]
+by the choice of \(A_0\).  The variance-drop lemma then yields
+\[
+    \frac V2
+    \le C_{\mathrm B}\sqrt{\rho_{\mathrm B}t_2}\,G,
+    \qquad\text{hence}\qquad
+    G\ge c_2V\sqrt{R}.
+\]
+Finally \(R\ge\log(V/(C_2W(f)))\), and the claim follows after adjusting
+\(c_2\).
+\end{proof}
+
+We now combine the two estimates.
+
+\begin{theorem}[Eldan--Gross inequality for high-temperature Ising]
+\label{thm:eg-high-temp-ising}
+Under the assumptions above, there exists a constant
+\(c_{\mathrm{HT}}>0\), depending only on the high-temperature constants and
+not on \(n\), such that every Boolean \(f:X\to\{-1,+1\}\) satisfies
+\[
+    \E[\mu]{|\nabla f|}
+    \ge
+    c_{\mathrm{HT}}\,
+    \Var[\mu]{f}
+    \sqrt{
+        \log\left(
+            1+\frac{e}{W(f)}
+        \right)
+    }.
+\]
+\end{theorem}
+
+\begin{proof}
+Let \(V:=\Var[\mu]{f}\) and \(G:=\E[\mu]{|\nabla f|}\).  If \(V=0\), or if
+\(W(f)=0\) (which forces \(f\) to be constant), the result is trivial.  The
+two previous lemmas give, with \(c_3:=2^{-1/2}\min\{c_1,c_2\}\),
+\[
+    G
+    \ge
+    c_3V
+    \sqrt{
+        \log(e/V)
+        +
+        \log_+\left(\frac{V}{C_2W(f)}\right)
+    }.
+\]
+It remains to use the elementary comparison
+\[
+    \log(e/V)
+    +
+    \log_+\left(\frac{V}{C_2W(f)}\right)
+    \ge
+    c(C_2)
+    \log\left(1+\frac{e}{W(f)}\right),
+\]
+valid for \(0<V\le1\).  If \(V\ge C_2W(f)\), the left side equals
+\[
+    \log\left(\frac{e}{C_2W(f)}\right),
+\]
+which is comparable to \(\log(1+e/W(f))\) because \(W(f)\le1/C_2\).
+If \(V<C_2W(f)\), the second term vanishes and
+\[
+    \log\left(1+\frac{e}{W(f)}\right)
+    \le
+    \log\left(1+\frac{eC_2}{V}\right)
+    \lesssim_{C_2}
+    \log(e/V).
+\]
+Thus
+\[
+    G
+    \ge
+    c_{\mathrm{HT}}V
+    \sqrt{
+        \log\left(1+\frac{e}{W(f)}\right)
+    },
+\]
+as claimed.
+\end{proof}
+
+\begin{remark}[Dependence of the constant]
+The constant \(c_{\mathrm{HT}}\) depends on the local Bobkov constants
+\(M,\rho_{\mathrm B}\), the log-Sobolev constant \(\alpha\), the spectral
+gap \(\lambda_{\mathrm{gap}}\), and the smoothing constants
+\(C_0,C_1,\rho_{\mathrm{sm}}\). In the fixed high-temperature regime all of
+these are dimension-free constants depending only on the interaction
+strength parameter \(B\) and the commutator margin \(\lambda\). Hence
+\[
+    c_{\mathrm{HT}}=\Theta_{B,\lambda,\alpha}(1).
+\]
+In particular, for fixed high-temperature parameters,
+\[
+    \E[\mu]{|\nabla f|}
+    \gtrsim
+    \Var[\mu]{f}
+    \sqrt{
+        \log\left(
+            1+\frac{e}{W(f)}
+        \right)
+    },
+\]
+with a constant independent of \(n\).
+\end{remark}
+\end{document}

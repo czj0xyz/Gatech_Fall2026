@@ -1,0 +1,575 @@
+\documentclass[11pt]{article}
+\pagestyle{plain}
+
+% \pgfplotsset{compat=1.18}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amsfonts,amssymb,amsthm}
+\usepackage[ruled,vlined,linesnumbered,commentsnumbered]{algorithm2e}
+\SetKwInput{KwIn}{Input}
+\SetKwInput{KwOut}{Output}
+\SetKwInput{KwGlobal}{Global variable}
+\SetKwInput{KwOracle}{Oracle}
+\SetKwComment{Comment}{// }{}
+\usepackage{graphicx}
+\usepackage{enumerate}
+\usepackage{bbm}
+\usepackage{verbatim}
+\usepackage{hyperref,color}
+\usepackage[capitalize,nameinlink]{cleveref}
+\usepackage[dvipsnames]{xcolor} 
+\hypersetup{
+	colorlinks=true,
+	pdfpagemode=UseNone,
+	citecolor=OliveGreen,
+	linkcolor=NavyBlue,
+	urlcolor=Magenta,
+	pdfstartview=FitW
+}
+\usepackage{appendix}
+\usepackage{makecell}
+\usepackage{tablefootnote}
+\crefname{appsec}{Appendix}{Appendices}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{xifthen}
+\usepackage{subcaption}
+\usepackage{hhline}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{problem}[theorem]{Problem}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{fact}[theorem]{Fact}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{observation}[theorem]{Observation}
+\newtheorem{assumption}[theorem]{Assumption}
+\newtheorem*{assumption*}{Assumption}
+\newtheorem{condition}[theorem]{Condition}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\crefname{lemma}{Lemma}{Lemmas}
+\crefname{theorem}{Theorem}{Theorems}
+\crefname{definition}{Definition}{Definitions}
+\crefname{fact}{Fact}{Facts}
+\crefname{claim}{Claim}{Claims}
+\crefname{proposition}{Proposition}{Propositions}
+
+
+\newcommand{\dif}{\,\mathrm{d}}
+%\newcommand{\E}{\mathbb{E}}
+%\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\Cov}{\mathrm{Cov}}
+\newcommand{\MI}{\mathrm{I}}
+%\newcommand{\Ent}{\mathrm{Ent}}
+\newcommand{\ind}{\mathbbm{1}}
+\newcommand{\allone}{\mathbf{1}}
+\newcommand{\tr}{\mathrm{tr}}
+\newcommand{\wt}{\mathrm{weight}}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\newcommand{\TV}[2]{\left\|#1 - #2\right\|_{\mathrm{TV}}}
+\newcommand{\ceil}[1]{\left\lceil #1 \right\rceil}
+\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
+\newcommand{\ip}[2]{\left\langle #1 , #2 \right\rangle}
+\newcommand{\grad}{\nabla}
+\newcommand{\hessian}{\nabla^2}
+\newcommand{\trans}{\intercal}
+\newcommand{\diag}{\mathrm{diag}}
+\newcommand{\poly}{\mathrm{poly}}
+\newcommand{\dist}{\mathrm{dist}}
+\newcommand{\sgn}{\mathrm{sgn}}
+\newcommand{\fpras}{\mathsf{FPRAS}}
+\newcommand{\fpaus}{\mathsf{FPAUS}}
+\newcommand{\fptas}{\mathsf{FPTAS}}
+
+\newcommand{\eps}{\varepsilon}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+
+\renewcommand{\AA}{\mathcal{A}}
+\newcommand{\BB}{\mathcal{B}}
+\newcommand{\CC}{\mathcal{C}}
+\newcommand{\DD}{\mathcal{D}}
+\newcommand{\EE}{\mathcal{E}}
+\newcommand{\FF}{\mathcal{F}}
+\newcommand{\GG}{\mathcal{G}}
+\newcommand{\HH}{\mathcal{H}}
+\newcommand{\II}{\mathcal{I}}
+\newcommand{\JJ}{\mathcal{J}}
+\newcommand{\KK}{\mathcal{K}}
+\newcommand{\LL}{\mathcal{L}}
+\newcommand{\MM}{\mathcal{M}}
+\newcommand{\NN}{\mathcal{N}}
+\newcommand{\OO}{\mathcal{O}}
+\newcommand{\PP}{\mathcal{P}}
+\newcommand{\QQ}{\mathcal{Q}}
+\newcommand{\RR}{\mathcal{R}}
+\renewcommand{\SS}{\mathcal{S}}
+\newcommand{\TT}{\mathcal{T}}
+\newcommand{\UU}{\mathcal{U}}
+\newcommand{\VV}{\mathcal{V}}
+\newcommand{\WW}{\mathcal{W}}
+\newcommand{\XX}{\mathcal{X}}
+\newcommand{\YY}{\mathcal{Y}}
+\newcommand{\ZZ}{\mathcal{Z}}
+
+\newcommand{\KL}[2]{D_{\mathrm{KL}} \left( #1 \,\Vert\, #2 \right)}
+\newcommand{\KLbig}[2]{D_{\mathrm{KL}} \left( #1 \,\big\Vert\, #2 \right)}
+\newcommand{\KLBig}[2]{D_{\mathrm{KL}} \left( #1 \,\Big\Vert\, #2 \right)}
+
+\newcommand{\SKL}[2]{D_{\mathrm{SKL}} \left( #1 \,\Vert\, #2 \right)}
+\newcommand{\SKLbig}[2]{D_{\mathrm{SKL}} \left( #1 \,\big\Vert\, #2 \right)}
+\newcommand{\SKLBig}[2]{D_{\mathrm{SKL}} \left( #1 \,\Big\Vert\, #2 \right)}
+
+\newcommand{\qandq}{\quad\text{and}\quad}
+\newcommand{\supp}{\mathrm{supp}}
+
+\newcommand{\DKL}[2]{\-D_{\-{KL}}\left(#1 \parallel #2\right)}
+\newcommand{\DTV}[2]{\-D_{\mathrm{TV}}\left({#1},{#2}\right)}
+% \newcommand{\dist}{\mathrm{dist}}
+\newcommand{\e}{\mathrm{e}}
+\renewcommand{\epsilon}{\varepsilon}
+\renewcommand{\emptyset}{\varnothing}
+% \newcommand{\norm}[1]{\left\Vert#1\right\Vert}
+\newcommand{\set}[1]{\left\{#1\right\}}
+\newcommand{\tuple}[1]{\left(#1\right)} 
+% \newcommand{\eps}{\varepsilon}
+\newcommand{\inner}[2]{\left\langle #1,#2\right\rangle}
+\newcommand{\tp}{\tuple}
+\newcommand{\ol}{\overline}
+\newcommand{\abs}[1]{\left\vert#1\right\vert}
+\newcommand{\ctp}[1]{\left\lceil#1\right\rceil}
+\newcommand{\ftp}[1]{\left\lfloor#1\right\rfloor}
+\newcommand{\Ind}[1]{\-{Ind}_{#1}}
+\newcommand{\todo}[1]{{\color{red} TODO: #1}}
+
+\newcommand{\Cor}{\Psi^{\mathrm{sym}}}
+\newcommand{\cor}{\Psi^{\-{cor}}}
+\newcommand{\Inf}{\Psi}
+% \newcommand{\diag}{\-{diag}}
+
+\def\*#1{\boldsymbol{#1}} % Use \*A for \mathbf{A}
+\def\+#1{\mathcal{#1}} % Use \+A for \mathcal{A}
+\def\-#1{\mathrm{#1}} % Use \-A for \mathrm{A}
+\def\=#1{\mathbb{#1}} % Use \^A for \mathbb{A}
+\def\!#1{\mathfrak{#1}} % Use \!A for \mathfrak{A}
+
+\newcommand*\diff{\mathop{}\!\mathrm{d}}
+
+% probability
+% \DeclareMathOperator*{\oPr}{\mathbf{Pr}}
+\def\oPr{\mathop{\mathrm{Pr}}}
+\renewcommand{\Pr}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oPr\left[#2\right]}
+  {\oPr_{#1}\left[#2\right]} } % Use \Pr[a]{b} for \mathbf{Pr}_a[b], \Pr{b} for  \mathbf{Pr}[b]
+
+% expectation: relies on the package "dsfont"
+% \DeclareMathOperator*{\oE}{\mathbb{E}}
+\def\oE{\mathop{\mathbb{E}}}
+\newcommand{\E}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oE\left[#2\right]}
+  {\oE_{#1}\left[#2\right]} }
+
+% variance
+%\DeclareMathOperator*{\oVar}{\mathbf{Var}}
+\def\oVar{\mathrm{Var}}
+\newcommand{\Var}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oVar\left[#2\right]}
+  {\oVar_{#1}\left[#2\right]} }
+
+% entropy
+% \DeclareMathOperator*{\oEnt}{\mathbf{Ent}}
+\def\oEnt{\mathrm{Ent}}
+\newcommand{\Ent}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oEnt\left[#2\right]}
+  {\oEnt_{#1}\left[#2\right]} }
+
+\newcommand{\PhiEnt}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oEnt^\Psi\left[#2\right]}
+  {\oEnt^\Psi_{#1}\left[#2\right]} }
+
+
+\newenvironment{Exampleparagraph}[1][]
+{
+    \par 
+    \noindent 
+    \textbf{\color{blue} #1}
+    \par 
+    \vspace{0.5em} 
+    \itshape 
+}
+{
+    \par 
+    \vspace{1em} 
+}
+
+%\input{local-macro}
+
+\newcommand{\RED}[1]{\textcolor{red}{#1}}
+\newcommand{\zc}[1]{\textcolor{red}{ZC: #1}}
+
+\newcommand{\bern}[1]{\mathrm{Bern}\left(#1\right)}
+\newcommand{\pll}{\parallel}
+
+
+
+\title{Gaussian Isopermetric Profile Entropic Independence and Contraction}
+\date{\today}
+
+\pgfplotsset{compat=1.18} 
+\begin{document}
+
+\maketitle
+\section{Setup}
+\begin{definition}[$\Psi$-entropy]
+    Given convex function $\Psi: [0,\infty)\mapsto \R$, define $\Psi$-entropy $\PhiEnt{X}$ as follows
+    $$
+    \PhiEnt{X} = \E{\Psi(X)} - \Psi(\E{X}) ,
+    $$ 
+    for $X\geq 0$.
+    For any funcion $f$ and distribution $\mu$, define 
+    $$
+    \PhiEnt[\mu]{f} = \E[\mu]{\Psi(f)} - \Psi(\E[\mu]{f}) ,
+    $$ 
+\end{definition}
+\begin{lemma}[Law of Total Entropy]
+    $$
+        \PhiEnt{Y} = \E{\PhiEnt {Y\mid X}} + \PhiEnt{\E{Y\mid X}} . 
+    $$
+\end{lemma}
+Suppose we consider the distribution $\pi_k$ where $\supp(\pi_k) \subseteq \binom{[n]}{k}$.
+\begin{definition}[Contraction of $\Psi$-entropy]
+    We say $\pi_k$ is $C$-contraction of $\Psi$-entropy with respect to $k$ and $r$ if for any $f: \binom{[n]}k\mapsto [0,1]$,
+    $$
+        \E[S\sim\pi_r]{\PhiEnt[\pi_{k-r}^{S}]{f}} \leq C\cdot \PhiEnt[\mu]{f}
+    $$
+\end{definition}
+\begin{definition}[Approximate Tensorization of $\Psi$-entropy]
+    We say $\pi_k$ is $C$-ATE of $\Psi$-entropy if
+    $$
+        \forall f , \PhiEnt[\mu]{f} \leq C\cdot \E[x\sim \pi_k]{\sum_{i=1}^n \PhiEnt[\pi_1^{x_{-i}}]{f}}
+    $$
+\end{definition}
+\noindent Hope: tensorization can imlpy 
+$$
+    \PhiEnt{f} \lesssim \E[\pi_k]{|\nabla f|}
+$$
+where $|\nabla f|$ is the $1$-norm of $f$, i.e., $|\nabla f(x)| = \sum_{i=1}^n |\frac{f(x) - f(x^{\oplus i})}{2}|$.
+
+\begin{definition}[$\Psi$-entropy Independence]
+    We say $\pi_k$ is $C$-EI of $\Psi$-entropy if for any $f: \binom{[n]}k\mapsto [0,1]$,
+    $$
+       k\PhiEnt[\{i\}\sim \pi_1]{\E[T\sim \pi_k]{f(T)\mid i\in T}} \leq C\cdot \PhiEnt[\pi_k]{f} . 
+    $$
+\end{definition}
+Generally, by local-to-global arguement, entropic independence always implies approximate tensorization.
+\begin{lemma}\label{lem:EI_to_contraction}
+    If $\pi_{k-|S|}^S$ satisfies $\Psi$-entropic independence with $C_{EI}(n-|S|,k-|S|)$ for any subset $S$, then for any $0\leq j\leq k$ and $f: \binom{[n]}k\mapsto [0,1]$, we have that
+    $$
+        \PhiEnt[T\sim \pi_j]{\E[\pi^T_{k-j}]{f}} \leq (1 - \prod_{i=0}^{j-1}(1-\frac{C_{EI}(n-i,k-i)}{k-i}))\PhiEnt[\pi]{f} 
+    $$
+\end{lemma}
+\begin{proof}
+    we prove by induction.
+    By law of total entropy, we have that
+    \begin{align*}
+        \PhiEnt[T\sim \pi_{j+1}]{\E[\pi^T_{k-j}]{f}} &= \PhiEnt[S\sim \pi_{j}]{\E[\pi^S_{k-j}]{f}} + \E[S\sim \pi_j]{\PhiEnt[T\sim \pi^S_{j+1}]{\E[\pi^T_{k-j-1}]{f}}}
+        \\&\leq \PhiEnt[S\sim \pi_{j}]{\E[\pi^S_{k-j}]{f}} + \frac{C_{EI}(n-j,k-j)}{k-j}\cdot \E[S\sim \pi_j]{\PhiEnt[T\sim \pi^S_{k-j}]{f}}%+ \E[S\sim \pi_j]{\PhiEnt[T\sim \pi^S_{j+1}]{\E[\pi^T]{f}}}
+        \\&= (1 - \frac{C_{EI}(n-j,k-j)}{k-j})\PhiEnt[S\sim \pi_{j}]{\E[\pi^S_{k-j}]{f}} + \frac{C_{EI}(n-j,k-j)}{k-j} \PhiEnt[\pi_k]{f}
+        \\&\leq (1 - \frac{C_{EI}(n-j,k-j)}{k-j})(1 - \prod_{i=0}^{j-1}(1 - \frac{C_{EI}(n-i,k-i)}{k-i}))\PhiEnt[\pi_{k}]{f} 
+        \\&+ \frac{C_{EI}(n-j,k-j)}{k-j} \PhiEnt[\pi_k]{f}
+        \\&= (1 - \prod_{i=0}^{j}(1 - \frac{C_{EI}(n-i,k-i)}{k-i})) \PhiEnt[\pi_k]{f}\qedhere
+    \end{align*}
+\end{proof}
+It is sufficient to build the $\Psi$-entropic independence.
+
+\subsection{Uniform Distribution}
+Consdier proving for the uniform distribution on $\pi_k = Uni(\binom{[n]}{k})$.
+Take $\Psi = - I = - \varphi(\Phi^{-1})$, where $I$ is the Gaussian isopermetric profile.
+
+We have the following claim.
+\begin{conjecture}
+    We have that 
+    $$
+        C_{EI} = \sup_{\substack{f: \PhiEnt[\pi_k]{f} > 0\\f =\Phi(\lambda x)}} \frac{k\PhiEnt[\{i\}\sim \pi_1]{\E[T\sim \pi_k]{f(T)\mid i\in T}}}{\PhiEnt[\pi_k]{f}} .
+    $$
+\end{conjecture}
+The intuition behind the conjecture:
+Let $q_i := \binom{n-1}{k-1}^{-1}\sum_{i\in T} f(T)$.
+We have that 
+$$
+    \frac{C_{EI}}k = \sup_{f: \PhiEnt[\pi_k]{f} > 0} \frac{ \frac 1n\sum_{i=1}^n \Psi(q_i)- \Psi(\frac 1n\sum_{i=1}^n q_i)}{ \E{\Psi(f)} - \Psi(\frac 1n\sum_{i=1}^n q_i)}
+    \leq \sup_{\*q = (q_1,\ldots,q_n)} \frac{ \frac 1n\sum_{i=1}^n \Psi(q_i)- \Psi(\frac 1n\sum_{i=1}^n q_i)}{(\inf_{f: \*q}\E{\Psi(f)}) - \Psi(\frac 1n\sum_{i=1}^n q_i)}
+$$
+The Lagrangian function $\+L$ is as follows for $\inf_{f: \*q}\E{\Psi(f)}$: 
+$$
+    \+L(x,\lambda) = \binom nk^{-1}\sum_{T} \Psi(x_T) - \sum_{i=1}^n\lambda_i(\binom{n-1}{k-1}^{-1}\sum_{i\in T} x_T - q_i) .
+$$
+Since $\Psi' = - \varphi'(\Phi^{-1})\frac{1}{\varphi(\Phi^{-1})} = \Phi^{-1}\varphi(\Phi^{-1})\frac{1}{\varphi(\Phi^{-1})} = \Phi^{-1}$, we have that 
+$$
+    \nabla \+L = 0 \implies
+    \begin{cases}
+        \binom nk^{-1}\Phi^{-1}(x_T) - \binom{n-1}{k-1}^{-1}\sum_{i\in T}\lambda_i = 0 &,\forall T\in\binom{[n]}k
+        \\\binom{n-1}{k-1}^{-1}\sum_{i\in T} x_T - q_i = 0 &, \forall i\in[n]
+    \end{cases} .
+$$ 
+Therefore, if $x$ is a local minimizer of $\inf_{f: \*q}\E{\Psi(f)}$ shows that $f(x) = \Phi(\frac nk\inner{x}{\lambda})$.
+\begin{observation}
+    % By numerical experiments, we observe that for some $b$ satisfying that $|b|$ is small, 
+    % $$
+    %    \frac{\PhiEnt[\{i\}\sim \pi_1]{\E[T\sim \pi_k]{\Psi(\inner{T}{\lambda} + b)\mid i\in T}}}{\PhiEnt[T\sim\pi_k]{\Psi(\inner{T}{\lambda} + b)}} \xrightarrow{\eps \to 0^+, a.s.} \frac{n-k}{(n-1)k}
+    % $$
+    % where $\lambda \sim Uni([-\eps,\eps]^n)$.
+    By numerical experiments, we observe that
+    $$
+       \frac{\PhiEnt[\{i\}\sim \pi_1]{\E[T\sim \pi_k]{\Psi(\inner{T}{\lambda})\mid i\in T}}}{\PhiEnt[T\sim\pi_k]{\Psi(\inner{T}{\lambda})}} \xrightarrow{\eps \to 0^+, a.s.} \frac{n-k}{(n-1)k}
+    $$
+    where $\lambda \sim Uni([-\eps,\eps]^n)$.
+\end{observation}
+Therefore, we have the following lemma,
+\begin{lemma}
+    We have that $C_{EI} \geq \frac{n-k}{n-1}$ and it is conjectured that the equality holds.
+\end{lemma}
+If the equality holds, then by Lemma \ref{lem:EI_to_contraction}, we have taht for any $j\leq k$,
+$$
+    \PhiEnt[T\sim \pi_j]{\E[\pi^T_{k-j}]{f}} \leq (1 - \prod_{i=0}^{j-1}(1-\frac{n-k}{(k-i)(n-i-1)}))\PhiEnt[\pi]{f} 
+$$
+The following shall be true,
+\begin{align*}
+    1 - \prod_{i=0}^{j-1}(1-\frac{n-k}{(k-i)(n-i-1)})
+    &\leq 1 - \prod_{i=0}^{j-1}\frac{k-i-1}{k-i} =  \frac jk.
+\end{align*}
+And it is almost tight if $n\gg k$.
+% since $\frac{1}{x} \leq \ln x - \ln(x-1)$ .
+
+Suppose $k \ll n$. In conclusion, the uniform distribution may satisfy $(\frac jk)$-contraction of $(-I)$-entropy with respect to $k$ and $j$ (if the conjecture is right).
+
+Proof idea: fix $v\in \R^n$ and $f_\lambda(x) := \Phi(\lambda\inner{x}{v})$.
+Let $A(\lambda) = \frac 1n\sum_{i=1}^n \Psi(q_i)- \Psi(\frac 1n\sum_{i=1}^n q_i), B(\lambda) =  \E{\Psi(f_\lambda)} - \Psi(\frac 1n\sum_{i=1}^n q_i)$ where $q_i  = \binom{n-1}{k-1}^{-1}\sum_{i\in T} f_\lambda(T)$.
+Let $g(\lambda) = \frac{A(\lambda)}{B(\lambda)}$.
+If we can show that $g$ is increasing with respect to $\lambda > 0$ (which should hold by numerical experiments), then it is sufficient to calculate $\lim_{\lambda\to 0^+} g(\lambda)$, which should converge to $\frac{n-k}{(n-1)k}$.
+
+$\Psi(\frac 12 + \delta) = \Psi(\frac 12) + \frac{\Psi''(\frac 12)}{2}\delta^2 + o(\delta)$.
+We have that
+$$
+    A(\lambda) = \frac{\Psi''(1/2)}2(\frac 1n\sum_{i=1}^n \delta_i^2 - \overline \delta^2) + o(\lambda^2) = \frac{\sqrt{2\pi}}2(\frac 1n\sum_{i=1}^n \delta_i^2 - \overline \delta^2) + o(\lambda^2),
+$$
+where $\delta_i := q_i - \frac 12 = O(\delta)$, $\overline \delta = \frac 1n\sum_{i=1}^n \delta_i$.
+Similarly,
+$$
+    B(\lambda) = \frac{\lambda^2}{2\sqrt{2\pi}}(\E{\inner{v}{T}^2} - \E{\inner{v}{T}}^2) + o(\lambda^2) = \frac{\lambda^2}{2\sqrt{2\pi}}\Var{\inner{v}{T}}  + o(\lambda^2).
+$$
+$\delta_i = \E{\frac 12 + \frac{\lambda \inner{v}{T}}{\sqrt{2\pi}} + o(\lambda)\mid i\in T} - \frac 12 = \frac {\lambda}{\sqrt{2\pi}}\E{\inner{v}{T}\mid i\in T} + o(\lambda)$.
+Let $\*m_i = \E{\inner{v}{T}\mid i\in T}$ and $\*m = \E{\inner{v}{T}}$, we have that $A(\lambda) = \frac{\lambda^2}{2\sqrt{2\pi}}\Var{\*m_i}$.
+Therefore,
+\begin{align*}
+    \lim_{\lambda \to 0^+} \frac{A(\lambda)}{B(\lambda)} &= \frac{\Var{\*m_i}}{\Var{\inner{v}{T}}} = \frac{\Var[i]{\E{\inner{v}{T}\mid i\in T}}}{\Var{\inner{v}{T}}}
+    = \frac{\Var[i]{\frac{n-k}{n-1}v_i + \frac{k-1}{n-1}\sum v_j}}{\Var{\inner{v}{T}}}
+    \\&= \frac{(n-k)^2\Var[i]{v_i}}{(n-1)^2\Var{\inner{v}{T}}} = \frac{(n-k)^2(n-1)\Var[i]{v_i}}{(n-1)^2k(n-k)\Var[i]{v_i}} = \frac{n-k}{k(n-1)} ,
+\end{align*}
+where $\Var{\inner{v}{T}} = \frac{k(n-k)}{n-1}\Var[i]{v_i}$.
+% Since $A(0) = B(0) = 0$, we have that
+% \begin{align*}
+%     A'(\lambda) &= \frac 1n\sum_{i=1}^n \Phi^{-1}(q_i)q_i' - \frac 1n\Phi^{-1}(\frac 1n\sum_{i=1}^n q_i)\sum_{i=1}^n q_i' 
+%     \\&= \frac {1}{k\binom nk}\left(\sum_{i=1}^n \sum_{i\in T} \Phi^{-1}(q_i)f_\lambda'(T) - \Phi^{-1}(\frac 1n\sum_{i=1}^n q_i)\sum_{T} f_\lambda'(T)\right) 
+%     \\&= \frac {1}{k\binom nk}\sum_{T}f_\lambda'(T)\left(\sum_{i\in T} \Phi^{-1}(q_i) - \Phi^{-1}(\frac 1n\sum_{i=1}^n q_i)\right) ;
+% \end{align*}
+% \begin{align*}
+%     B'(\lambda) &= \frac 1{\binom nk}\sum_T \Phi^{-1}(f_\lambda(T))f_\lambda'(T) - \frac 1n\Phi^{-1}(\frac 1n\sum_{i=1}^n q_i)\sum_{i=1}^n q_i' 
+%     \\&= \frac 1{\binom nk}\sum_T \Phi^{-1}(f_\lambda(T))f_\lambda'(T) - \frac 1{k\binom nk}\Phi^{-1}(\frac 1n\sum_{i=1}^n q_i)\sum_{T} f_\lambda'(T)
+%     \\&= \frac 1{k\binom nk}\sum_T f_\lambda'(T) \left(k\lambda \inner{T}{v}- \Phi^{-1}(\frac 1n\sum_{i=1}^n q_i)\right) .
+% \end{align*}
+% Since $\Phi^{-1}(\E{\Phi(\lambda f)}) = \lambda \E{f} + \frac {\lambda^3}6(\E{f}^3 - \E{f^3}) + o(\lambda^4)$,
+% $$
+%     \sum_{i\in T}\Phi^{-1}(q_i) = \lambda \sum_{i\in T} \E[S\sim \mu(\cdot\mid i\in)]{\inner{S}{v}}  + o(\lambda) = \lambda \E[S\sim \mu]{\inner{S}{v}|S\cap T|} .
+% $$
+% Want to compute 
+% $$
+%     \sup_{v} \frac{\sum_T \inner{T}{v}(\E{\inner{S}{v}\cdot|S\cap T|} - \*\mu(\*v))}{\sum_T k\inner{T}{v}^2 - \inner{T}{v}\*\mu(\*v)} ,
+% $$
+% where $\*\mu(\*v) := \E[S\sim \mu]{\inner{S}{v}}$.
+
+
+\newpage
+\section{Boolean Hypercube Isoperimetric Inequality}
+\subsection{Isoperimetric Inequality}
+See \cite{durcik2026sharp} for more details.
+Let $\Omega = \{0,1\}^n$ be the Boolean hypercube.
+Define $h_A(x) := |N(x) \cap (\Omega\setminus A)|$ be the number of edges that go out of $A$ from $x$ for $x\in A$.
+\begin{theorem}[Therorem 1 in \cite{durcik2026sharp}]\label{thm:durcik}
+    For any $A\subseteq \Omega$ with $|A|\leq \frac 12$,
+    we have that 
+    $$
+        \E[\mu]{\sqrt{h_A}} \geq |A|\sqrt{\log_2(1/|A|)} ,
+    $$
+    where $\mu$ is the uniform distribution on $\Omega$ and $|A| := |A|/2^n$.
+\end{theorem}
+\begin{corollary}
+    Theorem \ref{thm:durcik} implies that for any boolean function $f: \Omega\mapsto \{0,1\}$, $\norm{\nabla f}_1 \geq \norm{f - \E{f}}_1$, where $\norm{\nabla f}_1 = \E[\mu]{\sqrt{\sum_{i\in[n]}(\frac 12(f(x) - f(x^{\oplus i})))^2}}$.
+    And by Cauchy-Schwarz inequality, we have that 
+    $$
+        \E{h_A} \geq \frac{|A|^2}{|\partial A|}\log_2(1/|A|) .
+    $$
+\end{corollary}
+Proof Idea: find a Bellman function $B: [0,1]\mapsto [0,\infty)$ which satisfies that 
+$$
+    B(0) = 0, B(1) = 1, max(G_1,G_2)[B](x,y) \geq 0 \text{ for }x,y\in[0,1],
+$$
+$$
+    \text{where }G_1[B](x,y) = \sqrt{(y-x)^2 + B(y)^2} + B(x) - 2B(\frac{x+y}{2}) ,
+$$
+$$
+   G_2[B](x,y) = y-x +(\sqrt 2 - 1)B(y) + B(x) - 2B(\frac{x+y}{2}) .
+$$
+Then $\E{\sqrt{h_A}} \geq B(|A|)$ for any $A\subset \Omega$.
+In \cite{durcik2026sharp}, the authors take
+$$
+    B(x) = x\sqrt{\log_2(1/x)}\ind[x\leq \frac 14] + \text{some cubic func. for } x\in (\frac 14,\frac 12) +  \frac 12 I(\frac 1{2w})^{-1}I(\frac{1-x}w)\ind[x\geq \frac 12]
+$$
+to finish the proof.
+\subsection{KKL Theorem}
+Define $\+I_i(f) := \frac 12\E[\mu]{(f(x) - f(x^{\oplus i}))^2} = \frac 12\Pr{f(x) \neq f(x^{\oplus i})}$ be the influence of the $i$-th coordinate.
+Let $\+M(f) := \max_{i\in[n]}\+I_i(f)$ and $\+E(f) := \frac 1n\sum_{i\in[n]}\+I_i(f)$.
+\begin{theorem}[KKL]
+    For any boolean function $f: \Omega\mapsto \{0,1\}$, we have that
+    $$
+        \+E(f) \geq\Omega(1)\frac{\log(1/\+M(f))}{n}\Var{f} ,
+    $$
+    implying $\+M(f) \geq \Omega(\frac {\log n}n)\Var{f}$.
+\end{theorem}
+\subsection{FKN Theorem}
+\begin{theorem}[FKN Theorem]
+    Suppose $f: \Omega\mapsto \{0,1\}$ is $\eps$-close to an affine function.
+    Then $f$ is $O(\eps)$-close to one of the functions $\{0,1,x_1,1-x_1,\ldots,x_n,1-x_n\}$.
+    $f,g$ are $\eps$-close if $\norm{f-g}^2_\mu \leq \eps$, i.e. $\Pr[\mu]{f\neq g}\leq \eps$.
+
+    Specifically, if $\eps = 0$, $f\in \{0,1\}$ or $f\in \{x_i,1-x_i\}$ for some $i\in[n]$.
+\end{theorem}
+\subsection{Gross-Eldan Inequality}
+See \cite{ivanisvili2025eldan} for more details.
+\begin{theorem}[Therorem 3 in \cite{ivanisvili2025eldan}]
+    There exists a constant $C$ such that for any boolean function $f: \{\pm 1\}^n\mapsto \{\pm 1\}$, we have that
+    $$
+        \E[\mu]{\norm{\nabla f}_1}\geq C \Var{f} \sqrt{\log\left(1 + \frac{e}{{\color{red} 4}\sum_{i=1}^n \+I_i(f)^2}\right)} .
+    $$
+\end{theorem}
+Proof idea: see \href{https://www.overleaf.com/project/68c323dbe053030b143776e0}{overleaf notes}.
+Apply the semigroup $H_t = (e^{-t} I  + (1-e^{-t})\E{})^{\otimes n}$ (i.e., resample w.p. $1 - e^{-t}$ and do nothing w.p. $e^{-t}$).
+Prove the hypercontractivity, commutativity ($\E{H_t()} = H_t(\E{})$) and Bobkov inequality on discrete hypercube.
+\section{Slices of the Boolean Hypercube}
+\subsection{Isoperimetric Inequality} 
+What we want to show is that for some constant $C$,
+$$
+    \E[\mu]{\sqrt {h_S}} \geq C|S|(1-|S|) .
+$$
+\subsection{KKL Theorem}
+See \cite{o2013kkl} for more details.
+
+The definition of influence is as follows: for $1\leq u < v\leq n$,
+$$
+    \+I_{u,v} = \frac 12\E[\mu]{(f(x) - f(x^{u,v}))^2} = \frac 12\Pr{f(x) \neq f(x^{u,v})} ,
+$$
+where $x^{u,v}$ denotes the vector obtained by swapping the $u$-th and $v$-th coordinates of $x$.
+We have the following similar KKL theorem for the slice of the Boolean hypercube.
+\begin{theorem}[Theorem 1.1 in \cite{o2013kkl}]\label{thm:kkl_slice}
+    Suppose the uniform distribution over $\binom{[n]}k$ has log-Sobolev constant $\rho$, we have that for any boolean function $f: \binom{[n]}{k}\mapsto \{0,1\}$, 
+    $$
+        \+E(f) \geq \Omega(1)\rho\log(1/\+M(f))\Var{f} ,
+    $$
+    implying $M(f)\geq \Omega(1)\rho \log(1/\rho)\Var{f}$.
+    Specifically, if $\Omega(1) \leq k/n\leq 1-\Omega(1)$, we can replace $\rho$ with $\frac 1n$, since $\rho = \Theta\left(\displaystyle\frac 1{n\log \frac{n(n-1)}{2k(n-k)}}\right) = \Theta\left(\frac 1n\right)$.
+\end{theorem}
+Proof idea: define generator $L = \binom{n}{2}^{-1}\sum_{a<b} L_{a,b}$ such that $L_{a,b}f(x) = f(x) - f(x^{a,b})$ (i.e., $L = I - K$ where $K$ is down-up walk on the slice with some laziness).
+Then $H_t = e^{tL}$ satisfies that $H_t f(x) = \E[m\sim \-{Poisson}(t), y\sim K^{m}(x,\cdot)]{f(y)}$.
+For uniform distribution, we have bounds for spectral gap and log-Sobolev constant:
+$$
+    \Theta\left(\displaystyle\frac 1{n\log \frac{n(n-1)}{2k(n-k)}}\right) = \rho \leq \lambda_1 = \frac 2{n-1} 
+$$
+hypercontractivity:
+$$
+    \forall 1\leq p\leq q\text{ with } \frac{q-1}{p-1} \leq \exp(2\rho t) \text{ and } f\in L^2(\mu): \norm{H_t f}_q \leq \norm{f}_p .
+$$
+and commutativity:
+$$
+    L L_{a,b} = L_{a,b} L \text{ and }\forall t\geq 0, H_t L_{a,b} = L_{a,b} H_t .
+$$
+Calculation shows Theorem \ref{thm:kkl_slice}.
+\subsection{FKN Theorem}
+See \cite{filmus2014friedgut} for more details.
+\begin{theorem}[Theorem 3.1 in \cite{filmus2014friedgut}]
+    Suppose a boolean function $f: \binom{[n]}{k}\mapsto \{0,1\}$ is $\eps$-close to an affine function, where $2\leq k\leq n-2$.
+    Let $p:=\min\{k/n,1-k/n\}$.
+    Then either $f$ or $1 - f$ is $O(\eps)$-close to $\max_{i\in S} x_i$ or to $\min_{i\in S} x_i$ for some $S\subseteq [n]$ of size at most $\max\{1,O(\sqrt{\eps})/p\}$.
+
+    Specifically, if $\eps = 0$, $f\in \{0,1\}$ or $f\in \{x_i,1-x_i\}$ for some $i\in[n]$.
+\end{theorem}
+
+
+% \subsection{Notation Translation}
+% For $f\in C_k = (X_k,\R)$, the influence (only one layer of down-up walk)
+% \subsection{Verification}
+% The KKL theorem is that
+% $$
+%     \+E(f) \geq \Omega(1)\frac{\log(1/\+M[f])}{n}\Var{f} .
+% $$
+$(\eps,i)$-global if 
+$$
+    \forall \tau \in X(i): \E[X_\tau]{f_\tau} \leq \E{f} + \eps.
+$$
+% If $\eps$ is large, it means that the density must concentrate on some subset of the simplicial complex, meaning that some influence must be large.
+% Use Garland’s Lemma to do induction.
+\subsection{Main Results}
+$\gamma_i = \max_{\tau\in X(i)}\{\lambda_2(A_\tau)\}, \gamma_i^{(-)} = \min_{\tau\in X(i)}\{\lambda_{\min}(A_\tau)\}$.
+\begin{theorem}[Theorem 1.1 and Theorem 1.2 in \cite{hopkins2025local}]
+If $f$ is $(\eps,i)$-global boolean function, Then
+$$
+    \Phi(f) \geq \frac{1-\E{f}}{k-i}\prod_{j=i}^{k-2}(1-\gamma_j) - c_{k,i,\gamma} \eps ,
+$$
+where $c_{k,i,\gamma} \leq (k-i+1)\left(\frac 1{k-i}\prod_{j=i}^{k-2}(1-\gamma_j)-\frac 1{k-i+1}\prod_{j=i-1}^{k-2}(1-\gamma_j)\right)\left(1+(k-i)\gamma_{i-1}^{(-)}\right)^{-1}$ and $\Phi$ is the conductance of the down-up walk on $C_k$.
+
+And for $0<i<k$, there exists $\{X_k\}$ and $(0,i)$-global function $\{f\}$ such that 
+$$
+    \Phi(f)\leq (1 - \E{f})\frac {i+1}k\prod_{j=i}^{k-2}(1-\gamma_j),
+$$
+where, $\Phi(f) = 1-\frac{\inner{N_k^1f}{f}}{\inner{f}{f}}$.
+\end{theorem}
+\begin{example}
+    Let $X(k) = \binom{[n]}k$ and $\pi_k$ be the uniform distribution on $X(k)$.
+    We have that
+    $$
+        \tau\in X(i),A_\tau = \frac 1{n-|\tau|-1}(J-I)\implies \gamma_i = \gamma_i^{(-)} = -\frac 1{n-i-1} .
+    $$
+    $$
+        c_{k,i,\gamma} \leq \frac{n-i}{(n-k+1)(k-i)}.
+    $$
+    Note that under worst case,
+    $$
+        \eps = \max_{\tau}\{\E[X_\tau]{f_\tau} - \E{f}\} = \max_\tau \frac{|S\cap X_\tau|}{\binom {n-i}{k-i}} - \frac{|S|}{\binom {n}{k}} = 1 - \frac{\binom {n-i}{k-i}}{\binom {n}{k}} = 1 - \frac{k^{\underline i}}{n^{\underline i}}.
+    $$
+    Therefore,
+    \begin{align*}
+        \Phi(f) &\geq \frac{1-\E{f}}{k-i}\prod_{j=i}^{k-2}(1-\gamma_j) - c_{k,i,\gamma} \eps
+        \\&= \frac{1-\E{f}}{k-i}\frac{n-i}{n-k+1} - \frac{n-i}{(n-k+1)(k-i)}\eps
+        \\&= \frac{n-i}{(n-k+1)(k-i)}(1 - \E{f} - \eps)
+        \\&= \frac{n-i}{(n-k+1)(k-i)}(1 - \max_\tau \E[X_\tau]{f_\tau})
+        \\&= \frac{n-i}{(n-k+1)(k-i)}(1 - \max_{\tau:|\tau| = i} \frac{|S\cap X_\tau|}{\binom {n-i}{k-i}}) .
+    \end{align*}
+    where $S = \supp(f)$.
+\end{example}
+
+\bibliographystyle{alpha}
+\bibliography{ref.bib}
+\end{document}

@@ -1,0 +1,524 @@
+\section{Preliminaries}
+\subsection{$\Gamma$-calculus on Boolean hypercube}
+Let $\Omega = \{\pm 1\}^n$ be the boolean hypercube.
+For any $x \in \Omega$, we use $x^i$ to denote the vector obtained by flipping the $i$-th coordinate of $x$ and $x^{ij} := (x^i)^j$.
+Given the transition rates $\{q_i: \Omega \mapsto \R_+\}_{i\in[n]}$, we define the operator $L$ on functions $f:\Omega \to \R$ as follows:
+\begin{align*}
+    \forall x \in \Omega,\quad Lf(x) = \sum_{i=1}^n q_i(x)(f(x^i) - f(x)).
+\end{align*}
+The \textit{continuous-time Markov semigroup} $(P_t)_{t\geq 0}$ is given by $P_t = \e^{t L}$.
+Let $\mu$ be the \textit{stationary distribution} of the Markov semigroup $(P_t)_{t\geq 0}$.
+And in this paper, we assume that $L$ is \textit{reversible} with respect to $\mu$, that is, for any $x\in \Omega$ and $i\in [n]$, it holds 
+$$\mu(x)q_i(x) = \mu(x^i)q_i(x^i).$$
+
+\begin{definition}[Weighted carr\'e du champ operator $\Gamma_w$]
+    Given the weight functions $w_i: \Omega \to \R_+$ for every $i\in [n]$, the \textit{weighted carr\'e du champ operator} $\Gamma_w$ is defined that for any function $f,g:\Omega \to \R$,
+    \begin{align*}
+        \Gamma_w(f,g) := \frac 12 (L_w(fg)-gL_wf-fL_wg),
+    \end{align*}
+    where $L_w$ is the operator defined by the reweighted transition rates $\{w_iq_i\}_{i\in[n]}$ (for which $\mu$ is not necessarily stationary). 
+    We write $\Gamma_w(f) := \Gamma_w(f,f)$ for simplicity.
+    By a straightforward calculation, for any $x \in \Omega$, it holds
+    \begin{align*}
+       \Gamma_w(f,g)(x) = \frac 12\sum_{i=1}^n w_i(x)q_i(x)(f(x^i) - f(x))(g(x^i) - g(x)).
+    \end{align*}
+    We also use $\Gamma_{w,i}$ to denote the contribution of the $i$-th coordinate to $\Gamma_w$, that is, 
+    \begin{align*}
+        \forall x \in \Omega,\quad \Gamma_{w,i}(f,g)(x) := \frac 12 w_i(x)q_i(x)(f(x^i) - f(x))(g(x^i) - g(x)).
+    \end{align*}
+    We write $\Gamma_{w,i}(f) := \Gamma_{w,i}(f,f)$ for simplicity.
+    Note, $\Gamma_w(f) = \sum_{i=1}^n \Gamma_{w,i}(f)$.
+\end{definition}
+
+We omit the subscript $w$ when $w_i \equiv 1$ for all $i \in [n]$.
+
+It is also convenient to use the weighted discrete gradient to represent the carr\'e du champ operator.
+
+
+\begin{definition}[Weighted discrete gradient of $f$]\label{def:weighted-gradient}
+    The \textit{weighted discrete gradient} of function $f: \Omega \to \mathbb{R}$ is defined as the vector 
+    \begin{align*}
+        \nabla_w f := (\delta_{w,1} f, \ldots, \delta_{w,n} f),\quad \text{where} \quad \delta_{w,i} f := \sqrt{\frac 12w_i(x)q_i(x)}(f(x^i) - f(x)).
+    \end{align*}
+    The \textit{absolute weighted discrete gradient} is the entrywise absolute value of $\nabla_w f$, denoted by $|\nabla_w| f := (|\delta_{w,1}| f, \ldots, |\delta_{w,n}| f)$.
+\end{definition}
+
+\begin{fact}
+    We have that $\Gamma_{w,i}(f,g) = (\delta_{w,i} f) (\delta_{w,i} g)$ and $\Gamma_w(f,g) = \inner{\nabla_w f}{\nabla_w g}$.
+    In particular, $\Gamma_{w,i}(f) = (\delta_{w,i} f)^2$ and $\Gamma_w(f) = \norm{\nabla_w f}_2^2$.
+\end{fact}
+
+\ZC{$|\nabla_w f|$ vs $|\nabla_w| f$, $|\delta_{w,1} f|$ vs $|\delta_{w,1}| f$}
+
+\ZJ{I used $|\nabla_w| f$ and $|\delta_{w,1}| f$ in Section 5.}
+
+\ZC{Mention the definition of discrete gradient is slightly non-standard.}
+
+\ZC{add citation for weighted $\Gamma$}
+
+\begin{definition}[Second-order weighted carr\'e du champ operator $\Gamma_{2;w}$]
+    The \textit{second-order weighted carr\'e du champ operator} $\Gamma_{2;w}$ satisfies that for any function $f:\Omega \to \R$,
+    \begin{align*}
+        \Gamma_{2;w}(f) := \frac 12 L\Gamma_w(f) - \Gamma_w(f,Lf).
+    \end{align*}
+\end{definition}
+
+\begin{lemma}[\cite{BHLLMY15,FS18}, Chain rule]
+\label{lem:chain-rule}
+    For any function $f: \Omega \to \R$, it holds
+    \begin{align*}
+        \sqrt{f} L \sqrt{f} = \frac{1}{2} L f - \Gamma(\sqrt{f}).
+    \end{align*}
+\end{lemma}
+
+% \begin{proof}
+%     For any $x \in \Omega$, by definition, we have
+%     \begin{align*}
+%         \sqrt{f(x)} L \sqrt{f}(x) &= \sum_{i=1}^n q_i(x) \sqrt{f(x)} (\sqrt{f(x^i)} - \sqrt{f(x)})\\
+%         &= \sum_{i=1}^n q_i(x) (\sqrt{f(x)}\sqrt{f(x^i)} - f(x))\\
+%         &= \frac 12 \sum_{i=1}^n q_i(x) (f(x^i) - f(x)) - \frac 12 \sum_{i=1}^n q_i(x) (\sqrt{f(x^i)} - \sqrt{f(x)})^2\\
+%         &= \frac 12 L f(x) - \Gamma(\sqrt{f})(x). \qedhere
+%     \end{align*}
+% \end{proof}
+
+% {\color{red} Xinayuan: Simpler proof:
+\begin{proof}
+    By the definition of carr\'e du champ operator, 
+    \begin{align*}
+        \Gamma(\sqrt{f}) = \frac{1}{2} \tp{L(\sqrt{f}^2) - 2\sqrt{f} L \sqrt{f}} = \frac{1}{2} Lf - \sqrt{f} L \sqrt{f}.
+    \end{align*}
+    This completes the proof.
+\end{proof}
+% }
+
+
+
+
+
+
+
+
+
+
+\subsection{Influence and surface area of Boolean functions}
+
+\begin{definition}
+    Let $f: \Omega \to \mathbb{R}$ be a function.
+
+    \begin{enumerate}[(1)]
+        \item The \textit{total influence} of $f$ is defined as
+        \begin{align*}
+            I_w(f) := \E[\mu]{\Gamma_{w}(f)} = \E[\mu]{\norm{\nabla_w f}^2_2}.
+        \end{align*}
+        Also, let $I_{w,i}(f) := \E[\mu]{\Gamma_{w,i}(f)}$ denote the influence of the $i$-th coordinate.
+
+        \item The \textit{(Boolean) surface area} of $f$ is defined as
+        \begin{align*}
+            A_w(f) := \E[\mu]{\sqrt{\Gamma_wf}} = \E[\mu]{\norm{\nabla_w f}_2}.
+        \end{align*}
+
+        \item The \textit{total squared influence} of $f$ is defined as
+        \begin{align*}
+            J_{w}(f) := \sum_{i=1}^n \tp{\E[\mu]{\abs{\delta_{w,i} f}}}^2 = \norm{\E[\mu]{|\nabla_w| f}}^2_2.
+        \end{align*}
+    \end{enumerate}
+    
+\end{definition}
+
+
+
+\begin{example}[Uniform distribution]
+    Consider the case where $\mu$ is uniform over $\Omega$. Let $q_i(x) = \frac{1}{2}$ and $w_i(x) = 1$ for all $i \in [n]$ and $x \in \Omega$.
+    Let $f: \Omega \to \{\pm 1\}$ be a Boolean-valued function. 
+    Below, we omit $w$ in the subscript since everything is unweighted.
+
+    \begin{enumerate}[(1)]
+        \item Total influence: We have
+        \begin{align*}
+            I_i(f) = \Pr[\mu]{f(x^i) \neq f(x)}, \quad I(f) = \sum_{i=1}^n I_i(f).
+        \end{align*}
+
+        \item Surface area: We have
+        \begin{align*}
+            A(f) = \E[\mu]{\sqrt{s(f)}}
+        \end{align*}
+        where $s(f)$ denotes the sensitivity of $f$; namely, $s(f)(x) = |\{i \in [n]: f(x^i) \neq f(x)\}|$ for each $x \in \Omega$.
+    
+        \item Total squared influence: We have
+        \begin{align*}
+            J(f) = \sum_{i=1}^n \Pr[\mu]{f(x^i) \neq f(x)}^2 = \sum_{i=1}^n I_i(f)^2.
+        \end{align*}
+    \end{enumerate}
+\end{example}
+
+\ZC{Let's keep it like this for now. I may use different notations in the intro for:
+\begin{align*}
+    \mathsf{Inf_i}(f) &:= \Pr[\mu]{f(x^i) \neq f(x)} \\
+    \mathsf{Inf}(f) &:= \sum_{i=1}^n \Pr[\mu]{f(x^i) \neq f(x)} \\
+    \mathsf{SurfArea}(f) &:= \E[\mu]{\sqrt{s(f)}} \\
+    \mathsf{SqInf}(f) &:= \sum_{i=1}^n \Pr[\mu]{f(x^i) \neq f(x)}^2.
+\end{align*}
+}
+
+\begin{example}[Canonical transition rates and weights]
+    Let $\mu$ be an arbitrary distribution supported on $\Omega$. 
+    Consider the canonical transition rates and weights defined as: for any $i \in [n]$ and $x \in \Omega$,
+    \begin{align*}
+        q^\star_i(x) := \frac 12\sqrt{\frac{\mu(x^i)}{\mu(x)}}
+        \qquad\text{and}\qquad
+        w^\star_i(x) := 2q^\star_i(x) = \sqrt{\frac{\mu(x^i)}{\mu(x)}}.
+    \end{align*}
+    Let $f: \Omega \to \{\pm 1\}$ be a Boolean-valued function. 
+    Below, we use the superscript $\star$ to represent the canonical weights $w^\star$.
+
+    \begin{enumerate}[(1)]
+        \item Total influence: We have
+        \begin{align*}
+            I^\star_i(f) = \Pr[\mu]{f(x^i) \neq f(x)}, \quad I^\star(f) = \sum_{i=1}^n I^\star_i(f).
+        \end{align*}
+        The above equality is derived from definitions:
+        \begin{align*}
+            I^\star_i(f) &= \E[\mu]{q_i^\star(x)^2 (f(x^i) - f(x))^2}
+            = \E[\mu]{\ind\{f(x^i)\neq f(x)\}\frac{\mu(x^i)}{\mu(x)}}
+            \\&= \sum_{x^i\in \Omega} \ind\{f(x^i)\neq f(x^{ii})\}\mu(x^i)
+            = \Pr[\mu]{f(x^i) \neq f(x)},
+        \end{align*}
+        where the third equality follows from the fact that $x^{ii}=x$ holds for $i\in[n]$ and $x\in \Omega$.
+        \ZC{Add a short calculation to explain.}
+
+        \item Surface area: We have
+        \begin{align*}
+            A^\star(f) = \E[\mu]{\sqrt{s_\mu(f)}},
+        \end{align*}
+        where $s_\mu(f)$ denotes a weighted sensitivity of $f$ defined by
+        \begin{align*}
+            s_\mu(f)(x) = \sum_{i=1}^n \frac{\mu(x^i)}{\mu(x)} \mathbf{1}\{f(x^i) \neq f(x)\}.
+        \end{align*}
+        If $b \le \sqrt{\mu(x^i)/\mu(x)} \le 1/b$ for all $x \in \Omega$ for some $b \in (0,1]$, then 
+        \begin{align*}
+            bA^\star(f) \le \E[\mu]{\sqrt{s(f)}} \le \frac 1b A^\star(f).
+        \end{align*}
+        \ZC{Add constants above.}
+
+        \item Total squared influence: We have
+        \begin{align*}
+            J^\star(f) = \sum_{i=1}^n \E[\mu]{\sqrt{\frac{\mu(x^i)}{\mu(x)}} \mathbf{1}\{f(x^i) \neq f(x)\}}^2
+        \end{align*}
+        If $b \le \sqrt{\mu(x^i)/\mu(x)} \le 1/b$ for all $x \in \Omega$ for some $b \in (0,1]$, then 
+        \begin{align*}
+            b^2J^\star(f) \le \sum_{i=1}^n \Pr[\mu]{f(x^i) \neq f(x)}^2 \le \frac 1{b^2}J^\star(f).
+        \end{align*}
+        \ZC{Add constants above.}
+    \end{enumerate}
+    
+\end{example}
+
+By H\"older’s and Jensen’s inequalities, we obtain the following relations.
+\begin{fact}
+    For any function $f : \Omega \to \R$, we have that $J_w(f)\leq A_w(f)^2 \leq I_w(f)$.
+\end{fact}
+
+\subsection{Functional inequalities}
+\begin{definition}
+    The \textit{variance} of function $f: \Omega \to \mathbb{R}$ is
+    \begin{align*}
+        \Var[\mu]{f} := \E[\mu]{f^2} - (\E[\mu]{f})^2.
+    \end{align*}
+    The \textit{entropy} of function $f: \Omega \to \mathbb{R}_+$ is
+    \begin{align*}
+        \Ent[\mu]{f} := \E[\mu]{f \log f} - \E[\mu]{f} \log \E[\mu]{f}.
+    \end{align*}
+\end{definition}
+
+\begin{definition}[Poincar\'e inequality]
+    We say that the Poincar\'e inequality holds with constant $\lambda > 0$ if for any $f: \Omega \to \R$,
+    \begin{align}\label{eq:Poincare}
+        \Var[\mu]{f} \leq \frac 1\lambda \E[\mu]{\Gamma (f)}, \tag{Poincar\'e}
+    \end{align}
+    where $\Gamma(f)$ is the unweighted carr\'e du champ operator, i.e. $w_i \equiv 1$ for all $i\in [n]$.
+    Or equivalently, $\Var[\mu]{P_t f}\leq e^{-2\lambda t}\Var[\mu]{f}$ holds.
+\end{definition}
+
+\begin{definition}[Log-Sobolev inequality]
+    We say that the log-Sobolev inequality holds with constant $\rho_{\LSI} > 0$ if for any $f: \Omega \to \R$,
+    \begin{align}\label{eq:LSI}
+        \Ent[\mu]{f^2} \leq \frac 2{\rho_{\LSI}} \E[\mu]{\Gamma (f)}. \tag{LSI}
+    \end{align}
+\end{definition}
+
+\begin{definition}[Modified log-Sobolev inequality of gradient type]
+    We say that the modified log-Sobolev inequality of gradient type holds with constant $\rho_{\MLSI} > 0$ if for any $f: \Omega \to \R_+$,
+    \begin{align}\label{eq:mLSI-gradient}
+        \Ent[\mu]{f} \leq \frac 2{\rho_{\MLSI}} \E[\mu]{\frac{\Gamma (f)}{f}}. \tag{mLSI-gradient}
+    \end{align}
+\end{definition}
+
+\ZC{Use $\norm{\cdot}_{p,\mu}$}
+\begin{theorem}[Hypercontractivity]\label{thm:hypercontractivity}
+    If the log-Sobolev inequality holds with constant $\rho > 0$ and $1\leq p \leq q \leq \infty$ satisfy $\frac{q-1}{p-1}\leq \exp(2\rho t)$, then for all $f: \Omega \to \R$, we have $\norm{P_t f}_{q,\mu} \leq \norm{f}_{p,\mu}$.
+\end{theorem}
+
+\subsection{Gaussian isoperimetric profile}
+\begin{definition}[Gaussian isoperimetric profile]\label{def:gaussian_isoperimetric_profile}
+    We define the Gaussian isoperimetric profile $\+I: [0,1] \to \R_+$ as $\+I(x) = \varphi(\Psi^{-1}(x))$, where $\varphi$ and $\Phi$ are the Probability Density Function (PDF) and Cumulative Distribution Function (CDF) of the standard Gaussian distribution, respectively.
+\end{definition}
+\begin{fact}\label{fact:gaussian_isoperimetric_profile_ineq}
+    For any $a,b\in [0,1]$, we have that
+    $$
+        \+I(a)(\+I(b)-\+I(a)-\+I'(a)(b-a))\geq -(b-a)^2 .
+    $$
+\end{fact}
+
+\section{Bakry--\'Emery Conditions and Gradient Estimates}
+
+\subsection{BE theory, weak and strong gradient estimates}
+For $f,g: \Omega \to \R$, we write $f\leq g$ for brevity if $f(x)\leq g(x)$ for all $x\in \Omega$.
+\begin{definition}[Bakry--\'Emery conditions]
+    Let $\mu$ be a distribution supported on $\Omega = \{\pm 1\}^n$ and $\{q_i: \Omega \mapsto \R_+\}_{i\in[n]}$ be transition rates reversible for $\mu$.
+    Suppose $\{w_i:\Omega \to \R_+\}_{i\in[n]}$ is a collection of weight functions.
+    \begin{itemize}
+        \item We say that the \textit{Bakry--\'Emery condition} holds with constant $\rho_{\BE} > 0$ if for any function $f: \Omega \to \mathbb{R}$, it holds
+        \begin{align}\label{eq:BE}
+            \Gamma_{2;w}(f) \geq \rho_{\BE} \cdot \Gamma_w(f); \tag{BE}
+        \end{align}
+        \item We say that the \textit{reinforced Bakry--\'Emery condition} holds with constant $\rho_{\RBE} > 0$ if for any function $f: \Omega \to \R$, it holds 
+        \begin{align}\label{eq:rBE}
+            \Gamma_{2;w}(f) - \Gamma(\sqrt{\Gamma_w(f)}) \ge \rho_{\RBE} \cdot \Gamma_w(f). \tag{rBE}
+        \end{align}
+    \end{itemize}
+\end{definition}
+
+The following comparison follows immediately from the non-negativity of $\Gamma$.
+\begin{fact}
+If~\ref{eq:rBE} holds with constant $\rho > 0$, then~\ref{eq:BE} holds with the same constant $\rho$.
+\end{fact}
+
+
+
+
+\begin{definition}[Weak and strong gradient estimate]
+    Let $\mu$ be a distribution supported on $\Omega = \{\pm 1\}^n$ and $\{q_i: \Omega \mapsto \R_+\}_{i\in[n]}$ be transition rates reversible for $\mu$.
+    Suppose $\{w_i:\Omega \to \R_+\}_{i\in[n]}$ is a collection of weight functions. 
+    \begin{itemize}
+        \item We say that the \emph{Weak Gradient Estimate (WGE)} holds with constant $\rho_{\WGE} > 0$ if for any function $f:\Omega \to \R$ and $t\geq 0$, 
+        \begin{align}\label{eq:WGE}
+            \Gamma_w(P_t f) \leq e^{-2\rho_{\WGE} t} P_t(\Gamma_w(f)) \quad\iff\quad \norm{\nabla_w P_t f}^2_2 \leq e^{-2\rho_{\WGE} t} P_t(\norm{\nabla_w f}^2_2); \tag{WGE}
+        \end{align}
+        \item We say that the \emph{Strong Gradient Estimate (SGE)} holds with constant $\rho_{\SGE} > 0$ if for any function $f: \Omega \to \R$ and $t\geq 0$, 
+        \begin{align}\label{eq:SGE}
+            \sqrt{\Gamma_w(P_t f)} \leq e^{-\rho_{\SGE} t} P_t  \sqrt{\Gamma_w(f)} \quad\iff\quad \norm{\nabla_w P_t f}_2 \leq e^{-\rho_{\SGE} t} P_t(\norm{\nabla_w f}_2); \tag{SGE}
+        \end{align}
+    \end{itemize}
+\end{definition}
+
+\begin{fact}\label{fact:SGE-to-WGE}
+If~\ref{eq:SGE} holds with constant $\rho > 0$, then~\ref{eq:WGE} holds with the same constant $\rho$.
+\end{fact}
+
+\begin{proof}
+    By~\ref{eq:SGE}, it holds that for any $f : \Omega \to \mathbb{R}$ and $t \ge 0$,
+    \begin{align*}
+         \norm{\nabla_w P_t f}^2_2  \le \e^{-2\rho t} \tp{P_t \norm{\nabla_w f}_2}^2 \le \e^{-2\rho t}P_t \tp{\norm{\nabla_w f}^2_2},
+    \end{align*}
+    where the last inequality follows from the Cauchy--Schwarz inequality: $\tp{P_t g}^2 \le P_t (g^2)$ for any function $g : \Omega \to \mathbb{R}$.
+\end{proof}
+
+
+\begin{proposition}\label{prop:equivalence_BE_GE}
+    The following equivalences hold.
+    \begin{itemize}
+        \item The Bakry--\'Emery condition with constant $\rho$ iff the weak gradient estimate with constant $\rho$.
+        \item The reinforced Bakry--\'Emery condition with constant $\rho$ iff the strong gradient estimate with constant $\rho$.
+    \end{itemize}
+\end{proposition}
+
+\begin{lemma}\label{lem:gamma2-formula}
+    For any function $f: \Omega \to \R$, it holds
+    \begin{align*}
+        \Gamma_{2;w}(f) - \Gamma(\sqrt{\Gamma_w(f)}) = \sqrt{\Gamma_w(f)} L \sqrt{\Gamma_w(f)} - \Gamma_w(f,Lf).
+    \end{align*}
+\end{lemma}
+
+\begin{proof}
+    % \ZC{Use \Cref{lem:chain-rule}}
+    Straightforward calculation shows that
+    \begin{align*}
+        \Gamma_{2;w}(f) - \Gamma(\sqrt{\Gamma_w(f)}) &= \frac 12 L \Gamma_w(f) - \Gamma_w(f,Lf) - \Gamma(\sqrt{\Gamma_w(f)}) &&\text{(by definition of $\Gamma_{2;w}$)}
+        \\&= \sqrt{\Gamma_w(f)} L \sqrt{\Gamma_w(f)} - \Gamma_w(f,Lf). &&\text{(by \Cref{lem:chain-rule})} \qedhere
+    \end{align*}
+\end{proof}
+Now we prove \Cref{prop:equivalence_BE_GE} based on \Cref{lem:gamma2-formula}.
+
+
+\begin{proof}[Proof of \Cref{prop:equivalence_BE_GE}]
+\ZC{GPT: The converse directions require differentiating WGE and SGE at \(t=0\).
+Notation change: $F(s) \to F_s$ and $G(s) \to G_s$, because both are operators with argument $f$.
+}
+    Fix $f : \Omega \to \R$ and $t \ge 0$. Let $F(s) = P_s \Gamma_w(P_{t-s} f)$. The derivative $\frac{\dif }{\dif s} F(s)$ satisfies
+    \begin{align*}
+        \frac{\dif }{\dif s} F(s) = L P_s \Gamma_w(P_{t-s} f) + P_s \frac{\dif}{\dif s} \Gamma_w(P_{t-s} f) &= L P_s \Gamma_w(P_{t-s} f) -2 P_s \Gamma_w(P_{t-s}f, LP_{t-s} f)\\
+        &= 2 P_s \Gamma_{2;w}(P_{t-s} f).
+    \end{align*}
+    This proves the first part. Similarly, let $G(s) = P_s \sqrt{\Gamma_w(P_{t-s} f)}$. At points where $\Gamma_w(P_{t-s}f)=0$, the following calculation is justified by replacing $\sqrt{\Gamma_w}$ with $\sqrt{\Gamma_w+\varepsilon}$ and letting $\varepsilon\downarrow0$. The derivative satisfies
+    \begin{align}\label{eq:dG-1}
+    \frac{\dif}{\dif s} G(s) = P_s \tp{L \sqrt{\Gamma_w(P_{t-s} f)} - \frac{\Gamma_w(P_{t-s} f, L P_{t-s} f)}{\sqrt{\Gamma_w(P_{t-s} f)}}}.
+    \end{align} 
+    By the definition of the second-order carr\'e du champ operator $\Gamma_{2;w}$, it holds
+    \begin{align}\label{eq:dG-2}
+        \Gamma_w(P_{t-s} f, L P_{t-s} f) = \frac{1}{2} L \Gamma_w(P_{t-s} f) - \Gamma_{2;w}(P_{t-s} f). 
+    \end{align}
+    By~\Cref{lem:chain-rule}, the quantity $\sqrt{\Gamma_w(P_{t-s} f)} L\sqrt{\Gamma_w(P_{t-s} f)}$ can be written as
+    \begin{align}\label{eq:dG-3}
+        \sqrt{\Gamma_w(P_{t-s} f)} L\sqrt{\Gamma_w(P_{t-s} f)} = \frac{1}{2} L \Gamma_w(P_{t-s} f) - \Gamma(\sqrt{\Gamma_w(P_{t-s} f)}).
+    \end{align}
+    % \ZC{Cite the chain rule for \cref{eq:dG-3}? (\Cref{lem:gamma2-formula})}
+    Combining~\ref{eq:dG-1},~\ref{eq:dG-2} and~\ref{eq:dG-3}, we have
+    \begin{align*}
+    \frac{\dif}{\dif s} G(s) = P_s\tp{\frac{\Gamma_{2;w}(P_{t-s} f) - \Gamma(\sqrt{\Gamma_w(P_{t-s} f)})}{\sqrt{\Gamma_w(P_{t-s} f)}}}.
+    \end{align*}
+    This proves the second part.
+\end{proof}
+
+\begin{remark}[Comparison with continuous space]
+    Let $w \equiv 1$.
+    For continuous spaces like $\mathbb{R}^n$, the Bakry--\'Emery condition is also known as the curvature-dimension $CD(\rho,\infty)$, which is also equivalent to the reinforced Bakry--\'Emery condition. However, in the discrete setting, the reinforced version is strictly stronger. \ZC{Need to expand.}
+\end{remark}
+
+\begin{proposition}[Contraction in total influence and surface area]
+    %Let $\rho > 0$ be a constant.
+    \quad
+    \begin{itemize}
+        \item If~\ref{eq:WGE} holds with constant $\rho > 0$, then the total influence contracts along the heat semigroup with rate $2\rho$; that is, for any function $f: \Omega \to \R$ and $t \ge 0$,
+        \begin{align*}
+            I_w(P_t f) \leq e^{-2\rho t} I_w(f); \tag{$I$-contraction}
+        \end{align*}
+        
+        \item If~\ref{eq:SGE} holds with constant $\rho > 0$, then the surface area contracts along the heat semigroup with rate $\rho$; that is, for any function $f: \Omega \to \R$ and $t \ge 0$,
+        \begin{align*}
+            A_w(P_t f) \leq e^{-\rho t} A_w(f). \tag{$A$-contraction}
+        \end{align*}   
+    \end{itemize}
+\end{proposition}
+
+\begin{proof}
+By the definition of the total influence, it holds
+\begin{align*}
+    I_w(P_t f) = \E[\mu]{\Gamma_w(P_t f)} \le \e^{-2 \rho t} \E[\mu]{P_t \Gamma_w(f)} = \e^{-2 \rho t} \E[\mu]{\Gamma_w(f)}.
+\end{align*}
+This proves the contraction of the total influence. 
+Similarly, by the definition of the surface area, 
+\begin{align*}
+    A_w(P_t f) = \E[\mu]{\sqrt{\Gamma(P_t f)}} \le \e^{-\rho t} \E[\mu]{P_t \sqrt{\Gamma(f)}} = \e^{-\rho t} A_w(f).
+\end{align*}
+This proves the contraction of the surface area.
+\end{proof}
+
+\subsection{Coordinate-wise strong gradient estimate}
+Suppose $v: \Omega \to \R^n$ is a vector field; for example, given any function $f: \Omega \to \R$, the discrete gradient $\nabla_w f$ and the absolute discrete gradient $\abs{\nabla_w}f$ are both vector fields.
+Suppose $T$ is an operator mapping a function $f: \Omega \to \R$ to another function $Tf: \Omega \to \R$.
+With a slight abuse of notation, we extend $T$ to apply to vector fields entrywisely; specifically, $T v: \Omega \to \R^n$ is again a vector field defined as
+\begin{align*}
+    T v := (T v_1,\dots,T v_n)
+    % \begin{pmatrix}
+    %     T v_1 \\
+    %     \vdots \\
+    %     T v_n
+    % \end{pmatrix}
+\end{align*}
+where $v_1,\dots,v_n$ are components of $v$.
+
+\begin{definition}[Coordinate-wise strong gradient estimate]
+    Let $\mu$ be a distribution supported on $\Omega = \{\pm 1\}^n$ and $\{q_i: \Omega \mapsto \R_+\}_{i\in[n]}$ be transition rates reversible for $\mu$.
+    Suppose $\{w_i:\Omega \to \R_+\}_{i\in[n]}$ is a collection of weight functions. 
+    
+    We say that the \emph{Coordinate-wise Strong Gradient Estimate (CSGE)} holds with constant $\rho_{\CSGE} > 0$ if for any $\tau \in [0,\infty]$, any function $f: \Omega \to \R$, and $t\geq 0$, 
+        \begin{align}\label{eq:CSGE}
+            \norm{P_\tau \abs{\nabla_w}P_t f}_2 \leq e^{-\rho_{\CSGE} t}\norm{P_{\tau+t} \abs{\nabla_w}f}_2. \tag{CSGE}
+        \end{align}
+        We record two particularly important subcases:
+        \begin{itemize}
+            \item ($\tau = 0$) For any function $f: \Omega \to \R$ and $t\geq 0$,  
+            \begin{align}\label{eq:0-CSGE}
+                \norm{\nabla_w P_t f}_2 \leq e^{-\rho_{\CSGE} t}\norm{P_t \abs{\nabla_w}f}_2. \tag{$0$-CSGE}
+            \end{align}
+
+            \item ($\tau = \infty$) For any function $f: \Omega \to \R$ and $t\geq 0$,  
+            \begin{align}\label{eq:infty-CSGE}
+                \norm{\E[\mu]{\abs{\nabla_w}P_t f}}_2 \leq e^{-\rho_{\CSGE} t}\norm{\E[\mu]{\abs{\nabla_w}f}}_2. \tag{$\infty$-CSGE}
+            \end{align}
+        \end{itemize}
+\end{definition}
+
+\begin{fact}
+If~\ref{eq:0-CSGE} holds with constant $\rho > 0$, then both~\ref{eq:WGE} and~\ref{eq:SGE} hold with the same constant $\rho$.
+\end{fact}
+
+\begin{proof}
+    By~\eqref{eq:0-CSGE} and Minkowski inequality,
+    \begin{align*}
+        \norm{\nabla_w P_t f}_2 \le \e^{-\rho t} \norm{P_t \abs{\nabla_w} f}_2 \le \e^{-\rho t} P_t \norm{\nabla_w f}_2.
+    \end{align*}
+    Therefore,~\eqref{eq:SGE} holds with the constant $\rho$. 
+    By~\Cref{fact:SGE-to-WGE},~\eqref{eq:WGE} also holds with the same constant $\rho$.
+\end{proof}
+
+
+\begin{proposition}[Contraction in total squared influence]
+    %Let $\rho > 0$ be a constant.
+    If~\ref{eq:infty-CSGE} holds with constant $\rho > 0$, then the total squared influence contracts along the heat semigroup with rate $2\rho$; that is, for any function $f: \Omega \to \R$ and $t \ge 0$,
+    \begin{align*}
+        J_w(P_t f) \leq e^{-2\rho t} J_w(f). \tag{$J$-contraction}
+    \end{align*} 
+\end{proposition}
+
+\begin{proof}
+    Assume~\ref{eq:infty-CSGE} holds with constant $\rho$. For any $f:\Omega \to \mathbb{R}$ and $t \ge 0$, it holds
+    \begin{align*}
+        J_w(P_t f) = \norm{\E[\mu]{\abs{\nabla_w} P_t f}}_2^2 \le \e^{-2\rho t} \norm{\E[\mu]{\abs{\nabla_w} f}}_2^2 = \e^{-2 \rho t} J_w(f).
+    \end{align*}
+    The last two items can be proved similarly.
+\end{proof}
+
+
+\subsection{Functional inequalities from gradient estimates}
+\begin{definition}
+    For $b \in (0,1]$, we say the weight functions $\{w_i:\Omega \to \R_+\}_{i\in[n]}$ are $b$-bounded if for all $i \in [n]$ and $x \in \Omega$, it holds
+    \begin{align}\label{eq:w_lower_bound}
+        b \le w_i(x) \le \frac{1}{b}.
+    \end{align}
+\end{definition}
+
+\begin{proposition}[Gradient estimate and functional inequalities]
+    Let $\mu$ be a distribution supported on $\Omega = \{\pm 1\}^n$ and $\{q_i: \Omega \mapsto \R_+\}_{i\in[n]}$ be transition rates reversible for $\mu$.
+    Suppose $\{w_i:\Omega \to \R_+\}_{i\in[n]}$ is a collection of weight functions 
+    that are $b$-bounded for some $b \in (0,1]$.
+    \begin{itemize}
+        \item If~\ref{eq:SGE} holds with $\rho > 0$, then~\ref{eq:mLSI-gradient} holds with constant $4b^2\rho$;
+        \item If~\ref{eq:WGE} holds with $\rho > 0$, then~\ref{eq:Poincare} holds with constant $b^2\rho$.
+    \end{itemize}
+\end{proposition}
+
+\begin{proof}
+    By a standard calculation,
+    \begin{align*}
+    \Ent[\mu]{f} = \int_0^{+\infty} \E[\mu]{\Gamma(P_t f, \log P_t f)} \dif t  \overset{(\star)}{\le}  \int_0^{+\infty} \E[\mu]{\frac{\Gamma(P_t f)}{P_t f}} \dif t \le \frac{1}{b} \cdot \int_0^{+\infty} \E[\mu]{\frac{\Gamma_w(P_t f)}{P_t f}} \dif t,
+    \end{align*}
+    where the inequality $(\star)$ follows from $(s-t)\tp{\log s -\log t} \le \frac{(s-t)^2}{2}\tp{\frac{1}{s} + \frac{1}{t}}$. By~\ref{eq:SGE},
+    \begin{align*}
+        \Gamma_w(P_t f) \le \e^{-2\rho t} \tp{P_t \sqrt{\Gamma_w(f)}}^2 \le \e^{-2\rho t} \tp{P_t \tp{\frac{\Gamma_w (f)}{f}}} \tp{P_t f},
+    \end{align*}
+    where the last inequality follows from Cauchy-Schwarz inequality. Hence,
+    \begin{align*}
+    \Ent[\mu]{f} \le \frac{1}{b} \int_0^{+\infty} \e^{-2 \rho t} \E[\mu]{\frac{\Gamma_w (f)}{f}} \dif t \le \frac{1}{2 b^2 \rho} \cdot \E[\mu]{\frac{\Gamma(f)}{f}}.
+    \end{align*}
+    This proves the first part. For the second part, we use a similar proof strategy. Specifically,
+    \begin{align*}
+    \Var[\mu]{f} = 2\int_0^{+\infty} \E[\mu]{\Gamma(P_t f)} \dif t &\le \frac{2}{b} \cdot \int_0^{+\infty} \E[\mu]{\Gamma_w(P_t f)} \dif t \\
+    (\text{By~\ref{eq:WGE}})\quad & \le \frac{2}{b} \cdot \int_0^{+\infty} \e^{-2\rho t} \E[\mu]{\Gamma_w(f)} \dif t \le \frac{1}{b^2\rho} \cdot \E[\mu]{\Gamma(f)}.
+    \end{align*}
+    This establishes the desired Poincar\'e inequality.
+\end{proof}
+
+\ZC{Add a figure for implications among: BE, rBE, WGE, SGE, CGE, I/A/J-contraction, PI, mLSI}
+
+\ZC{More implications}

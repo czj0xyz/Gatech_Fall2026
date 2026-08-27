@@ -1,0 +1,169 @@
+\documentclass[11pt]{article}
+\pagestyle{plain}
+
+% \pgfplotsset{compat=1.18}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amsfonts,amssymb,amsthm}
+\usepackage{graphicx}
+\usepackage{enumerate}
+\usepackage{bbm}
+\usepackage{verbatim}
+\usepackage{hyperref,color}
+\usepackage[capitalize,nameinlink]{cleveref}
+\usepackage[dvipsnames]{xcolor}
+\hypersetup{
+	colorlinks=true,
+	pdfpagemode=UseNone,
+	citecolor=OliveGreen,
+	linkcolor=NavyBlue,
+	urlcolor=Magenta,
+	pdfstartview=FitW
+}
+\usepackage{appendix}
+\usepackage{makecell}
+\usepackage{tablefootnote}
+\crefname{appsec}{Appendix}{Appendices}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{xifthen}
+\usepackage{subcaption}
+\usepackage{hhline}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{problem}[theorem]{Problem}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{fact}[theorem]{Fact}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{observation}[theorem]{Observation}
+\newtheorem{assumption}[theorem]{Assumption}
+\newtheorem*{assumption*}{Assumption}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\crefname{lemma}{Lemma}{Lemmas}
+\crefname{theorem}{Theorem}{Theorems}
+\crefname{definition}{Definition}{Definitions}
+\crefname{fact}{Fact}{Facts}
+\crefname{claim}{Claim}{Claims}
+\crefname{proposition}{Proposition}{Propositions}
+
+\usetikzlibrary{arrows.meta,positioning}
+
+\input{macro}
+
+\title{Witten Laplacian}
+\author{}
+\date{\today}
+
+\pgfplotsset{compat=1.18}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\newpage
+
+\section{Setup}
+
+\(L = \sum_{i=1}^n \delta_i\) where \(\delta_i g(x) = q_i(x) (g(x^i) - g(x))\).
+Also, assume \(q_i(x) = \sqrt{\mu(x^i)}/\sqrt{\mu(x)}\).
+
+\section{Witten Laplacian (discrete version)}
+
+For \(f\) with mean \(0\), let \(g = (-L)^{-1} f\). Then
+\[
+Var_\mu(f) = E_\mu(f (-L) g) = E_\mu(\langle \nabla f,\nabla g\rangle_q).
+\]
+A straightforward calculation yields
+\[
+\delta_i f = \delta_i (-L) g = -\sum_{j} \delta_i \delta_j g = - L \delta_i g + \sum_{j} [\delta_j,\delta_i] g.
+\]
+Note that
+\([\delta_j,\delta_i] g(x) = (q_j(x^i) - q_j(x)) \delta_i g - (q_i(x^j) - q_i(x)) \delta_j g\).
+
+Therefore, \(\nabla f\) can be expressed by
+\[
+\nabla f = (-L \otimes I_n + \mathcal{M}) \nabla g,
+\]
+where \(\mathcal{M}(x) = \mathrm{diag}(\sum_j (q_j(x^i) - q_j(x))) - (q_i(x^j)-q_i(x))_{1 \le i,j \le n}\).
+
+Therefore,
+\[
+E_\mu(\langle \nabla f, \nabla g\rangle_q) = E_\mu(\langle \nabla f, (-L \otimes I_n + \mathcal{M})^{-1} \nabla f \rangle_q).
+\]
+
+For product distribution on Boolean hypercube, we have
+\[
+E_\mu(\langle \nabla f, (-L \otimes I_n + \mathcal{M})^{-1} \nabla f \rangle_q) = E_\mu(\langle \nabla f, (-L \otimes I_n)^{-1} \nabla f \rangle_q) = \frac{1}{2} \int_0^{+\infty} \sum_i E_\mu((\partial_i f)(P_t \partial_i f)) dt.
+\]
+
+\section{Comment}
+ 
+It seems we cannot expect \(\mathcal{M} \ge \rho I\) as in the Langevin dynamics.
+
+\ZC{(old) My conversation with Gemini says that $-L \otimes I_n + \mathcal{M} \succeq \rho \mathrm{id}$ does not hold pointwisely (i.e., ${\langle \nabla f(x), (-L \otimes I_n + \mathcal{M}) \nabla f(x) \rangle_q} \ge \rho {\langle \nabla f(x), \nabla f(x) \rangle_q}$ does not hold for all $x$), but holds in expectation (i.e., $\E[]{\langle \nabla f, (-L \otimes I_n + \mathcal{M}) \nabla f \rangle_q} \ge \rho \E[]{\langle \nabla f, \nabla f \rangle_q}$).}
+
+\ZC{(old) Want to find $\mathcal{M'}$ such that
+\begin{align*}
+    \E[]{\langle \nabla f, (-L \otimes I_n + \mathcal{M}) \nabla f \rangle_q} \ge \E[]{\langle \nabla f, \mathcal{M'}\nabla f \rangle_q}
+\end{align*}
+and then, under similar Dobrushin-type conditions, it holds pointwisely
+\begin{align*}
+    \mathcal{M'}(x) \succeq \rho I.
+\end{align*}
+This gives a Brascamp--Lieb inequality with $\mathcal{M'}$.
+}
+
+\bigskip
+\ZC{(new) Define the \textit{non-directional} derivatives and gradient as
+\begin{align*}
+    \overline{\grad} f = 
+    \begin{pmatrix}
+        \overline{\delta}_1 f \\
+        \vdots \\
+        \overline{\delta}_n f
+    \end{pmatrix},
+\end{align*}
+where
+\begin{align*}
+    \overline{\delta}_i f(x)
+    = q_i(x) \frac{f(x^i)-f(x)}{-x_i} 
+    = q_i(x) (-x_i) (f(x^i)-f(x)).
+\end{align*}
+Then we have
+\begin{align*}
+    \overline{\grad} Lf = (L \otimes I_n - \mathcal{H}) \overline{\grad} f,
+\end{align*}
+where $\mathcal{H}$ is defined by a collection of local Hessian matrices $\{H(x) \in \R^{n \times n}: x \in \{-1,+1\}^n\}$ such that
+\begin{align*}
+    \mathcal{H} v(x) = H(x) v(x),
+\end{align*}
+for any (gradient) vector field $v: \{-1,+1\}^n \to \R^n$.
+If $q_i(x) = \frac{1}{2}$ at all $x$ and $i$, then $H(x) = I$ at all $x$ and $\mathcal{H} = \mathrm{id}$.
+}
+
+\ZC{$$\mathbb{E}_\mu [\langle \grad f, (-L\otimes I_n) \grad f \rangle_q] \ge 0$$}
+
+\ZC{$$\langle v, \mathcal{A} v \rangle \ge \langle v, \mathcal{B} v \rangle > 0, \forall v
+\quad \Longrightarrow \quad
+\langle v, \mathcal{A}^{-1} v \rangle \le \langle v, \mathcal{B}^{-1} v \rangle, \forall v
+$$
+where $\langle u, v \rangle = \mathbb{E}_\mu [\langle u,v \rangle_q]$.\\
+$\mathcal{A} \succeq \mathcal{B} \succ 0
+\quad \not\Longrightarrow \quad 
+\mathcal{A}^2 \succeq \mathcal{B}^2$
+}
+
+
+\end{document}

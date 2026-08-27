@@ -1,0 +1,542 @@
+\documentclass[11pt]{article}
+\pagestyle{plain}
+
+% \pgfplotsset{compat=1.18}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amsfonts,amssymb,amsthm}
+\usepackage[ruled,vlined,linesnumbered,commentsnumbered]{algorithm2e}
+\SetKwInput{KwIn}{Input}
+\SetKwInput{KwOut}{Output}
+\SetKwInput{KwGlobal}{Global variable}
+\SetKwInput{KwOracle}{Oracle}
+\SetKwComment{Comment}{// }{}
+\usepackage{graphicx}
+\usepackage{enumerate}
+\usepackage{bbm}
+\usepackage{verbatim}
+\usepackage{hyperref,color}
+\usepackage[capitalize,nameinlink]{cleveref}
+\usepackage[dvipsnames]{xcolor}
+\hypersetup{
+	colorlinks=true,
+	pdfpagemode=UseNone,
+	citecolor=OliveGreen,
+	linkcolor=NavyBlue,
+	urlcolor=Magenta,
+	pdfstartview=FitW
+}
+\usepackage{appendix}
+\usepackage{makecell}
+\usepackage{tablefootnote}
+\crefname{appsec}{Appendix}{Appendices}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{xifthen}
+\usepackage{subcaption}
+\usepackage{hhline}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{problem}[theorem]{Problem}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{fact}[theorem]{Fact}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{observation}[theorem]{Observation}
+\newtheorem{assumption}[theorem]{Assumption}
+\newtheorem*{assumption*}{Assumption}
+\newtheorem{condition}[theorem]{Condition}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\crefname{lemma}{Lemma}{Lemmas}
+\crefname{theorem}{Theorem}{Theorems}
+\crefname{definition}{Definition}{Definitions}
+\crefname{fact}{Fact}{Facts}
+\crefname{claim}{Claim}{Claims}
+\crefname{proposition}{Proposition}{Propositions}
+
+
+\newcommand{\dif}{\,\mathrm{d}}
+%\newcommand{\E}{\mathbb{E}}
+%\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\Cov}{\mathrm{Cov}}
+\newcommand{\MI}{\mathrm{I}}
+%\newcommand{\Ent}{\mathrm{Ent}}
+\newcommand{\ind}{\mathbbm{1}}
+\newcommand{\allone}{\mathbf{1}}
+\newcommand{\tr}{\mathrm{tr}}
+\newcommand{\wt}{\mathrm{weight}}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\newcommand{\TV}[2]{\left\|#1 - #2\right\|_{\mathrm{TV}}}
+\newcommand{\ceil}[1]{\left\lceil #1 \right\rceil}
+\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
+\newcommand{\ip}[2]{\left\langle #1 , #2 \right\rangle}
+\newcommand{\grad}{\nabla}
+\newcommand{\hessian}{\nabla^2}
+\newcommand{\trans}{\intercal}
+\newcommand{\diag}{\mathrm{diag}}
+\newcommand{\poly}{\mathrm{poly}}
+\newcommand{\dist}{\mathrm{dist}}
+\newcommand{\sgn}{\mathrm{sgn}}
+\newcommand{\fpras}{\mathsf{FPRAS}}
+\newcommand{\fpaus}{\mathsf{FPAUS}}
+\newcommand{\fptas}{\mathsf{FPTAS}}
+
+\newcommand{\eps}{\varepsilon}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+
+\renewcommand{\AA}{\mathcal{A}}
+\newcommand{\BB}{\mathcal{B}}
+\newcommand{\CC}{\mathcal{C}}
+\newcommand{\DD}{\mathcal{D}}
+\newcommand{\EE}{\mathcal{E}}
+\newcommand{\FF}{\mathcal{F}}
+\newcommand{\GG}{\mathcal{G}}
+\newcommand{\HH}{\mathcal{H}}
+\newcommand{\II}{\mathcal{I}}
+\newcommand{\JJ}{\mathcal{J}}
+\newcommand{\KK}{\mathcal{K}}
+\newcommand{\LL}{\mathcal{L}}
+\newcommand{\MM}{\mathcal{M}}
+\newcommand{\NN}{\mathcal{N}}
+\newcommand{\OO}{\mathcal{O}}
+\newcommand{\PP}{\mathcal{P}}
+\newcommand{\QQ}{\mathcal{Q}}
+\newcommand{\RR}{\mathcal{R}}
+\renewcommand{\SS}{\mathcal{S}}
+\newcommand{\TT}{\mathcal{T}}
+\newcommand{\UU}{\mathcal{U}}
+\newcommand{\VV}{\mathcal{V}}
+\newcommand{\WW}{\mathcal{W}}
+\newcommand{\XX}{\mathcal{X}}
+\newcommand{\YY}{\mathcal{Y}}
+\newcommand{\ZZ}{\mathcal{Z}}
+
+\newcommand{\KL}[2]{D_{\mathrm{KL}} \left( #1 \,\Vert\, #2 \right)}
+\newcommand{\KLbig}[2]{D_{\mathrm{KL}} \left( #1 \,\big\Vert\, #2 \right)}
+\newcommand{\KLBig}[2]{D_{\mathrm{KL}} \left( #1 \,\Big\Vert\, #2 \right)}
+
+\newcommand{\SKL}[2]{D_{\mathrm{SKL}} \left( #1 \,\Vert\, #2 \right)}
+\newcommand{\SKLbig}[2]{D_{\mathrm{SKL}} \left( #1 \,\big\Vert\, #2 \right)}
+\newcommand{\SKLBig}[2]{D_{\mathrm{SKL}} \left( #1 \,\Big\Vert\, #2 \right)}
+
+\newcommand{\qandq}{\quad\text{and}\quad}
+\newcommand{\supp}{\mathrm{supp}}
+
+\newcommand{\DKL}[2]{\-D_{\-{KL}}\left(#1 \parallel #2\right)}
+\newcommand{\DTV}[2]{\-D_{\mathrm{TV}}\left({#1},{#2}\right)}
+% \newcommand{\dist}{\mathrm{dist}}
+\newcommand{\e}{\mathrm{e}}
+\renewcommand{\epsilon}{\varepsilon}
+\renewcommand{\emptyset}{\varnothing}
+% \newcommand{\norm}[1]{\left\Vert#1\right\Vert}
+\newcommand{\set}[1]{\left\{#1\right\}}
+\newcommand{\tuple}[1]{\left(#1\right)} 
+% \newcommand{\eps}{\varepsilon}
+\newcommand{\inner}[2]{\left\langle #1,#2\right\rangle}
+\newcommand{\tp}{\tuple}
+\newcommand{\ol}{\overline}
+\newcommand{\abs}[1]{\left\vert#1\right\vert}
+\newcommand{\ctp}[1]{\left\lceil#1\right\rceil}
+\newcommand{\ftp}[1]{\left\lfloor#1\right\rfloor}
+\newcommand{\Ind}[1]{\-{Ind}_{#1}}
+\newcommand{\todo}[1]{{\color{red} TODO: #1}}
+
+\newcommand{\Cor}{\Psi^{\mathrm{sym}}}
+\newcommand{\cor}{\Psi^{\-{cor}}}
+\newcommand{\Inf}{\Psi}
+% \newcommand{\diag}{\-{diag}}
+
+\def\*#1{\boldsymbol{#1}} % Use \*A for \mathbf{A}
+\def\+#1{\mathcal{#1}} % Use \+A for \mathcal{A}
+\def\-#1{\mathrm{#1}} % Use \-A for \mathrm{A}
+\def\=#1{\mathbb{#1}} % Use \^A for \mathbb{A}
+\def\!#1{\mathfrak{#1}} % Use \!A for \mathfrak{A}
+
+\newcommand*\diff{\mathop{}\!\mathrm{d}}
+
+% probability
+% \DeclareMathOperator*{\oPr}{\mathbf{Pr}}
+\def\oPr{\mathop{\mathrm{Pr}}}
+\renewcommand{\Pr}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oPr\left[#2\right]}
+  {\oPr_{#1}\left[#2\right]} } % Use \Pr[a]{b} for \mathbf{Pr}_a[b], \Pr{b} for  \mathbf{Pr}[b]
+
+% expectation: relies on the package "dsfont"
+% \DeclareMathOperator*{\oE}{\mathbb{E}}
+\def\oE{\mathop{\mathbb{E}}}
+\newcommand{\E}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oE\left[#2\right]}
+  {\oE_{#1}\left[#2\right]} }
+
+% variance
+%\DeclareMathOperator*{\oVar}{\mathbf{Var}}
+\def\oVar{\mathrm{Var}}
+\newcommand{\Var}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oVar\left[#2\right]}
+  {\oVar_{#1}\left[#2\right]} }
+
+% entropy
+% \DeclareMathOperator*{\oEnt}{\mathbf{Ent}}
+\def\oEnt{\mathrm{Ent}}
+\newcommand{\Ent}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oEnt\left[#2\right]}
+  {\oEnt_{#1}\left[#2\right]} }
+
+\newcommand{\PhiEnt}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oEnt^\phi\left[#2\right]}
+  {\oEnt^\phi_{#1}\left[#2\right]} }
+
+
+\newenvironment{Exampleparagraph}[1][]
+{
+    \par 
+    \noindent 
+    \textbf{\color{blue} #1}
+    \par 
+    \vspace{0.5em} 
+    \itshape 
+}
+{
+    \par 
+    \vspace{1em} 
+}
+
+%\input{local-macro}
+
+\newcommand{\RED}[1]{\textcolor{red}{#1}}
+\newcommand{\zc}[1]{\textcolor{red}{ZC: #1}}
+
+\newcommand{\bern}[1]{\mathrm{Bern}\left(#1\right)}
+
+
+
+\title{Note on \hyperlink{https://arxiv.org/pdf/2407.17864}{https://arxiv.org/pdf/2407.17864}}
+\date{\today}
+
+\pgfplotsset{compat=1.18} 
+\begin{document}
+
+\maketitle
+
+\section{Gaussian isoperimetric inequality}
+Let $\gamma_n$ be $n$-dimensional standard Gaussian measure.
+
+\begin{lemma}[Bobkov inequality]
+    For any function $f: \mathbb{R}^n \to [0,1]$, it holds
+    \begin{align*}
+        I\tp{\int f \dif \gamma_n} \le \int \sqrt{I(f)^2 + \abs{\nabla f}^2} \dif \gamma_n,
+    \end{align*}
+    where $I(\cdot) = \phi(\Phi^{-1}(\cdot))$ is the Gaussian isoperimetric profile.
+\end{lemma}
+\begin{proof}
+    Let $P_t$ be the Ornstein–Uhlenbeck semigroup (corresponding to the Lagenvin diffusion).
+    It suffices to show that $\int F_t \dif \gamma_n$ is monotone-decreasing in $t$, where 
+    \begin{align*}
+        F_t(x) := \sqrt{I(P_tf(x))^2 + \abs{\nabla P_tf(x)}^2} (=: \sqrt{q}). 
+    \end{align*}
+    We prove by showing that $(\partial_t - L) F_t \le 0$ for all $x$, where $L = \Delta - x \cdot \nabla$ is the generator.
+
+    By chain rule:
+    \begin{align*}
+        \nabla \sqrt{q} = \frac{1}{2q^{1/2}} \cdot \nabla q \text{ and }  \Delta \sqrt{q} = \frac{1}{2q^{1/2}} \cdot \Delta q - \frac{1}{4q^{3/2}} \cdot \abs{\nabla q}^2.
+    \end{align*}
+    Therefore, it holds
+    \begin{align*}
+        L \sqrt{q} = \frac{1}{2q^{1/2}} \cdot Lq - \frac{1}{4q^{3/2}} \cdot \abs{\nabla q}^2.
+    \end{align*}
+    It remains to show that
+    \begin{align*}
+    \abs{\nabla q}^2 \le 2q \cdot (L - \partial_t)q. 
+    \end{align*}
+    Let $u := P_t f$. Again by chain rule and identity $(\partial_t - L)\Gamma(u) = -2\Gamma_2(u)$, we have
+    \begin{align*}
+        (L-\partial_t) q = (L-\partial_t) (I(u)^2 + \abs{\nabla u}^2) = 2 \Gamma_2(u) + 2 (I'(u)^2 - 1) \Gamma(u),
+    \end{align*}
+    where $\Gamma(f,g) = \frac{1}{2} \tp{L(fg) - fL(g)-gL(f)}$ and $\Gamma_2(f) = \frac{1}{2}\tp{f \Gamma(f) - 2\Gamma\tp{f,Lf}}$.
+    Also, by a straightforward calculation, it holds
+    \begin{align*}
+        \Gamma(q) &= \abs{\nabla q}^2 = 4 \abs{(\nabla^2 u) \nabla u + I(u) I'(u) \cdot \nabla u }^2 \le 4 \tp{\abs{\nabla^2 u}_{F} \abs{\nabla u} + \abs{I(u)} \abs{I'(u) \nabla u}}^2\\
+        &\le 4 q \cdot \tp{\abs{\nabla^2 u}^2_F + \abs{I'(u) \nabla u}^2} = 4q \cdot \tp{\Gamma_2(u) + (I'(u)^2 - 1)\Gamma(u)}.
+    \end{align*}
+    This concludes the proof.
+\end{proof}
+
+\begin{corollary}[Gaussian isoperimetric inequality]
+    Let $A \subseteq \mathbb{R}^n$ be a measurable set with volume $V=\gamma_n(A)$. The perimeter of set $A$  defined by $P(A) := \lim_{\eps \to 0^+} \frac{\gamma_n(A+B(0,\eps)) - \gamma_n(A)}{\eps}$ satisfies
+    \begin{align*}
+        P(A) \ge I(V).
+    \end{align*}
+\end{corollary}
+
+\section{Gaussian isoperimetric inequality for general probability measures}
+
+Recall $\Gamma(f,g) = \frac{1}{2} \tp{L(fg) - fL(g)-gL(f)}$ and $\Gamma_2(f) = \frac{1}{2}\tp{L\Gamma(f) - 2\Gamma(f,Lf)}$.
+
+We let $\Gamma(f) = \Gamma(f,f)$ and $\Gamma_2(f) = \Gamma_2(f,f)$ for simplicity.
+
+We assume that $(P_t)_{t \ge 0}$ is a diffusion semigroup, i.e., for any $f$ and smooth function $\phi$, 
+\begin{align*}
+    L(\phi(f)) = \phi'(f) L f + \phi''(f) \Gamma(f).
+\end{align*}
+
+\begin{fact}
+    It holds
+    \begin{align*}
+        \Gamma(\phi(f),g) = \phi'(f) \Gamma(f,g).
+    \end{align*}
+\end{fact}
+\begin{proof}
+    By definition, it holds
+    \begin{align*}
+        \Gamma(\phi(f),g) &= \frac{1}{2} \tp{L(\phi(f) g) - \phi(f) L g - g L \phi(f)}\\
+        &= \frac{1}{2} \tp{\phi'(f) g L f + \phi''(f) g \Gamma(f) + \phi(f) L g - \phi(f) L g - g \phi'(f) L f - g \phi''(f) \Gamma(f)}\\
+        &= \phi'(f) \Gamma(f,g).
+    \end{align*}
+\end{proof}
+\begin{fact}
+    Let $f_t = P_t f$. It holds
+    \begin{align*}
+        (\partial_t - L) \Gamma(f_t) = -2 \Gamma_2(f_t).
+    \end{align*}
+\end{fact}
+\begin{proof}
+    By definition, it holds
+    \begin{align*}
+        (\partial_t - L) \Gamma(f_t) &= \frac{1}{2} \tp{(\partial_t - L) L(f_t^2) - 2 (\partial_t - L)(f_t L f_t)}\\
+        &= \frac{1}{2} \tp{L^2 (f_t^2) - 2L(f_t L f_t)} = -2 \Gamma_2(f_t).
+    \end{align*}
+\end{proof}
+
+In the following, we assume $\Gamma_2(f) \ge \rho \Gamma(f)$ and $\Gamma(\Gamma(f)) \le 4 \Gamma(f) \tp{\Gamma_2(f) - \rho \Gamma(f)}$.
+\begin{lemma}[Bobkov inequality for general probability measures]
+    For any function $f: \mathbb{R}^n \to [0,1]$, it holds
+    \begin{align*}
+        I\tp{\int f \dif \mu} \le \int \sqrt{I(f)^2 + \frac{1}{\rho} \cdot \Gamma(f)} \dif \mu,
+    \end{align*}
+    where $\mu$ is a probability measure satisfying $\Gamma_2(f) \ge 0$ for all $f$ and $\rho > 0$.
+\end{lemma}
+\begin{proof}
+    Similar to the first proof, it suffices to show that $(\partial_t - L) F_t \le 0$ for all $x$, where
+    \begin{align*}
+        F_t(x) := \sqrt{I(f_t(x))^2 + \frac{1}{\rho} \cdot \Gamma(f_t)(x)} (=: \sqrt{q_t}).
+    \end{align*}
+    Note that
+    \begin{align*}
+        \partial_t \sqrt{q_t} = \frac{1}{2 \sqrt{q_t}} \cdot \partial_t q_t \text{ and } L \sqrt{q_t} = \frac{1}{2\sqrt{q_t}}\tp{L q_t - \frac{1}{2q_t} \Gamma(q_t)}.
+    \end{align*}
+    Therefore, it suffices to show that
+    \begin{align*}
+        \Gamma(q_t) \le 2 q_t (L - \partial_t) q_t.
+    \end{align*}
+    Note that
+    \begin{align*}
+        (L - \partial_t) I^2(f_t) &= 2 (I^2)'(f_t) \cdot (L - \partial_t) f_t + 2 (I^2)''(f_t) \Gamma(f_t)\\
+        &= 2 I(f_t) \cdot I'(f_t) \cdot (L - \partial_t) f_t + 2 (I'(f_t)^2 -1) \Gamma(f_t)\\
+        &= 2(I'(f_t)^2 -1) \Gamma(f_t).
+    \end{align*}
+    Therefore,
+    \begin{align*}
+        (L - \partial_t) q_t &= (L - \partial_t) I^2(f_t) + \frac{1}{\rho} (L - \partial_t) \Gamma(f_t)\\
+        &= 2(I'(f_t)^2 -1) \Gamma(f_t) + \frac{2}{\rho} \Gamma_2(f_t)\\
+        &= 2I'(f_t)^2 \Gamma(f_t) + \frac{2}{\rho} R_t,
+    \end{align*}
+    where we let $R_t = \Gamma_2(f_t) - \rho \Gamma(f_t) \ge 0$.
+    Also, by a straightforward calculation, it holds
+    \begin{align*}
+        \Gamma(q_t) &= \Gamma(I^2(f_t)) + \frac{1}{\rho^2} \Gamma(\Gamma(f_t)) + \frac{2}{\rho} \Gamma(I^2(f_t), \Gamma(f_t))\\
+        &= (I^2)'(f_t)^2 \Gamma(f_t) + \frac{1}{\rho^2} \Gamma(\Gamma(f_t)) + \frac{2}{\rho} (I^2)'(f_t) \Gamma(f_t, \Gamma(f_t))\\
+        &= 4 I^2(f_t) I'(f_t)^2 \Gamma(f_t) + \frac{1}{\rho^2} \Gamma(\Gamma(f_t)) + \frac{4}{\rho} I(f_t) I'(f_t) \Gamma(f_t, \Gamma(f_t))\\
+        &\le 4 I^2(f_t) I'(f_t)^2 \Gamma(f_t) + \frac{4}{\rho} I(f_t) I'(f_t) \Gamma(f_t, \Gamma(f_t)) + \frac{4}{\rho^2} \Gamma(f_t) R_t.
+    \end{align*}
+    It suffices to show that
+    \begin{align*} 
+        (I'(f_t))^2 \Gamma(f_t)^2+I^2(f_t) R_t \ge I(f_t) I'(f_t) \Gamma(f_t,\Gamma(f_t))
+    \end{align*}
+    This holds by Cauchy's inequality $\Gamma(f,g) \le \sqrt{\Gamma(f) \Gamma(g)}$.
+\end{proof}
+
+\paragraph{Application}
+    Let $\mu(x) \propto \exp\tp{-V(x)}$ be an $\rho$-strongly log-concave distribution. Let $(P_t)_{t \ge 0}$ be the Markov semigroup for the Langevin dynamics.
+    The infinitesimal generator $L = \Delta - \nabla V \cdot \nabla$,
+    \begin{align*}
+        \Gamma(f) = \abs{\nabla f}^2 \text{ and } \Gamma_2(f) = \|\hessian f\|_F^2 + \inner{\nabla^2 V \cdot \nabla f}{\nabla f} \ge \rho \Gamma(f).
+    \end{align*}
+    Moreover,
+    \begin{align*}
+        \Gamma(\Gamma f) = \abs{\nabla \abs{\nabla f}^2}^2 = 4 \abs{\nabla^2 f \cdot \nabla f}^2 \le 4 \abs{\nabla^2 f}_F^2 \cdot \abs{\nabla f}^2 \le 4 \Gamma(f) \tp{\Gamma_2(f) - \rho \Gamma(f)}.
+    \end{align*}
+
+\begin{remark}
+Without the second order $\Gamma(\Gamma(f)) \le 4\Gamma(f) \cdot (\Gamma_2(f) - \rho \Gamma(f))$ inequality: \url{https://arxiv.org/pdf/2403.00969}.
+\end{remark}
+\section{Gaussian isoperimetric inequality on discrete hypercube}
+
+\begin{lemma}[Bobkov inequality on discrete hypercube] 
+For any function $f: \{-1,+1\}^n \to [0,1]$, it holds
+\begin{align*}
+    I\tp{\int f \dif \mu_n} \le \int \sqrt{I(f)^2 + \abs{\nabla f}^2} \dif \mu_n,
+\end{align*}
+where $\mu_n$ is the uniform distribution over Boolean hypercube.
+\end{lemma}
+
+\begin{proof}[Proof sketch]
+    We assume the inequality holds when $n=1$:
+    \begin{align*}
+        I\tp{\frac{a+b}{2}} \le \frac{1}{2} \tp{\sqrt{I(a)^2 + \tp{\frac{b-a}{2}}^2} + \sqrt{I(b)^2 + \tp{\frac{b-a}{2}}^2}}.
+    \end{align*}
+    We prove by induction hypothesis:
+    Note that
+    \begin{align*}  
+        \int \sqrt{I(f)^2 + \abs{\nabla f}^2} \dif \mu_{n+1} &= \frac{1}{2} \int \sqrt{I(f_0)^2 + \abs{\nabla f_0}^2 + (f_1-f_0)^2/4} + \sqrt{I(f_1)^2 + \abs{\nabla f_1}^2 + (f_1-f_0)^2/4} \dif \mu_n \\
+        &\ge \frac{1}{2} \tp{\sqrt{I(a)^2 + \tp{\frac{b-a}{2}}^2} + \sqrt{I(b)^2 + \tp{\frac{b-a}{2}}^2}}\\
+        &\ge I(f),
+    \end{align*}
+    where $a = \int f_0 \dif \mu_n$, $b = \int f_1 \dif \mu_n$ and we use the inequality \begin{align*}
+    \E[\mu_n]{\sqrt{a^2+b^2+c^2}} \ge \sqrt{\tp{\E[\mu_n]{\sqrt{a^2+b^2}}}^2 + \tp{\E[\mu_n]{c}}^2}
+    \end{align*}
+\end{proof}
+
+\begin{remark}
+    It seems that $(\partial_t - L) F_t \le 0$ fails to hold.
+\end{remark}
+
+\begin{remark}
+For biased product distribution $\mu$ and function $h: \{-1,+1\}^n \to \{0,1\}$, we have
+\begin{align*}
+    I(\E[\mu]{h}) \le \sqrt{2} \E[\nu]{\sqrt{\sum_{i} \Var[i]{h}}}.
+\end{align*}
+\end{remark}
+
+\section{Eldan-Gross inequality}
+Eldan-Gross type inequality relies on the following ingredients:
+\begin{lemma}
+    For any $f:\{-1,+1\}^n \to \{-1,+1\}$:
+    \begin{align*}
+        I\tp{\frac{1+P_t f}{2}} \le \sqrt{\pi(1-\e^{-2t})} P_t \abs{\nabla f}.
+    \end{align*}
+\end{lemma}
+
+\begin{lemma}[Hypercontractivity]
+    \begin{align*}
+    \Var[]{P_t f} \le \tp{\Var[]{f}}^{1-\Theta(t)} \cdot \tp{\sum_i \mathrm{Inf}_i(f)^2}^{\Theta(t)},
+    \end{align*}
+    where $\Theta(t) = \frac{1-\exp\tp{-2t}}{1+\exp\tp{-2t}}$ and $\mathrm{Inf}_i (f) = \E[]{\abs{\partial_i f}}$.
+\end{lemma}
+
+\begin{theorem}[Gross-Eldan]
+    For any $f: \{-1,+1\}^n \to \{-1,+1\}$,
+    \begin{align*}
+        \int \abs{\nabla f} \dif \mu_n \gtrsim \Var[\mu_n]{f} \cdot \sqrt{\log \tp{1+ \frac{\e }{\sum_j \mathrm{Inf}_j(f)^2}}}.
+    \end{align*}
+\end{theorem}
+
+\begin{proof}
+    By Lemma 3.1 and inequality $I(x) \gtrsim x(1-x) \sqrt{\log \frac{1}{x(1-x)}}$, it holds
+    \begin{align*}
+        \E[]{\abs{\nabla{f}}} \gtrsim \Var[]{f} \cdot \sqrt{\log \frac{\e}{\Var[]{f}}}.
+    \end{align*}
+    Similarly, we have
+    \begin{align*}
+        \E[]{\abs{\nabla f}} \gtrsim \Var[]{f}.
+    \end{align*}
+    Therefore, we may assume without loss of generality that $\Var[]{f} \ge 100 W(f) := 100 \sum_{j} \mathrm{Inf}_j(f)^2$, $\Var[]{f} \ge \sqrt{W(f)}$ and $W(f) \ge 1/100$.
+
+    By Lemma 3.1 and Lemma 3.2, it holds
+    \begin{align*}
+        \E[]{\abs{\nabla f}} \gtrsim \frac{\Var[]{f} - \Var[]{P_t f}}{\sqrt{1- \e^{-2t}}} \gtrsim \frac{\Var[]{f} - (\Var[]{f})^{1-\Theta(t)} W(f)^{\Theta(t)}}{\sqrt{1-\e^{-2t}}}.
+    \end{align*}
+    Choose an appropriate $t$ to conclude the proof.
+\end{proof}
+
+\section{Bobkov inequality on hypercube via semigroup}
+
+We prove the following (relaxed) version of the Bobkov inequality
+\begin{align*}
+    I\tp{\int f \dif \mu_n} \le \int \sqrt{I(f)^2 + 2\abs{\nabla f}^2} \dif \mu_n.
+\end{align*}
+\begin{proof}
+    Let $L f = \frac{1}{2} \sum_{i=1}^n \tp{f(x^{\oplus i}) - f(x)}$ and $f_t = \e^{Lt} f$.
+    It suffices to show that $(\partial_t - L) F_t \le 0$ for all $x \in \{-1,+1\}^n$, where
+    \begin{align*}
+        F_t = \sqrt{I(f_t)^2 + 2 \abs{\nabla f_t}^2} = \abs{V_t},
+    \end{align*}
+    where $V_t = (I(f_t),\sqrt{2} \cdot \partial_1 f_t,\ldots,\sqrt{2} \cdot \partial_n f_t)$.
+    Note that
+    \begin{align*}
+        L F_t(x) &= \frac{1}{2}\sum_{i=1}^n \tp{|V_t|(x^{\oplus i}) - |V_t|(x)}\\
+        &= \frac{1}{2} \sum_{i=1}^n \tp{\abs{V_t}(x^{\oplus i}) - \frac{\abs{V_t}^2(x)}{\abs{V_t}(x)}}\\
+        &= \frac{1}{2} \sum_{i=1}^n \tp{\abs{V_t}(x^{\oplus i}) + \frac{\inner{V_t(x)}{L V_t(x)}}{n \abs{V_t}(x)} - \frac{\inner{V_t(x)}{V_t(x^{\oplus i})}}{\abs{V_t}(x)}}\\
+        &= \frac{\inner{V_t}{LV_t}}{\abs{V_t}}(x) + \frac{1}{2} \sum_{i=1}^n \underbrace{\tp{\abs{V_t}(x^{\oplus i}) - \frac{\inner{V_t(x)}{V_t(x^{\oplus i})} }{\abs{V_t}(x)}}}_{:=D_i}.
+    \end{align*}
+    Furthermore,
+\begin{align*}
+\partial_t F_t(x) = \partial_t \sqrt{\sum_{i=0}^n V_{t,i}^2} = \frac{\inner{V_{t}}{\partial_t V_t}}{\abs{V_t}}(x). 
+\end{align*}
+Hence, we have
+\begin{align*}
+    (\partial_t - L) F_t(x) = \frac{\inner{V_t}{(\partial_t - L)V_t}}{\abs{V_t}} - \frac{1}{2} \sum_{i=1}^n D_i.
+\end{align*}
+By a straightforward calculation,
+\begin{align*}
+    \partial_t \partial_i f_t = \partial_i \partial_t f_t = \partial_i L f_t = L \partial_i f_t.
+\end{align*}
+Therefore, it holds
+\begin{align*}
+    (\partial_t - L) F_t(x) = \frac{I(f_t) \cdot (\partial_t - L)I(f_t)}{\abs{V_t}} - \frac{1}{2} \sum_{i=1}^n D_i.
+\end{align*}
+We bound these two terms respectively.
+
+Note that $V_{t,i}(x) = - V_t(x^{\oplus i})$. 
+Let $\widetilde{V_t}(x)$ be $V_t(x)$ except $\widetilde{V_{t,i}}(x) = -V_{t,i}(x)$
+Therefore,
+\begin{align*}
+    D_i = \frac{2V_{t,i}(x)^2}{\abs{V_t}(x)} + \abs{V_t}(x^{\oplus i}) - \frac{\inner{\widetilde{V}_{t}(x)}{V_{t}(x^{\oplus i})}}{\abs{V_t}(x)} \ge \frac{2 V_{t,i}(x)^2}{\abs{V_t}(x)}.
+\end{align*}
+Therefore, $\frac{1}{2}\sum_{i=1}^n D_i \ge \abs{V_t}$. 
+Finally, note that
+\begin{align*}
+    (\partial_t - L) I(f_t) = I'(f_t(x)) L f_t(x) - L I(f_t) = \frac{1}{2} \sum_{i=1}^n I'(f_t(x)) \tp{f_t(x^{\oplus i}) - f_t(x)} - (I(f_t(x^{\oplus i})) - I(f_t(x))).
+\end{align*}
+Let $x_i = f_t(x^{\oplus i})$ and $x = f_t(x)$. It holds
+\begin{align*}
+    (\partial_t - L) I(f_t) = -\frac{1}{2} \sum_{i=1}^n \tp{I(x_i) - I(x)} - I'(x)(x_i-x).
+\end{align*}
+By inequality
+\begin{align*}
+    -I(a)(I(b)-I(a) - I'(a)(b-a)) \le (b-a)^2,
+\end{align*}
+It holds
+\begin{align*}
+    I(f_t) \cdot (\partial_t - L) I(f_t) \le 2 \abs{\nabla f_t}^2 \le \abs{V_t}^2.
+\end{align*}
+\end{proof}
+
+\section{Bobkov inequality on slices via semigroup}
+Let $\mu_{n,k}$ be the uniform distribution over $\{x \in \{-1,+1\}^n: \sum_i x_i = k\}$.
+\begin{align*}
+    I\tp{\int f \dif \mu_{n,k}} \le \int \sqrt{I(f(x))^2 + \sum_{\text{feasible swap } a,b} (f(x^{-a+b}) - f(x))^2} \dif \mu_{n,k}(z).
+\end{align*}
+
+{\color{red} TODO:
+\begin{enumerate}
+    \item Can we establish Bobkov inequality in more general settings (say \url{https://www.cs.cmu.edu/~odonnell/papers/kkl-kk.pdf});
+    \item Implications of Bobkov inequality for slices.
+\end{enumerate}
+}
+\end{document}
+

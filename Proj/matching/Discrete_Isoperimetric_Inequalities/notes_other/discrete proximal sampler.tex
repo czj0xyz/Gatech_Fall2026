@@ -1,0 +1,657 @@
+\documentclass[11pt]{article}
+\pagestyle{plain}
+
+% \pgfplotsset{compat=1.18}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amsfonts,amssymb,amsthm}
+\usepackage[ruled,vlined,linesnumbered,commentsnumbered]{algorithm2e}
+\SetKwInput{KwIn}{Input}
+\SetKwInput{KwOut}{Output}
+\SetKwInput{KwGlobal}{Global variable}
+\SetKwInput{KwOracle}{Oracle}
+\SetKwComment{Comment}{// }{}
+\usepackage{graphicx}
+\usepackage{enumerate}
+\usepackage{bbm}
+\usepackage{verbatim}
+\usepackage{hyperref,color}
+\usepackage[capitalize,nameinlink]{cleveref}
+\usepackage[dvipsnames]{xcolor}
+\hypersetup{
+	colorlinks=true,
+	pdfpagemode=UseNone,
+	citecolor=OliveGreen,
+	linkcolor=NavyBlue,
+	urlcolor=Magenta,
+	pdfstartview=FitW
+}
+\usepackage{appendix}
+\usepackage{makecell}
+\usepackage{tablefootnote}
+\crefname{appsec}{Appendix}{Appendices}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{xifthen}
+\usepackage{subcaption}
+\usepackage{hhline}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{problem}[theorem]{Problem}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{fact}[theorem]{Fact}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{observation}[theorem]{Observation}
+\newtheorem{assumption}[theorem]{Assumption}
+\newtheorem*{assumption*}{Assumption}
+\newtheorem{condition}[theorem]{Condition}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\crefname{lemma}{Lemma}{Lemmas}
+\crefname{theorem}{Theorem}{Theorems}
+\crefname{definition}{Definition}{Definitions}
+\crefname{fact}{Fact}{Facts}
+\crefname{claim}{Claim}{Claims}
+\crefname{proposition}{Proposition}{Propositions}
+
+
+\newcommand{\dif}{\,\mathrm{d}}
+%\newcommand{\E}{\mathbb{E}}
+%\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\Cov}{\mathrm{Cov}}
+\newcommand{\MI}{\mathrm{I}}
+%\newcommand{\Ent}{\mathrm{Ent}}
+\newcommand{\ind}{\mathbbm{1}}
+\newcommand{\allone}{\mathbf{1}}
+\newcommand{\tr}{\mathrm{tr}}
+\newcommand{\wt}{\mathrm{weight}}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\newcommand{\TV}[2]{\left\|#1 - #2\right\|_{\mathrm{TV}}}
+\newcommand{\ceil}[1]{\left\lceil #1 \right\rceil}
+\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
+\newcommand{\ip}[2]{\left\langle #1 , #2 \right\rangle}
+\newcommand{\grad}{\nabla}
+\newcommand{\hessian}{\nabla^2}
+\newcommand{\trans}{\intercal}
+\newcommand{\diag}{\mathrm{diag}}
+\newcommand{\poly}{\mathrm{poly}}
+\newcommand{\dist}{\mathrm{dist}}
+\newcommand{\sgn}{\mathrm{sgn}}
+\newcommand{\fpras}{\mathsf{FPRAS}}
+\newcommand{\fpaus}{\mathsf{FPAUS}}
+\newcommand{\fptas}{\mathsf{FPTAS}}
+
+\newcommand{\pll}{\parallel}
+\newcommand{\eps}{\varepsilon}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+
+\renewcommand{\AA}{\mathcal{A}}
+\newcommand{\BB}{\mathcal{B}}
+\newcommand{\CC}{\mathcal{C}}
+\newcommand{\DD}{\mathcal{D}}
+\newcommand{\EE}{\mathcal{E}}
+\newcommand{\FF}{\mathcal{F}}
+\newcommand{\GG}{\mathcal{G}}
+\newcommand{\HH}{\mathcal{H}}
+\newcommand{\II}{\mathcal{I}}
+\newcommand{\JJ}{\mathcal{J}}
+\newcommand{\KK}{\mathcal{K}}
+\newcommand{\LL}{\mathcal{L}}
+\newcommand{\MM}{\mathcal{M}}
+\newcommand{\NN}{\mathcal{N}}
+\newcommand{\OO}{\mathcal{O}}
+\newcommand{\PP}{\mathcal{P}}
+\newcommand{\QQ}{\mathcal{Q}}
+\newcommand{\RR}{\mathcal{R}}
+\renewcommand{\SS}{\mathcal{S}}
+\newcommand{\TT}{\mathcal{T}}
+\newcommand{\UU}{\mathcal{U}}
+\newcommand{\VV}{\mathcal{V}}
+\newcommand{\WW}{\mathcal{W}}
+\newcommand{\XX}{\mathcal{X}}
+\newcommand{\YY}{\mathcal{Y}}
+\newcommand{\ZZ}{\mathcal{Z}}
+
+\newcommand{\KL}[2]{D_{\mathrm{KL}} \left( #1 \,\Vert\, #2 \right)}
+\newcommand{\KLbig}[2]{D_{\mathrm{KL}} \left( #1 \,\big\Vert\, #2 \right)}
+\newcommand{\KLBig}[2]{D_{\mathrm{KL}} \left( #1 \,\Big\Vert\, #2 \right)}
+
+\newcommand{\SKL}[2]{D_{\mathrm{SKL}} \left( #1 \,\Vert\, #2 \right)}
+\newcommand{\SKLbig}[2]{D_{\mathrm{SKL}} \left( #1 \,\big\Vert\, #2 \right)}
+\newcommand{\SKLBig}[2]{D_{\mathrm{SKL}} \left( #1 \,\Big\Vert\, #2 \right)}
+
+\newcommand{\qandq}{\quad\text{and}\quad}
+\newcommand{\supp}{\mathrm{supp}}
+
+\newcommand{\DKL}[2]{\-D_{\-{KL}}\left(#1 \parallel #2\right)}
+\newcommand{\DTV}[2]{\-D_{\mathrm{TV}}\left({#1},{#2}\right)}
+% \newcommand{\dist}{\mathrm{dist}}
+\newcommand{\e}{\mathrm{e}}
+\renewcommand{\epsilon}{\varepsilon}
+\renewcommand{\emptyset}{\varnothing}
+% \newcommand{\norm}[1]{\left\Vert#1\right\Vert}
+\newcommand{\set}[1]{\left\{#1\right\}}
+\newcommand{\tuple}[1]{\left(#1\right)} 
+% \newcommand{\eps}{\varepsilon}
+\newcommand{\inner}[2]{\left\langle #1,#2\right\rangle}
+\newcommand{\tp}{\tuple}
+\newcommand{\ol}{\overline}
+\newcommand{\abs}[1]{\left\vert#1\right\vert}
+\newcommand{\ctp}[1]{\left\lceil#1\right\rceil}
+\newcommand{\ftp}[1]{\left\lfloor#1\right\rfloor}
+\newcommand{\Ind}[1]{\-{Ind}_{#1}}
+\newcommand{\todo}[1]{{\color{red} TODO: #1}}
+
+\newcommand{\Cor}{\Psi^{\mathrm{sym}}}
+\newcommand{\cor}{\Psi^{\-{cor}}}
+\newcommand{\Inf}{\Psi}
+% \newcommand{\diag}{\-{diag}}
+
+\def\*#1{\boldsymbol{#1}} % Use \*A for \mathbf{A}
+\def\+#1{\mathcal{#1}} % Use \+A for \mathcal{A}
+\def\-#1{\mathrm{#1}} % Use \-A for \mathrm{A}
+\def\=#1{\mathbb{#1}} % Use \^A for \mathbb{A}
+\def\!#1{\mathfrak{#1}} % Use \!A for \mathfrak{A}
+
+\newcommand*\diff{\mathop{}\!\mathrm{d}}
+
+% probability
+% \DeclareMathOperator*{\oPr}{\mathbf{Pr}}
+\def\oPr{\mathop{\mathrm{Pr}}}
+\renewcommand{\Pr}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oPr\left[#2\right]}
+  {\oPr_{#1}\left[#2\right]} } % Use \Pr[a]{b} for \mathbf{Pr}_a[b], \Pr{b} for  \mathbf{Pr}[b]
+
+% expectation: relies on the package "dsfont"
+% \DeclareMathOperator*{\oE}{\mathbb{E}}
+\def\oE{\mathop{\mathbb{E}}}
+\newcommand{\E}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oE\left[#2\right]}
+  {\oE_{#1}\left[#2\right]} }
+
+% variance
+%\DeclareMathOperator*{\oVar}{\mathbf{Var}}
+\def\oVar{\mathrm{Var}}
+\newcommand{\Var}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oVar\left[#2\right]}
+  {\oVar_{#1}\left[#2\right]} }
+
+% entropy
+% \DeclareMathOperator*{\oEnt}{\mathbf{Ent}}
+\def\oEnt{\mathrm{Ent}}
+\newcommand{\Ent}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oEnt\left[#2\right]}
+  {\oEnt_{#1}\left[#2\right]} }
+
+\newcommand{\PhiEnt}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oEnt^\phi\left[#2\right]}
+  {\oEnt^\phi_{#1}\left[#2\right]} }
+
+
+\newenvironment{Exampleparagraph}[1][]
+{
+    \par 
+    \noindent 
+    \textbf{\color{blue} #1}
+    \par 
+    \vspace{0.5em} 
+    \itshape 
+}
+{
+    \par 
+    \vspace{1em} 
+}
+
+%\input{local-macro}
+
+\newcommand{\RED}[1]{\textcolor{red}{#1}}
+\newcommand{\zc}[1]{\textcolor{red}{ZC: #1}}
+
+\newcommand{\bern}[1]{\mathrm{Bern}\left(#1\right)}
+
+
+
+\title{Discrete Proximal Sampler}
+\date{\today}
+
+\pgfplotsset{compat=1.18} 
+\begin{document}
+
+\maketitle
+
+\section{Setup}
+\begin{definition}[Discrete diffusion process]
+Let $N_1(t),N_2(t),\ldots,N_n(t)$ be independent one-dimensional standard Poisson point processes.
+Let $\mu$ be a distribution supported over $\{-1,+1\}^n$.
+Starting from $X_0 \sim \mu$, the discrete diffusion process $(X_t)_{t \in [0,1]}$ is given by
+\begin{align*}
+    \forall i \in [n],\quad X_t(i) = 
+    \begin{cases}
+    X_t(i) & \text{if $N_i(-\frac{1}{2} \log (1-t))$ is even,}\\
+    -X_t(i) & \text{otherwise.}
+    \end{cases}
+\end{align*}
+The denoising process $(Y_t)_{t \in [0,1]} \overset{d}{=} (X_{1-t})_{t \in [0,1]}$ is the time-reversal of the discrete diffusion process.
+\end{definition}
+
+\begin{remark}
+    The discrete diffusion process is a Markov process as $N_i$ is ``memoryless'' (in the sense that the distribution of $N_i(t+\Delta) - N_i(t)$ is independent of events before time $t$).
+\end{remark}
+
+\begin{definition}[Discrete proximal sampler]
+Let $P_{\eta \to \theta}(\cdot,\cdot)$ and $Q_{\eta \to \theta}(\cdot,\cdot)$ be Markov kernels defined as follows:
+\begin{align*}
+    P_{\theta \to \eta}(x,y) = \Pr[]{X_{\eta} = y \mid X_{\theta} = x} \quad \text{and} \quad Q_{\eta \to \theta}(x,y) = \Pr[]{X_{1-\theta} = y \mid X_{1-\eta} = x}.
+\end{align*}
+The discrete proximal sampler is the Markov chain $P_{1 \to \eta} Q_{\eta \to 1}$.
+\end{definition}
+
+\begin{remark}
+    Note that for each $i \in [n]$, the probability of $X_t(i) = X_0(i)$ is exactly $\frac{2-t}{2}$. Therefore,
+    The posterior distribution $Q_{\eta \to 1}(x,\cdot)$ satisfies
+    \begin{align*}
+        Q_{\eta \to 1}(x,y) = \Pr[]{X_0 = y \mid X_{1-\eta} = x} &\propto \Pr[]{X_0 = y \text{ and } X_{1-\eta} = x}\\ &\propto \mu(y) \cdot \tp{\frac{1-\eta}{1+\eta}}^{\abs{x \oplus y }}.
+    \end{align*}
+\end{remark}
+
+\section{Spectral Stability}
+\begin{definition}[Spectral stability]
+    The distribution $\mu$ satisfies the $C$-spectral stability with respect to the discrete diffusion process if for any $\eta \in [0,1)$, it holds
+    \begin{align}\label{eq:def-SI}
+        \forall x \in \+X \text{ and } f \in \mathbb{R}^{\+X},\quad \lim_{h \to 0^+} \frac{1}{h} \Var[Q_{\eta \to \eta + h}(x,\cdot)]{f_{\eta + h}} \le C(\eta) \cdot \Var[Q_{\eta \to 1}(x,\cdot)]{f},
+    \end{align}
+    where $f_\eta(y) = \E[Q_{\eta \to 1}(y,\cdot)]{f}$ and $\+X = \{-1,+1\}^n$ denotes the space of configurations.
+\end{definition}
+
+\begin{lemma}
+    The condition~\eqref{eq:def-SI} is equivalent to
+    \begin{align*}
+        \frac{1}{2\eta} \cdot \sum_{k \in [n]} \frac{\Pr[]{X_{1-\eta} = x^{\oplus k}} }{\Pr[]{X_{1-\eta} = x}} \cdot \tp{\E[Q_{\eta \to 1}(x,\cdot)]{f} - \E[Q_{\eta \to 1}(x^{\oplus k},\cdot)]{f}}^2 \le C(\eta) \cdot \Var[Q_{\eta \to 1}(x,\cdot)]{f}.
+    \end{align*}
+    Specifically, when $\eta = 0$, the spectral stability holds with rate $C(0) = 0$.
+\end{lemma}
+\begin{proof}
+The proof follows from a brute-force calculation. By definition, it holds
+\begin{align*}
+    Q_{\eta \to \eta+h}(x,y) = \Pr[]{X_{1-\eta-h} = y \mid X_{1-\eta}=x}&= \frac{\Pr[]{X_{1-\eta} = x \mid X_{1-\eta-h} = y} \cdot \Pr[]{X_{1-\eta-h} = y}}{\Pr[]{X_{1-
+    \eta} = x}}\\
+    &=\begin{cases}
+    1+\Theta(h) & \text{if $x = y$}\\
+    \frac{1}{2\eta} \cdot \frac{\Pr[]{X_{1-\eta} = y}}{\Pr[]{X_{1-\eta} = x}} \cdot h + o(h) & \text{$\abs{x \oplus y} = 1$}\\
+    o(h) & \text{otherwise}.
+    \end{cases}
+\end{align*}
+The last equation follows from that $\Pr[]{X_{1-\eta} = x \mid X_{1-\eta-h} = y}$ equals to the probability the difference between $N_{-\frac{1}{2} \log \eta}(k)$ and $N_{-\frac{1}{2} \log (\eta+h)}(k)$ is odd for sites $k \in x \oplus y$, and the difference is even for all $i \notin \abs{x \oplus y}$. Hence,
+\begin{align*}
+\Pr[]{X_{1-\eta} = x \mid X_{1-\eta-h} = y} = \tp{\frac{1+\frac{\eta}{\eta+h}}{2}}^{n-\abs{x \oplus y}} \cdot \tp{\frac{1-\frac{\eta}{\eta+h}}{2}}^{\abs{x \oplus y}}.
+\end{align*}
+Therefore, the variance $\Var[Q_{\eta \to \eta + h(x,\cdot)}]{f_{\eta+h}}$ satisfies
+\begin{align*}
+    \Var[Q_{\eta \to \eta+h}(x,\cdot)]{f_{\eta+h}} &= \sum_{y \in \{-1,+1\}^n} Q_{\eta \to \eta+h}(x,y) \cdot \tp{f_{\eta+h}(y) - \E[Q_{\eta \to 1}(x,\cdot)]{f}}^2\\
+    &= \frac{h}{2\eta} \cdot \sum_{k \in [n]} \frac{\Pr[]{X_{1-\eta} = x^{\oplus k}} }{\Pr[]{X_{1-\eta} = x}} \cdot \tp{\E[Q_{\eta \to 1}(x,\cdot)]{f} - \E[Q_{\eta \to 1}(x^{\oplus k},\cdot)]{f}}^2 + o(h),
+\end{align*}
+where the last inequality follows from the following facts:
+\begin{enumerate}
+\item $Q_{\eta \to \eta+h}(x,y) = o(h)$ for all $y \in \{-1,+1\}^n$ with $\abs{x \oplus y} > 1$;
+\item $f_{\eta+h}(x) - f_\eta(x) = f_{\eta+h}(x) - \E[Q_{\eta \to 1}(x,\cdot)]{f} = \Theta(h)$.
+\end{enumerate}
+\end{proof}
+
+\section{Trickle-down Equation}
+In this section, we establish the trickle-down equation for the discrete diffusion process.
+Consider the total law of covariance for the conditional covariance $\mathrm{Cov}(Y_1 \mid Y_{\eta})$:
+    \begin{align*}
+        \mathrm{Cov}(Y_1 \mid Y_\eta) = \E[]{\mathrm{Cov}(Y_1 \mid Y_{\eta+h}) \mid Y_\eta} + \mathrm{Cov}\tp{\E[]{Y_1 \mid Y_{\eta + h}} \mid Y_\eta}.
+    \end{align*}
+    It now suffices to compute the covariance of $\E[]{Y_1 \mid Y_{\eta + h}}$ conditioned on $Y_\eta$. By definition,
+    \begin{align*}
+        &\mathrm{Cov}\tp{\E[]{Y_1 \mid Y_{\eta + h}} \mid Y_\eta = x}\\
+        = &\sum_{z \in \{-1,+1\}^n} \Pr[]{Y_{\eta + h} = z \mid Y_{\eta} = x} \cdot \tp{\E[]{Y_1 \mid Y_{\eta + h} = z} - \E[]{Y_1 \mid Y_\eta = x}}^{\oplus 2}\\
+        = & \frac{1}{2\eta} \cdot \sum_{k \in [n]} \frac{\Pr[]{X_{1-\eta} = x^{\oplus k}} }{\Pr[]{X_{1-\eta} = x}} \cdot \tp{\*m(Q_{\eta \to 1}(x^{\oplus k},\cdot)) - \*m(Q_{\eta \to 1}(x,\cdot))}^{\otimes 2} \cdot h+ o(h)
+    \end{align*}
+    It turns out that the linear term is closely related to the covariance matrix.
+    \begin{proposition}
+        For any $x \in \{-1,+1\}^n$, it holds
+        \begin{align}\label{eq:target-trickle-down}
+        \frac{\Pr[]{X_{1-\eta} = x^{\oplus k}}}{\Pr[]{X_{1-\eta} = x}} \cdot \tp{\*m_i(Q_{\eta \to 1}(x^{\oplus k},\cdot)) - \*m_i(Q_{\eta \to 1}(x,\cdot))} = \frac{4\eta \cdot\mathrm{sign}(x_ix_k)}{(1-\eta)(1+\eta)} \cdot \mathrm{Cov}(Q_{\eta \to 1}(x,\cdot))_{i,k}.
+        \end{align}
+    \end{proposition}
+
+    \begin{proof}
+        Fix $x \in \{-1,+1\}^n$. Let $\nu$ denote the distribution $Q_{\eta \to 1}(x,\cdot)$, and $R = \frac{\Pr[]{X_{1-\eta} = x^{\oplus k}}}{\Pr[]{X_{1-\eta} = x}}$. By the law of total probability, it holds
+        \begin{align*}
+            \Pr[]{X_{1-\eta} = x^{\oplus k}} &= \Pr[]{X_{1-\eta} = x^{\oplus k} \text{ and } X_0(k) = x_k} + \Pr[]{X_{1-\eta} = x^{\oplus k} \text{ and } X_0(k) = -x_k} \\
+            &= \frac{1-\eta}{1+\eta} \cdot \Pr[]{X_{1-\eta} = x \text{ and } X_0(k) = x_k} + \frac{1+\eta}{1-\eta} \cdot \Pr[]{X_{1-\eta} = x \text{ and } X_0(k) = -x_k} \\
+            &=\Pr[]{X_{1-\eta} = x} \cdot \tp{\frac{1+\eta}{1-\eta} - \frac{4\eta}{(1-\eta)(1+\eta)} \cdot \nu\tp{X_k = x_k}}.
+        \end{align*}
+        Similarly, we have 
+        \begin{align*}
+            &\Pr[]{X_0(i) = x_i \text{ and } X_{1-\eta} = x^{\oplus k}} \\
+            = &\Pr[]{X_{1-\eta} = x} \cdot \tp{\frac{1-\eta}{1+\eta} \cdot \nu(X_i = x_i \text{ and } X_k = x_k) - \frac{1+\eta}{1-\eta} \cdot \nu(X_i = x_i \text{ and } X_k=-x_k)}.
+        \end{align*}
+        The left-hand-side of~\eqref{eq:target-trickle-down} equals to
+        \begin{align*}
+            \text{LHS of~\eqref{eq:target-trickle-down}} &= \tp{R-\frac{1-\eta}{1+\eta}} \cdot \nu\tp{X_i=x_i \text{ and } X_k = x_k}\\ &+ \tp{R - \frac{1+\eta}{1-\eta}} \cdot \nu\tp{X_i = x_i \text{ and } X_k=-x_k}\\
+            &=\frac{4\eta}{(1+\eta)(1-\eta)}\tp{\nu\tp{X_i = x_i \text{ and } X_k=x_k} - \nu(X_i = x_i)\cdot \nu(X_k=x_k)}\\
+            &=\frac{4\eta \cdot x_i x_k}{(1-\eta)(1+\eta)} \cdot \mathrm{Cov}(\nu)_{i,k}.
+        \end{align*}
+    \end{proof}
+    As a straightforward corollary, we have the following trickle-down equation.
+    \begin{lemma}[Trickle-down equation for discrete diffusion process]
+    Fix $\eta \in [0,1)$ and let $\Sigma$ denote the covariance matrix $\mathrm{Cov}(Y_1 \mid Y_h=x)$. It holds
+    \begin{align*}
+        \Sigma = \E[]{\mathrm{Cov}(Y_1 \mid Y_{\eta+h}) \mid Y_\eta=x} + \frac{8\eta}{(1-\eta^2)^2} \cdot \mathrm{diag}\tp{x} \cdot \Sigma \Pi_{\eta,x}^{-1} \Sigma \cdot \mathrm{diag} \tp{x} \cdot h + o(h),
+    \end{align*}
+    where $\Pi_{\eta,x}$ is the diagonal matrix $ \mathrm{diag}\tp{\frac{\Pr[]{X_{1-\eta} = x^{\oplus k}}}{\Pr[]{X_{1-\eta} = x}}}_{1 \le k \le n}$.
+    \end{lemma}
+
+    To establish the trickle-down theorem for discrete diffusion process, we prove the following fact. 
+    \begin{proposition}
+        Let $0 \le \eta \le \theta \le 1$ and $x \in \{-1,+1\}^n$. It holds
+        \begin{align}\label{eq:expectation}
+            \E[]{\Pi_{\theta,Y_{\theta}} \mid Y_\eta = x} = \Pi_{\eta,x}.
+        \end{align}
+    \end{proposition}
+    \begin{proof}
+         For each $k \in [n]$, it holds
+        \begin{align*}
+            &\sum_{y \in \{-1,+1\}^n} \Pr[]{Y_{\theta} = y \mid Y_\eta = x} \cdot \frac{\Pr[]{Y_{\theta} = y^{\oplus k}}}{\Pr[]{Y_\theta = y}}\\
+            =& \frac{1}{\Pr[]{Y_\eta =x}} \cdot \sum_{y \in \{-1,+1\}^n} \Pr[]{Y_\eta = x \mid Y_\theta = y} \cdot \Pr[]{Y_\theta = y^{\oplus k}}\\
+            =&\frac{1}{\Pr[]{Y_\eta = x}} \cdot \sum_{y \in \{-1,+1\}^n} \Pr[]{Y_\eta = x^{\oplus k} \mid Y_\theta = y^{\oplus k}} \cdot \Pr[]{Y_\theta = y^{\oplus k}}\\
+            =& \frac{\Pr[]{Y_\eta = x^{\oplus k}}}{\Pr[]{Y_\theta = x}}.
+        \end{align*}
+        This implies~\eqref{eq:expectation}
+    \end{proof}
+
+\section{Trickle-down Theorem}
+Suppose $C:[0,1]\to \mathbb{R}$ is a smooth function such that $\mathrm{Cov}(Y_1 \mid Y_\eta) \preceq C(\eta) \cdot \Pi_{\eta,Y_\eta}$. The trickle-down equation suggests the following differential equation on $C$:
+\begin{equation}\label{eq:C_2spin}
+    C(\eta) \le C(\eta+h) + \frac{8\eta}{(1-\eta^2)^2} C(\eta)^2 \cdot h +o(h).
+\end{equation}
+The solution to this differential equation is $C(\eta) \le U(\eta) := \frac{1}{K+\frac{4}{1-\eta^2}}$, where $K > -4$ is a constant determined by boundary condition. Note that
+\begin{align*}
+    U(1-h) = \frac{1}{2}\cdot h - \frac{1+K}{4}\cdot h^2 + o(h^2).
+\end{align*}
+It suggests us to investigate the covariance matrix $\mathrm{Cov}(Y_1 \mid Y_{1-h} = y)$ and diagonal matrix $\Pi_{1-h,y}$ up to the second order.
+
+\begin{proposition}
+For all $y \in \{-1,+1\}^n$ and $i \in [n]$, it holds
+\begin{align*}
+    \Pr[X \sim Q_{(1-h) \to 1}(y,\cdot)]{X_i \neq y_i} = \frac{\mu(y^{\oplus i})}{2 \mu(y)} \cdot h + \frac{1}{4} \cdot \tp{\frac{\mu(y^{\oplus i})}{\mu(y)} + \sum_{k \neq i} \frac{\mu(y^{\oplus \{k,i\}})}{\mu(y)} - \frac{\mu(y^{\oplus i})\sum_j\mu(y^{\oplus j})}{\mu(y)^2}} \cdot h^2 + o(h^2).
+\end{align*}
+\end{proposition}
+
+\begin{proof}
+    Note that the probability of $X \sim Q_{(1-h) \to 1}(y,\cdot)$ is in the order of $o(h^2)$ if the symmetric difference $\abs{X \oplus y}$ is greater than $2$. Therefore, it holds
+    \begin{align*}
+    \Pr[X \sim Q_{(1-h) \to 1}(y,\cdot)]{X_i \neq y_i} &= \frac{\frac{h}{2-h}\mu(y^{\oplus i}) + \frac{h^2}{(2-h)^2} \sum_{k \neq i} \mu(y^{\oplus \{k,i\} }) }{\mu(y) + \frac{h}{2-h}\sum_{j} \mu(y^{\oplus j}) + \frac{h^2}{(2-h)^2} \sum_{1 \le j < k \le n} \mu(y^{\oplus \{j,k\}})} + o(h^2)\\
+    &= \frac{\mu(y^{\oplus i})}{2 \mu(y)} \cdot h + \underbrace{\frac{1}{4} \cdot \tp{\frac{\mu(y^{\oplus i})}{\mu(y)} + \sum_{k \neq i} \frac{\mu(y^{\oplus \{k,i\}})}{\mu(y)} - \frac{\mu(y^{\oplus i}) \sum_{j} \mu(y^{\oplus j}) }{\mu(y)^2}}}_{:=S_i} \cdot h^2 + o(h^2)
+\end{align*}
+\end{proof}
+We are now ready to calculate the covariance matrix and the diagonal matrix.
+\begin{align*}
+    \Pi_{1-h,x}(i,i) &= \frac{h}{2-h} \cdot \Pr[X \sim Q_{(1-h) \to 1}(y,\cdot)]{X_i = y_i} + \frac{2-h}{h} \cdot \Pr[X \sim Q_{(1-h) \to 1}(y,\cdot)]{X_i \neq y_i}\\
+    &=\frac{h}{2} + \tp{\frac{2-h}{h} - \frac{h}{2-h}} \cdot \Pr[X \sim Q_{(1-h) \to 1}(y,\cdot)]{X_i \neq y_i} + o(h)\\
+    &=\frac{h}{2} + \frac{1}{h} \cdot \tp{2-h+o(h)} \cdot \tp{\frac{\mu(y^{\oplus i})}{2\mu(y)} \cdot h + S_i h^2 +o(h^2)} +o(h)\\
+    &= \frac{\mu(y^{\oplus i})}{\mu(y)} + \tp{\frac{1}{2} + 2S_i - \frac{\mu(y^{\oplus i})}{2\mu(y)}} \cdot h + o(h).
+\end{align*}
+Similarly, it holds
+\begin{align*}
+    \mathrm{Cov}(Y_1 \mid Y_{1-h}=y)(i,j) = (\frac{\mu(y^{\oplus \{i,j\}})}{4\mu(y)} - \frac{\mu(y^{\oplus i})\mu(y^{\oplus j})}{4\mu(y)^2}) \cdot h^2+o(h^2)
+\end{align*}
+and 
+\begin{align*}
+\mathrm{Cov}(Y_1 \mid Y_{1-h}=y)(i,i) = \frac{\mu(y^{\oplus i})}{2 \mu(y)} \cdot h + \tp{S_i - \frac{\mu(y^{\oplus i})^2}{4\mu(y)^2}} \cdot h^2 +o(h^2).
+\end{align*}
+To obtain the trickle-down theorem, it suffices to show that
+\begin{align*}
+    \mathrm{Cov}\tp{Y_1 \mid Y_{1-h}=y} -\frac{h}{2}\cdot \Pi \preceq \frac{3}{4} \cdot \Pi \cdot h^2 +o(h^2),
+\end{align*}
+which is equivalent to that
+\begin{align*}
+    M \preceq 2 \cdot \mathrm{diag}\tp{\frac{\mu(y^{\oplus i})}{\mu(y)}},
+\end{align*}
+where $M$ is the matrix such that
+\begin{align*}
+    M(i,j) = \frac{\mu(y^{\oplus \{i,j\}})}{\mu(y)} - \frac{\mu(y^{\oplus i})\mu(y^{\oplus j})}{\mu(y)^2} \quad \text{and} \quad M(i,i) = - 1 - \frac{\mu(y^{\oplus i})^2}{\mu(y)^2}.
+\end{align*}
+
+
+\zc{
+Using similar notations as in [CCCYZ25]: Let
+\begin{align*}
+    M(i,j) := 
+    \begin{cases}
+        \frac{\mu(y^{\oplus \{i,j\}}) \mu(y)}{\mu(y^{\oplus i}) \mu(y^{\oplus j})} - 1, & i \neq j;\\
+        0, & i = j.
+    \end{cases}
+\end{align*}
+Then the condition is
+\begin{align*}
+    M \preceq \mathrm{diag}\tp{ \left( 1+\frac{\mu(y)}{\mu(y^{\oplus i})} \right)^2 }
+\end{align*}
+}
+
+\section{$q$-spin System}
+\subsection{Similar Setup}
+In the same way, we can define the discrete diffusion process.
+The only the difference is that every time the Poisson clock rings, we pick a color $c \in [q]$ uniformly at random.
+We have that
+$$
+    Q_{\eta \to 1}(x,y) \propto \left(\frac{1-\eta}{q\eta + 1 - \eta}\right)^{d_H(x,y)} \mu(y);
+$$
+$$
+    \Pr{Y_\eta = X \mid Y_{\eta + h} = Y}
+    =\left(\frac{h+q\eta}{q(\eta+h)}\right)^{n} \left(\frac{h}{q\eta+h}\right)^{d_H(X,Y)} .
+$$
+\subsection{Spectral Stability}
+\begin{lemma}\label{lem:qspin_SS1}
+    The condition~\eqref{eq:def-SI} is equivalent to
+    \begin{align*}
+        \frac{1}{q\eta} \sum_{i,c\neq x_i} \frac{\Pr{Y_{\eta} = x^{i\to c}}}{\Pr{Y_\eta = x}} \left(f_{\eta}(x^{i\to c}) - \E[Q_{\eta\to1}(x,\cdot)]{f}\right)^2 \leq C(\eta) \cdot \Var[Q_{\eta \to 1}(x,\cdot)]{f}.
+    \end{align*}
+\end{lemma}
+\begin{proof}
+    We have that
+    $$
+        Q_{\eta \to \eta + h}(x,y) = \begin{cases}
+            \Omega(1) , & x = y\\
+            \frac{h}{q\eta}\cdot\frac{\Pr{Y_{\eta + h } = y}}{\Pr{Y_\eta = x}} + o(h) , & d_H(x,y) = 1\\
+            o(h), & \text{otherwise}
+        \end{cases} .
+    $$
+    And for any $x\in [q]^V$, 
+    $$
+        f_{\eta+h}(x) - f_\eta(x) = \sum_{y\in [q]^V} f(y)(Q_{\eta+h\to1}(x,y) - Q_{\eta\to1}(x,y)) = O(h).
+    $$
+    Therefore, the variance $\Var[Q_{\eta\to\eta+h}(x,\cdot)]{f_{\eta+h}}$ is as follows.
+    \begin{align*}
+        \Var[Q_{\eta\to\eta+h}(x,\cdot)]{f_{\eta+h}} &= \sum_{i,c\neq x_i} Q_{\eta\to\eta+h}(x,y) \left(f_{\eta+h}(x^{i\to c}) - f_\eta(x)\right)^2 + o(h)
+        \\&= \frac{h}{q\eta} \sum_{i,c\neq x_i} \frac{\Pr{Y_{\eta} = x^{i\to c}}}{\Pr{Y_\eta = x}} \left(f_{\eta+h}(x^{i\to c}) - f_\eta(x)\right)^2 + o(h) .
+        \qedhere
+    \end{align*}
+\end{proof}
+Let $\frac{\nu}{Q_{\eta\to 1}(x,\cdot)} := \frac{f}{f_\eta(x)}$ be the relative density.
+We have that 
+$\Var[Q_{\eta\to 1}(x,\cdot)]{f} = D_{\chi^2}(\nu\parallel\mu)f_\eta(x)^2$.
+Let $r_{i,c} = \frac{\Pr{Y_\eta = x^{i\to c}}}{\Pr{Y_\eta = x}}$.
+The following holds:
+\begin{align*}
+    \frac{Q_{\eta\to 1}(x^{i\to c},y)}{Q_{\eta\to 1}(x,y)} = 
+    \frac{\Pr{Y_\eta = x^{i\to c}\mid Y_1 = y}\Pr{Y_\eta = x}}{\Pr{Y_\eta = x^{}\mid Y_1 = y}\Pr{Y_\eta = x^{i\to c}}}
+    = r_{i,c}^{-1} \frac{dif(c,y_i)}{dif(x_i,y_i)}.
+\end{align*}
+Therefore,
+\begin{align}
+    f_\eta(x^{i\to c}) &= \sum_{T}Q_{\eta\to 1}(x^{i\to c},T) f(T)
+    = r^{-1}_{i,c}\sum_{T}Q_{\eta\to 1}(x,T) f(T) \frac{dif(c,T_i)}{dif(x_i,T_i)} \nonumber
+    \\&= r_{i,c}^{-1}f_\eta(x)\sum_{c_2\in [q]}\frac{dif(c,c_2)}{dif(x_i,c_2)} \*m(\nu)_{i,c_2} \label{eq:qspin_SS}
+\end{align}
+Plugging Lemma \ref{lem:qspin_SS1} and Equation \ref{eq:qspin_SS}, we have the following proposition.
+\begin{proposition}
+    Let $\gamma:= Q_{\eta\to 1}(x,\cdot)$. The condition~\eqref{eq:def-SI} is equivalent to 
+    $$
+        \forall \nu \ll \gamma: \qquad \frac{1}{q\eta}\sum_{i,c\neq x_i}r_{i,c} (r_{i,c}^{-1}\sum_{c_2\in [q]}\frac{dif(c,c_2)}{dif(x_i,c_2)} \*m(\nu)_{i,c_2} - 1)^2 \leq C(\eta)\cdot D_{\chi^2}(\nu \pll \gamma) .
+    $$
+\end{proposition}
+\subsection{Trickle-down Equation}
+In the same way, we only need to simplify $\Cov(\E{Y_1 \mid Y_{\eta+ h}}\mid Y_\eta = x)$.
+By definition,
+\begin{align}
+    \Cov(\E{Y_1\mid Y_{\eta+ h}}\mid Y_\eta = x)
+    &= \sum_{z\in [q]^V} \Pr{Y_{\eta+h} = z\mid Y_\eta = x} \cdot 
+    (\E{Y_1\mid Y_{\eta + h} = z} - \E{Y_1\mid Y_\eta = x})^{\otimes 2}. \nonumber
+    \\&= \sum_{i,c\neq x_i} \frac h{q\eta} \frac{\Pr{Y_\eta = x^{i\to c}}}{\Pr{Y_\eta = x}}(\E{Y_1\mid Y_{\eta + h} = x^{i\to c}} - \E{Y_1\mid Y_\eta = x})^{\otimes 2} + o(h). \nonumber
+    \\&= \frac{h}{q\eta}\sum_{i,c\neq x_i} \frac{\Pr{Y_\eta = x^{i\to c}}}{\Pr{Y_\eta = x}} \left(\*m(Q_{\eta\to 1}(x^{i\to c},\cdot)) - \*m(Q_{\eta\to 1}(x,\cdot))\right)^{\otimes 2} + o(h) \label{eq:trickle_down_base}
+\end{align}
+We use $r_{i,c}$ to denote $\frac{\Pr{Y_\eta = x^{i\to c}}}{\Pr{Y_\eta = x}}$ for simplicity.
+
+Let $\nu = Q_{\eta \to 1}(x,\cdot)$ and $\nu' = Q_{\eta \to 1}(x^{i\to c},\cdot)$.
+Let $dif: q\times q \mapsto \R$ and $dif(x,y) = \frac 1q\begin{cases}1-\eta,&x\neq y\\q\eta+1-\eta, &x=y\end{cases}$.
+
+\begin{proposition}\label{prop:q_spin_Cov}
+    Given $j\in[n]$ and $\overline{c}\in [q]$, we have that 
+    $$
+        r_{i,c} (m_{j,\overline c}(\nu') - m_{j,\overline c}(\nu) ) = \sum_{c' \in [q]} \frac{dif(c,c')}{dif(x_i,c')} \Cov_\nu((j,\overline c),(i,c')).
+    $$
+\end{proposition}
+\begin{proof}
+    We have that for any $i\in[n]$ and $c\in[q]$,
+    \begin{align}
+        \nu'(y) &= \Pr{Y_1 = y\mid Y_\eta = x^{i\to c}}
+        = \Pr{Y_\eta = x^{i\to c}\mid Y_1 = y}\frac{\Pr{Y_1 = y}}{\Pr{Y_\eta = x^{i\to c}}}\nonumber 
+        \\&= \frac{dif(y_i,c)}{dif(y_i,x_i)}\Pr{Y_\eta = x\mid Y_1 = y}\frac{\Pr{Y_1 = y}}{r_{i,c}\Pr{Y_\eta =x}}
+        = \frac{dif(y_i,c)}{dif(y_i,x_i)r_{i,c}} \nu(y) \label{eq:q_spin_nu'}.
+    \end{align}
+    By \Cref{eq:q_spin_nu'}, 
+    \begin{equation}\label{eq:q_spin_eq_1}
+        m_{j,\overline c}(\nu') = \sum_{c'\in[q]}\frac{dif(c',c)}{dif(c',x_i)r_{i,c}}\nu(\sigma_j=\overline c,\sigma_i = c'). 
+    \end{equation}
+    By law of total probability, it holds that 
+    \begin{align*}
+        \Pr{Y_\eta = x^{i\to c}} 
+        &= \sum_{c'\in[q]} \Pr{Y_\eta = x^{i\to c}, Y_1(i) = c'} \nonumber
+        \\&= \Pr{Y_\eta = x^{i\to c},Y_1(i) = x_i} + \Pr{Y_\eta = x^{i\to c},Y_1(i) = c} + \sum_{c'\neq x_i\land c'\neq c} \Pr{Y_\eta = x, Y_1(i) = c'} \nonumber
+        \\&= \Pr{Y_\eta = x}(\frac{dif(c,x_i)}{dif(x_i,x_i)}\nu(\sigma_i = x_i)+ \frac{dif(c,c)}{dif(x_i,c)}\nu(\sigma_i = c) + \sum_{c'\neq x_i\land c'\neq c} \nu(\sigma_i = c') )  ,
+    \end{align*}
+    which implies that 
+    \begin{equation}\label{eq:q_spin_eq_2}
+        r_{i,c} = \sum_{c'\in [q]} \frac{dif(c,c')}{dif(x_i,c')} \nu(\sigma_i = c')  .
+    \end{equation}
+    Plugging in \Cref{eq:q_spin_eq_1} and \Cref{eq:q_spin_eq_2}, we have that 
+    \[
+        r_{i,c} (m_{j,\overline c}(\nu') - m_{j,\overline c}(\nu) ) = \sum_{c' \in [q]} \frac{dif(c,c')}{dif(x_i,c')} (\nu(\sigma_j=\overline c,\sigma_i = c') - \nu(\sigma_j=\overline c)\nu(\sigma_i = c')) .
+        \qedhere 
+    \]
+\end{proof}
+
+\begin{lemma}[Trickle-down Equation on $q$-spin systems]\label{lem:trickle_down_q}
+    Let $\*d_c = (\frac{dif(c,1)}{dif(x_i,1)},\frac{dif(c,2)}{dif(x_i,2)},\ldots,\frac{dif(c,q)}{dif(x_i,q)})^\top$.
+    Then we have that
+    \begin{align*}
+        \mathrm{Cov}(Y_1 \mid Y_\eta = x) = \E[]{\mathrm{Cov}(Y_1 \mid Y_{\eta+h}) \mid Y_\eta = x} + \frac{h}{q\eta} \Cov(Y_1\mid Y_\eta = x)\*B\Cov(Y_1\mid Y_\eta = x) + o(h),
+    \end{align*}
+    where
+    $$
+        \*B = \diag\{B_i = \sum_{c\neq x_i} \frac{\Pr{Y_\eta = x}}{\Pr{Y_\eta = x^{i\to c}}}\*d_c\*d_c^\top\}_{i\in[n]}.%\quad \text{and} \quad \Pi_x = \diag\{dif(x_i,c)\}_{(i,c)\in [n]\times [q]}.
+    $$
+\end{lemma}
+\begin{proof}
+    By \Cref{eq:trickle_down_base} and Propsition \ref{prop:q_spin_Cov},
+    \begin{align*}
+        &\Cov(\E{Y_1\mid Y_{\eta+ h}}\mid Y_\eta = x)((j_1,c_1),(j_2,c_2))
+        \\=&\frac{h}{q\eta}\sum_{i,c\neq x_i} \frac 1{r_{i,c}} (\sum_{c' \in [q]} \frac{dif(c,c')}{dif(x_i,c')} \Cov_\nu((j_1,c_1),(i,c'))) (\sum_{c' \in [q]} \frac{dif(c,c')}{dif(x_i,c')} \Cov_\nu((i,c'),(j_2,c_2))) + o(h)
+        \\=&\frac{h}{q\eta}\sum_{i,c_1',c_2'}\frac{\Cov_\nu((j_1,c_1),(i,c'_1))\Cov_\nu((i,c'_2),(j_2,c_2))}{dif(x_i,c_1')dif(x_i,c_2')} \sum_{c\neq x_i} \frac {dif(c,c_1')dif(c,c_2')}{r_{i,c}} + o(h) .
+    \end{align*}
+    Since $\Cov(Y_1\mid Y_h = x) = \Cov(\nu)$, we conclude the proof by the law of total covariance.
+\end{proof}
+% \begin{proposition}
+%     Fix $i\in[n]$, let $v = (\frac{\Pr{Y_\eta = x}}{\Pr{Y_\eta = x^{i\to c}}} - \ind[c=x_i])_{c\in[q]}$, $k_1 = 1 - \frac{1-\eta}{q-1+\eta}$ and $k_2 = \frac{q-1+\eta}{1-\eta} -1$. We have that
+%     $$
+%         \Pi_{i,x}^{-1}B_i\Pi_{i,x}^{-1} = k_2^2 \diag\{v\} + \begin{pmatrix}1 &k_2 v &k_1 e_{x_i}\end{pmatrix}
+%         \begin{pmatrix}
+%             2s &1 &-s
+%             \\1 & 0 & 1
+%             \\-s & 1 & 2s
+%         \end{pmatrix}
+%         \begin{pmatrix}1 &k_2 v &k_1 e_{x_i}\end{pmatrix}^\top ,
+%     $$
+%     where $s = \sum_{c\neq x_i} \frac{\Pr{Y_\eta = x}}{\Pr{Y_\eta = x^{i\to c}}}$ .
+%     The eigenvalues of the $3\times 3$ matrix are $3s, \frac{s\pm\sqrt{s^2+8}}{2}$.
+% \end{proposition}
+
+\begin{conjecture}\label{conj:induction}
+    The induction inequality (Spectral Stability) of trickle-down is as follows:
+    $$
+        \Cov(Y_1\mid Y_\eta = x) \preceq C(\eta)\cdot \diag\{\sum_{c\neq x_i}\frac{\Pr{Y_\eta = x^{i\to c}}}{\Pr{Y_\eta = x}} a_c a_c^\top  \}_{i\in[n]}, 
+    $$
+    where $a_c\in \-{span}\{d_1,\ldots d_{c-1},d_{c+1},\ldots,d_q,\*1\}^{\perp}$.
+    Formally, we can assume that 
+    $$
+        a_c(r) = \begin{cases}
+            \alpha + (q-2)\beta &, r = c
+            \\-\alpha &, r = x_i
+            \\-\beta &, o.w.
+        \end{cases}\quad \text{and}\quad a_c^\top d_c = \alpha(\alpha + (q-1)\beta) .
+    $$
+    where $\alpha = \frac{q\eta}{1-\eta}$, $\beta = \frac{q\eta}{q\eta + 1-\eta}$ and $d_c = 1 + \alpha e_c - \beta e_{x_i}$.
+    % Specifically, $q=2$ implies $a_c^\top d_c = \eta$.
+\end{conjecture}
+If $q = 2$ and $x = (0,0)^\top$, $a_c = \alpha(-1,1)^\top$.
+Plugging Lemma \ref{lem:trickle_down_q} and Conjecture \ref{conj:induction}, let $\tilde C(\eta) = C(\eta)\alpha^2$, the induction inequality is as follows,
+$$
+    C(\eta) \leq \tilde C(\eta + h) + \frac{h}{q\eta}(a_c^\top d_c)^2 \tilde C(\eta)^2 \frac{1}{\alpha^2} = \tilde C(\eta + h) + \frac{8\eta h}{(1-\eta^2)^2}\tilde C(\eta)^2,
+$$ 
+which is exactly Equation \ref{eq:C_2spin}.
+
+
+Plugging Conjecture \ref{conj:induction}, we have that 
+\begin{align}
+    &\E{\Cov(Y_1\mid Y_{\eta+h})\mid Y_\eta=x} \nonumber
+    \\&= \sum_{y\in[q]^V} \Cov(Y_1\mid Y_{\eta+h}=y)\Pr{Y_{\eta+h}=y\mid Y_\eta =x} \nonumber
+    \\&\leq C(\eta+h)\sum_y \diag\{\sum_{c\neq y_i}\frac{\Pr{Y_{\eta+h} = y^{i\to c}}}{\Pr{Y_{\eta+h} = y}} a_c a_c^\top  \}_{i\in[n]}Q_{\eta\to\eta + h}(x,y) \nonumber
+    % \\&=C(\eta+h)\sum_{j,c\neq x_j} \diag\{\sum_{c_2\neq x_i^{j\to c}}\frac{\Pr{Y_{\eta+h} = x^{i\to c_2,j\to c}}}{\Pr{Y_{\eta} = x}} a_c a_c^\top  \}_{i\in[n]}\cdot h
+    % \\&+C(\eta+h)\diag\{\sum_{c_2\neq x_i}\frac{\Pr{Y_{\eta+h} = x^{i\to c_2}}}{\Pr{Y_{\eta+h} = x}} a_c a_c^\top  \}_{i\in[n]}\cdot (1 - \sum_{j,c\neq x_j}\frac{\Pr{Y_{\eta+h}=x^{j\to c}}}{\Pr{Y_{\eta}=x}}h)
+    \\&= \frac{C(\eta+h)}{\Pr{Y_\eta=x}}\sum_y \diag\{\sum_{c\neq y_i}\Pr{Y_{\eta+h} = y^{i\to c}} a_{c,y,\eta+h} a_{c,y,\eta+h}^\top  \}_{i\in[n]}\Pr{Y_\eta =x\mid Y_{\eta+h}=y} \label{eq:1} .
+\end{align}
+Fix $i\in[n]$.
+Since $\alpha(\eta + h) - \alpha(\eta) = \frac{qh}{(1-\eta)^2} + o(h) = \alpha(\eta)\frac{h}{\eta(1-\eta)} + o(h)$ and
+$\beta(\eta + h) - \beta(\eta) = \frac{qh}{(q\eta+1-\eta)^2} + o(h) = \beta(\eta)\frac{h}{\eta(q\eta+1-\eta)} + o(h)$,
+Equation \ref{eq:1} is equivalent to
+\begin{align*}
+    &\sum_y \sum_{c\neq y_i}\Pr{Y_{\eta+h} = y^{i\to c}} a_{c,y_i,\eta+h} a_{c,y_i,\eta+h}^\top \Pr{Y_\eta =x\mid Y_{\eta+h}=y}
+    \\=&\sum_y (\frac{h}{q\eta+h})^{\ind[y_i\neq x_i]}\sum_{c\neq y_i}\Pr{Y_{\eta+h} = y^{i\to c}} a_{c,y_i,\eta+h} a_{c,y_i,\eta+h}^\top \Pr{Y_\eta =x^{i\to c}\mid Y_{\eta+h}=y^{i\to c}}  
+    \\=&\frac{h}{q\eta}\sum_{y_i\neq x_i,c\neq y_i} \Pr{Y_{\eta+h} = x^{i\to c}} a_{c,y_i,\eta} a^\top_{c,y_i,\eta} \Pr{Y_\eta =x^{i\to c}\mid Y_{\eta+h}=x^{i\to c}}
+    \\+&\sum_{c\neq x_i} a_{c,x_i,\eta+h} a^\top_{c,x_i,\eta+h} \Pr{Y_\eta =x^{i\to c}, Y_{\eta+h}=x^{i\to c}}
+    \\+&\sum_{j\neq i,c_2\neq x_j}\sum_{c\neq x_i} a_{c,x_i,\eta} a^\top_{c,x_i,\eta} \Pr{Y_\eta =x^{i\to c}, Y_{\eta+h}=x^{i\to c,j\to c_2}} + o(h)
+    \\=&\sum_{c\neq x_i} a_{c,x_i,\eta+h} a^\top_{c,x_i,\eta+h} \Pr{Y_\eta =x^{i\to c}} + \frac{h}{q\eta}\sum_{y_i\neq x_i,c\neq y_i} \Pr{Y_{\eta} = x^{i\to c}} a_{c,y_i,\eta} a^\top_{c,y_i,\eta}
+    \\-&\sum_{c\neq x_i}\sum_{c_2\neq c} a_{c,x_i,\eta} a^\top_{c,x_i,\eta} \Pr{Y_\eta =x^{i\to c}, Y_{\eta+h}=x^{i\to c_2}} + o(h) ,
+\end{align*}
+where $\Pr{Y_\eta =x^{i\to c}, Y_{\eta+h}=x^{i\to c_2}} = \frac{h}{q\eta}(1+o(1))\Pr{Y_{\eta}=x^{i\to c_2}}$.
+For $q = 2$, we have that 
+$$
+    \forall c\in[q], \sum_{y_i\neq x_i,y_i\neq c} a_{c,y_i}a_{c,y_i}^\top - \sum_{c_2\neq x_i,c_2\neq c}a_{c_2,x_i}a_{c_2,x_i}^\top = 0.
+$$
+since $a_{1,2}\parallel a_{2,1}$.
+Then the induction works.
+For $q > 2$, take $c_1\neq c_3$, we have that 
+$$
+\forall c\in[q], d_{c_1,x_i}^\top\sum_{y_i\neq x_i,y_i\neq c} a_{c,y_i}a_{c,y_i}^\top d_{c_3,x_i} \neq 0 =  d_{c_1,x_i}^\top \sum_{c_2\neq x_i,c_2\neq c}a_{c_2,x_i}a_{c_2,x_i}^\top  d_{c_3,x_i}.
+$$
+
+\end{document}  
