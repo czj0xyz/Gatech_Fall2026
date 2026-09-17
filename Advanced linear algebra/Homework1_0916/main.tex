@@ -239,41 +239,43 @@
 Suppose there are two different minimal polynomials $p_1,p_2$ of $T$.
 We use $\deg f$ to denote the degree of polynomial $f$.
 By minimality, $\deg p_1 = \deg p_2$.
-Since both of $p_1$ and $p_2$ are monic, we have that $\deg (p_1-p_2) < \deg p_1$ and $(p_1-p_2)(T) = p_1(T)-p_2(T) = 0$.
-Since $p_1-p_2\neq 0$, it contradicts to the minimality of $p_1$.
+Since both $p_1$ and $p_2$ are monic, we have that $\deg (p_1-p_2) < \deg p_1$ and $(p_1-p_2)(T) = p_1(T)-p_2(T) = 0$.
+Since $p_1-p_2\neq 0$, it contradicts the minimality of $p_1$.
 Therefore, the minimal polynomial is unique.
 \subsection*{Exercise 1.3.13-2}
 Let $p = a_0 + a_1x + \cdots + a_kx^k$ be the minimal polynomial ($a_k=1$).
 It is trivial that $k\geq 1$.
-\\$\boldsymbol{\implies}:$ Suppose $a_0 = 0$, then we have that
+\\$\boldsymbol{\implies}:$ Suppose $a_0 = 0$. 
+Then we have that
 $$
     0 = T^{-1}p(T) = \sum_{i=1}^k a_i T^{i-1} =: q(T)
 $$
 where $q(x) = a_1+a_2x+\cdots+a_k x^{k-1}$.
 $q\neq 0$ since $k\geq 1$.
-$q$ has lower degree of $p$ and $q(T) = 0$, this contradicts to the minimality of $p$.
+$q$ has lower degree than $p$ and $q(T) = 0$.
+This contradicts the minimality of $p$.
 Hence, $a_0\neq 0$.
 \\$\boldsymbol{\impliedby}:$
 Since $p(T) = 0$, we have that
 $$
-    T\sum_{i=1}^k \frac{a_i}{a_0}T^{k-1} = I .
+    T\tp{-\sum_{i=1}^k \frac{a_i}{a_0}T^{i-1}} = I .
 $$
-We complete the proof by setting $T^{-1} = \sum_{i=1}^k \frac{a_i}{a_0}T^{k-1}$.
+We complete the proof by setting $T^{-1} = -\sum_{i=1}^k \frac{a_i}{a_0}T^{i-1}$.
 \subsection*{Exercise 1.3.13-6}
 \textbf{(a)}: $Tv = \alpha v$ implies that $0 = T^k v = \alpha T^{k-1}v =\cdots = \alpha^k v$.
 Since $v\neq 0$, $\alpha^k = 0$ shows that $\alpha = 0$.
-\\\textbf{(b)}: WLOG, we may assume $p=k-1$ ($T^k=0$ and we can set $\alpha_i=0$ for $i>0$).
+\\\textbf{(b)}: WLOG, we may assume $p=k-1$ ($T^k=0$ and if \(p<k-1\), we set \(\alpha_i=0\) for \(p<i\le k-1\)).
 Construct $\{\beta_i\}_{i\in [k-1]\cup\{0\}}$ as follows,
 \begin{equation}\label{eq:bP1_beta}
     \beta_0 = \frac 1{\alpha_0}\qquad\text{and}\qquad\forall i\in[k-1], \beta_i = -\frac 1{\alpha_0}\sum_{j=1}^i \alpha_j\beta_{i-j}.
 \end{equation}
 Set $P = \sum_{i=0}^{k-1}\beta_i T^i$.
-By \Cref{eq:bP1_beta}, $SP = I + T^kH = I$, where $H$ is some ploynomial of $T$.
+By \Cref{eq:bP1_beta}, $SP = I + T^kH = I$, where $H$ is some polynomial of $T$.
 Therefore, $S$ is invertible and $S^{-1}=P$.
 \section*{Problem 2}
 We first prove that $C$ is invertible.
 Let $V = (v_1,\cdots,v_n)$ and $W = (w_1,\cdots,w_n)$.
-Let $D$ be the matrix associated to the linear transformation which changes the basis: $v_j = \sum_{i=1}^n c_{ij}w_i$.
+Let $D$ be the matrix associated to the linear transformation which changes the basis: $v_j = \sum_{i=1}^n d_{ij}w_i$.
 We have that $VC = W$ and $WD = V$.
 Therefore, $VCD = WD = V$.
 Since $v_1\ldots v_n$ are linearly independent, $CD = I$ and $C$ is invertible.
@@ -282,14 +284,14 @@ We then prove that $B=DAC$.
 The following holds:
 \begin{align*}
     WDAC &= VAC = [T(v_1),\cdots T(v_n)]C &&(\text{def. of }A)
-    \\&= [\sum_{i=1}^n c_{1i} T(v_i), \sum_{i=1}^n c_{2i} T(v_i) ,\cdots , \sum_{i=1}^n c_{ni} T(v_i)]
-    \\&= [T(\sum_{i=1}^n c_{1i} v_i), T(\sum_{i=1}^n c_{2i}v_i) ,\cdots , T(\sum_{i=1}^n c_{ni}v_i)] &&(T\in \-{Hom}(V,V))
+    \\&= [\sum_{i=1}^n c_{i1} T(v_i), \sum_{i=1}^n c_{i2} T(v_i) ,\cdots , \sum_{i=1}^n c_{in} T(v_i)]
+    \\&= [T(\sum_{i=1}^n c_{i1} v_i), T(\sum_{i=1}^n c_{i2}v_i) ,\cdots , T(\sum_{i=1}^n c_{in}v_i)] &&(T\in \-{Hom}(V,V))
     \\&= [T(w_1),\cdots T(w_n)] = WB.  &&(\text{def. of }B)
 \end{align*}
 Since $w_1,\cdots,w_n$ are linearly independent, we have that $DAC = B$.
 \section*{Problem 3}
 \textbf{(a)}:
-By Block Diagonal Form (Corollary 1.5.45), there exists $V$ such that $V^{-1}AV = R = \diag\{R_{ii}\}_{i\in [p]}$, where $R_{ii} = \lambda_i I + U_{ii}$ and $U_{ii}\in \C^{m_i\times m_i}$ is strictly upper triangle.
+By Block Diagonal Form (Corollary 1.5.45), there exists $V$ such that $V^{-1}AV = R = \diag\{R_{ii}\}_{i\in [p]}$, where $R_{ii} = \lambda_i I + U_{ii}$ and $U_{ii}\in \C^{m_i\times m_i}$ is strictly upper triangular.
 Fix $k\in [p]$, let $U_{kk} = (u_{ij})_{i,j\in [m_k]}$ and $v_1\ldots v_{m_k}$ be the $(1+\sum_{i<k}m_i)$-th to $(\sum_{i\leq k}m_i)$-th column vectors of $V$.
 Since $AV = VR$, we have that
 $$
@@ -307,32 +309,79 @@ $$
         \\ (A - \lambda_k I)^{m_k}v_{m_k} = (A - \lambda_k I)^{m_k-1}\sum_{i<m_k} u_{i m_k}v_i = 0
     \end{cases}
 $$
-Therefore, $v_1,\cdots,v_{m_k}$ are solutions of $(A-\lambda_k I)^{m_k}v = 0$ and the solution set is spannde by at least $m_k$ linearly independent vectors.
+Therefore, $v_1,\cdots,v_{m_k}$ are solutions of $(A-\lambda_k I)^{m_k}v = 0$ and the solution set contains at least $m_k$ linearly independent vectors.
 On the other hand, let $v$ be one column vector of $V$ and $v\notin \{v_1,\cdots,v_{m_k}\}$.
 Suppose $\lambda$ be the corresponding eigenvalue of $v$, we have that 
 $$
     (A-\lambda_k I)^{m_k}V=V(R - \lambda_k I)^{m_k} \implies
 $$
 $$
-    (A-\lambda_k I)^{m_k}v = (\lambda - \lambda_k)^{m_k}v + \text{linear combination of column vectors of }V \neq 0,
+    (A-\lambda_k I)^{m_k}v = (\lambda - \lambda_k)^{m_k}v + \text{linear combination of column vectors of $V$ except $v$} \neq 0,
 $$ 
-since $\lambda - \lambda_k\neq 0$ and linear independence of column vectors of $V$.
-Since $\dim(V)=n$, the dimension of solution set of $(A-\lambda_k I)^{m_k}v = 0$ is $m_k$.
+since $\lambda - \lambda_k\neq 0$ and column vectors of $V$ are linearly independent.
+Since $\-{rank}(V)=n$, the dimension of solution set of $(A-\lambda_k I)^{m_k}v = 0$ is $m_k$.
 \\\textbf{(b)}
 Putting together the sets of vectors from \textbf{(a)}, we get exactly $V$. 
-Since $\dim(V)=n$, it is a basis of $\C^n$.
+Since $\-{rank}(V)=n$, it is a basis of $\C^n$.
 \section*{Problem 4}
+\textbf{(a)}
+Suppose $v_1,\cdots v_n$ are column vectors of $V$.
+$A V =V J_n(\lambda)$ implies that 
+$$
+    \forall i\in[n], (A - \lambda I)v_i = v_{i-1} \quad \text{where} \quad v_0 = 0.
+$$
+Since $(A - \lambda I)^{n-1} = V (J_n(\lambda) - \lambda I)^{n-1}V^{-1}\neq 0$, it is trivial to find a vector $x$ such that $(A - \lambda I)^{n-1}x \neq 0$.
+Set $v_i = (A-\lambda I)^{n-i}x$.
+It is sufficient to show the linear independence of $\{v_i\}_{i\in[n]}$.
+Suppose not, that is, there exists $j \leq n$ such that
+$$
+    v_j = \sum_{i=1}^{j-1} a_i v_i \implies (A-\lambda I)^{n-j}x = \sum_{i=1}^{j-1}a_i (A-\lambda I)^{n-i}x
+    \implies (A-\lambda I)^{n-1}x = \sum_{i=1}^{j-1}a_i (A-\lambda I)^{n-i+j-1}x.
+$$
+Since $(A - \lambda I)^{n} = V (J_n(\lambda) - \lambda I)^nV^{-1} = 0$, we have that
+$$
+    (A - \lambda I)^{n-1}x = (A-\lambda I)^n\sum_{i=1}^{j-1}a_i (A-\lambda I)^{j-i-1}x = 0,
+$$
+which contradicts our choice of $x$. 
+Therefore, $\{v_i\}_{i\in[n]}$ are linearly independent and $V = [v_1,\cdots v_n]$.
+\\\textbf{(b)}
+Suppose there is only one eigenvalue $\lambda$ and the Jordan blocks have sizes $m_1 \geq \cdots \geq m_k$.
+We get the corresponding vectors for $V$ as follows:
+\begin{itemize}
+    \item [1.] Initially $i=1$ and $S = \emptyset$.
+    \item [2.] Take $x_i\in \ker (A-\lambda I)^{m_i}\setminus \ker (A-\lambda I)^{m_i-1}$ and $(A - \lambda I)^{m_i-1}x_i \notin \-{span}(S)$.
+    Let the vectors corresponding to the $i$-th Jordan block to be 
+    $$
+        V_i =  [(A - \lambda I)^{m_i-1}x_i, (A - \lambda I)^{m_i-2}x_i,\cdots,(A - \lambda I)x_i,x_i].
+    $$
+    \item [3.] Set $S \leftarrow S \cup \{(A - \lambda I)^{m_i-1}x_i\}$, $i\leftarrow i+1$ and back to Step 2 until $i > k$.
+    \item [4.] $V = [V_1,\ldots,V_k]$.
+\end{itemize}
+Note that such $x$ always exists since $\dim \ker(A-\lambda I)^{m_i} - \dim \ker(A-\lambda I)^{m_i-1} \geq i$ (there are at least $i$ Jordan blocks whose sizes are at least $m_i$) and $\dim\-{span} (S) < i$ at step $i$.
+Finding $x_i$ can be achieved by Gaussian elimination.
+
+
+By \textbf{(a)}, the choice of $V$ satisfies $AV = V \diag\{J_{m_i}(\lambda)\}_{i\in[k]}$ and for $i\in [k]$, the columns of $V_i$ are linearly independent. 
+Suppose the columns of $V$ are not linearly independent, that is, WLOG, we have that there exists $\*a\neq \*0$ (we can get rid of $(A-\lambda I)^{\ell}x_i$ for $\ell < m_i-1$ by multiplying $(A-\lambda I)^{m_i-1-\ell}$ on both sides),
+$$
+    \sum_{i=1}^k a_i (A-\lambda I)^{m_i - 1} x_i = 0,
+$$
+which contradicts our Step 2.
+In conclusion, $V$ is a feasible choice.
+Also, note that for each column $v$ of $V$, $v$ is the solution of $(A-\lambda I)^{m_1+\cdots+m_k} u = 0$.
+
+For Jordan blocks with different eigenvalues, by Problem 3, we complete the proof by putting all $V$'s of the different eigenvalues together.
 \section*{Problem 5}
 We prove by induction on $k$. 
-The statement follows from definition of Jordan block if $k=1$.
+The statement follows from definition of the Jordan block if $k=1$.
 
 Now suppose $k > 1$.
 We have that 
 \begin{align}
     (J^k)_{ij} &= \sum_{\ell=1}^n  (J^{k-1})_{i\ell} (J)_{\ell j}
-    =  \sum_{\ell=i}^{i+k-1} \binom{k-1}{\ell - i}\lambda^{k-1-(\ell-i)} (J)_{\ell j} &&(\text{I.H.}) \nonumber
-    \\&= \lambda^{k+i-j} \sum_{\ell=i}^{i+k-1} \ind[j-1\leq \ell \leq j]\binom{k-1}{\ell - i} &&(\text{def. of }J) \nonumber
-    \\&= 
+    =  \sum_{\ell=i}^{\min(n,i+k-1)} \binom{k-1}{\ell - i}\lambda^{k-1-(\ell-i)} (J)_{\ell j} &&(\text{I.H.}) \nonumber
+    \\&= \lambda^{k+i-j} \sum_{\ell=i}^{\min(n,i+k-1)} \ind[j-1\leq \ell \leq j]\binom{k-1}{\ell - i} &&(\text{def. of }J) \nonumber
+    \\&= \lambda^{k+i-j}\times 
     \begin{cases}
         \binom{k-1}{j-i-1} + \binom{k-1}{j-i}&,i\leq j-1 \land j\leq i+k-1
         \\\binom{k-1}{j-i}=1=\binom{k}{j-i}&, j=i
@@ -345,12 +394,50 @@ Since $\binom{k-1}{j-i-1} + \binom{k-1}{j-i} = \binom{k}{j-i}$, \Cref{eq:P5_fina
 By definition we have that
 \begin{align*}
     \frac{d(\det A(\mu))}{d\mu}
-    &= \sum_{\sigma \in S} (-1)^\sigma \frac{d}{d\mu} \prod_{i=1}^n a_{i,\sigma_i}
-    = \sum_{\sigma \in S} (-1)^\sigma \sum_{j=1}^n a_{j,\sigma_j}' \prod_{i\in[n],i\neq j}^n a_{i,\sigma_i}
-    \\&= \sum_{j=1}^n \sum_{\sigma \in S} (-1)^\sigma a_{j,\sigma_j}' \prod_{i\in[n],i\neq j}^n a_{i,\sigma_i}
+    &= \sum_{\sigma \in S} (-1)^\sigma \frac{d}{d\mu} \prod_{i=1}^n a_{\sigma_i,i}
+    = \sum_{\sigma \in S} (-1)^\sigma \sum_{j=1}^n a_{\sigma_j,j}' \prod_{i\in[n],i\neq j}^n a_{\sigma_i,i}
+    \\&= \sum_{j=1}^n \sum_{\sigma \in S} (-1)^\sigma a_{\sigma_j,j}' \prod_{i\in[n],i\neq j}^n a_{\sigma_i,i}
     = \sum_{j=1}^n \det (a_1,\cdots,a_{j-1},a_j',a_{j+1},\cdots,a_n).
 \end{align*}
 \section*{Problem 7}
+Block Diagonal Form (Corollary 1.5.45) shows the existence of $T$.
+We now prove the uniqueness property.
+Suppose $T^{-1}AT = \diag\{B_{ii}\}_{i\in[n]}$ and $(T')^{-1}AT' = \diag\{B_{ii}'\}_{i\in[p]}$ where $B_{ii}$ has the same eigenvalues as $B_{ii}'$ for $i\in[p]$.
+It is sufficient to show that $T = T'V$ and $V$ is an diagonal block matrix.
+Note that the invertiblity of $V$ follows from the invertiblity of $T$ and $T'$. 
 
-
+Let $C = (T')^{-1}T$. 
+We write $C = (C_{ij})_{i,j\in[p]}$ as a block matrix.
+We need to show that $C_{ij} = 0$ for $i\neq j$.
+We have that
+\begin{equation}\label{eq:P7_1}
+    T \diag\{B_{ii}\}_{i\in [p]}T^{-1} = (T') \diag\{B_{ii}'\}_{i\in [p]}(T')^{-1} \implies C\cdot \diag\{B_{ii}\}_{i\in [p]} = \diag\{B_{ii}'\}_{i\in [p]}\cdot C .
+\end{equation}
+Therefore, \Cref{eq:P7_1} shows that
+$$
+    \begin{pmatrix}
+        C_{11}B_{11}   &\cdots  &C_{1p}B_{pp}
+        \\\vdots &\ddots  &\vdots
+        \\C_{p1}B_{11} &\cdots  &C_{pp}B_{pp}
+    \end{pmatrix}
+    = \begin{pmatrix}
+        B_{11}'C_{11}  &\cdots  &B_{11}'C_{1p}
+        \\\vdots &\ddots  &\vdots
+        \\B_{pp}'C_{p1} &\cdots  &B_{pp}'C_{pp}
+    \end{pmatrix} .
+$$
+Fix $i,j\in[p]$ and $i\neq j$. 
+Suppose $V^{-1} B_{jj} V =  R_{jj}$ and $W^{-1} B'_{ii} W = R'_{ii}$ where $R_{jj}$ and $R'_{ii}$ are upper-triangular matrix and lower-triangle matrix respectively.
+Let $H = W^{-1}C_{ij} V$, we have that 
+$$
+    C_{ij} B_{jj} = B_{ii}'C_{ij} \implies W^{-1}C_{ij}VV^{-1}B_{jj}V = W^{-1}B_{ii}'WW^{-1}C_{ij}V \implies HR_{jj} = R_{ii}'H.
+$$
+Let $\lambda_1 \cdots \lambda_{n_j}$ be diagonal entries of $R_{jj}$ and $\mu_1 \cdots \mu_{n_i}$ be diagonal entries of $R_{ii}'$.
+Since the eigenvalues of $R_{jj}$ and $R_{ii}'$ are disjoint, $\{\lambda_k\}_{k\in[n_j]} \cap \{\mu_k\}_{k\in[n_i]} = \emptyset$. 
+$HR_{jj} = R_{ii}' H$ implies the following equations
+$$
+    \lambda_1 h_{11} = \mu_1 h_{11}\implies h_{11}=0,\quad h_{11}r_{12}+h_{12}\lambda_2 = \mu_1h_{12}\implies h_{12}=0\cdots .
+$$
+By the the argument in the class, $H = 0$.
+Since $V,W$ are of full rank, $H = 0$ implies $C_{ij} = 0$.
 \end{document}
