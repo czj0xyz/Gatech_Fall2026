@@ -1,0 +1,405 @@
+\documentclass[11pt]{article}
+\pagestyle{plain}
+
+% \pgfplotsset{compat=1.18}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amsfonts,amssymb,amsthm}
+\usepackage[ruled,vlined,linesnumbered,commentsnumbered]{algorithm2e}
+\SetKwInput{KwIn}{Input}
+\SetKwInput{KwOut}{Output}
+\SetKwInput{KwGlobal}{Global variable}
+\SetKwInput{KwOracle}{Oracle}
+\SetKwComment{Comment}{// }{}
+\usepackage{graphicx}
+\usepackage{enumerate}
+\usepackage{bbm}
+\usepackage{verbatim}
+\usepackage{hyperref,color}
+\usepackage[capitalize,nameinlink]{cleveref}
+\usepackage[dvipsnames]{xcolor}
+\hypersetup{
+	colorlinks=true,
+	pdfpagemode=UseNone,
+	citecolor=OliveGreen,
+	linkcolor=NavyBlue,
+	urlcolor=Magenta,
+	pdfstartview=FitW
+}
+\usepackage{appendix}
+\usepackage{makecell}
+\usepackage{tablefootnote}
+\crefname{appsec}{Appendix}{Appendices}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{xifthen}
+\usepackage{subcaption}
+\usepackage{hhline}
+\usepackage{listings}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{problem}[theorem]{Problem}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{fact}[theorem]{Fact}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{observation}[theorem]{Observation}
+\newtheorem{assumption}[theorem]{Assumption}
+\newtheorem*{assumption*}{Assumption}
+\newtheorem{condition}[theorem]{Condition}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\crefname{lemma}{Lemma}{Lemmas}
+\crefname{theorem}{Theorem}{Theorems}
+\crefname{definition}{Definition}{Definitions}
+\crefname{fact}{Fact}{Facts}
+\crefname{claim}{Claim}{Claims}
+\crefname{proposition}{Proposition}{Propositions}
+
+
+\newcommand{\dif}{\,\mathrm{d}}
+%\newcommand{\E}{\mathbb{E}}
+%\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\Cov}{\mathrm{Cov}}
+\newcommand{\MI}{\mathrm{I}}
+%\newcommand{\Ent}{\mathrm{Ent}}
+\newcommand{\ind}{\mathbbm{1}}
+\newcommand{\allone}{\mathbf{1}}
+\newcommand{\tr}{\mathrm{tr}}
+\newcommand{\wt}{\mathrm{weight}}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\newcommand{\TV}[2]{\left\|#1 - #2\right\|_{\mathrm{TV}}}
+\newcommand{\ceil}[1]{\left\lceil #1 \right\rceil}
+\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
+\newcommand{\ip}[2]{\left\langle #1 , #2 \right\rangle}
+\newcommand{\grad}{\nabla}
+\newcommand{\hessian}{\nabla^2}
+\newcommand{\trans}{\intercal}
+\newcommand{\diag}{\mathrm{diag}}
+\newcommand{\poly}{\mathrm{poly}}
+\newcommand{\dist}{\mathrm{dist}}
+\newcommand{\sgn}{\mathrm{sgn}}
+\newcommand{\fpras}{\mathsf{FPRAS}}
+\newcommand{\fpaus}{\mathsf{FPAUS}}
+\newcommand{\fptas}{\mathsf{FPTAS}}
+
+\newcommand{\eps}{\varepsilon}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+
+\renewcommand{\AA}{\mathcal{A}}
+\newcommand{\BB}{\mathcal{B}}
+\newcommand{\CC}{\mathcal{C}}
+\newcommand{\DD}{\mathcal{D}}
+\newcommand{\EE}{\mathcal{E}}
+\newcommand{\FF}{\mathcal{F}}
+\newcommand{\GG}{\mathcal{G}}
+\newcommand{\HH}{\mathcal{H}}
+\newcommand{\II}{\mathcal{I}}
+\newcommand{\JJ}{\mathcal{J}}
+\newcommand{\KK}{\mathcal{K}}
+\newcommand{\LL}{\mathcal{L}}
+\newcommand{\MM}{\mathcal{M}}
+\newcommand{\NN}{\mathcal{N}}
+\newcommand{\OO}{\mathcal{O}}
+\newcommand{\PP}{\mathcal{P}}
+\newcommand{\QQ}{\mathcal{Q}}
+\newcommand{\RR}{\mathcal{R}}
+\renewcommand{\SS}{\mathcal{S}}
+\newcommand{\TT}{\mathcal{T}}
+\newcommand{\UU}{\mathcal{U}}
+\newcommand{\VV}{\mathcal{V}}
+\newcommand{\WW}{\mathcal{W}}
+\newcommand{\XX}{\mathcal{X}}
+\newcommand{\YY}{\mathcal{Y}}
+\newcommand{\ZZ}{\mathcal{Z}}
+
+\newcommand{\KL}[2]{D_{\mathrm{KL}} \left( #1 \,\Vert\, #2 \right)}
+\newcommand{\KLbig}[2]{D_{\mathrm{KL}} \left( #1 \,\big\Vert\, #2 \right)}
+\newcommand{\KLBig}[2]{D_{\mathrm{KL}} \left( #1 \,\Big\Vert\, #2 \right)}
+
+\newcommand{\SKL}[2]{D_{\mathrm{SKL}} \left( #1 \,\Vert\, #2 \right)}
+\newcommand{\SKLbig}[2]{D_{\mathrm{SKL}} \left( #1 \,\big\Vert\, #2 \right)}
+\newcommand{\SKLBig}[2]{D_{\mathrm{SKL}} \left( #1 \,\Big\Vert\, #2 \right)}
+
+\newcommand{\qandq}{\quad\text{and}\quad}
+\newcommand{\supp}{\mathrm{supp}}
+
+\newcommand{\DKL}[2]{\-D_{\-{KL}}\left(#1 \parallel #2\right)}
+\newcommand{\DTV}[2]{\-D_{\mathrm{TV}}\left({#1},{#2}\right)}
+% \newcommand{\dist}{\mathrm{dist}}
+\newcommand{\e}{\mathrm{e}}
+\renewcommand{\epsilon}{\varepsilon}
+\renewcommand{\emptyset}{\varnothing}
+% \newcommand{\norm}[1]{\left\Vert#1\right\Vert}
+\newcommand{\set}[1]{\left\{#1\right\}}
+\newcommand{\tuple}[1]{\left(#1\right)} 
+% \newcommand{\eps}{\varepsilon}
+\newcommand{\inner}[2]{\left\langle #1,#2\right\rangle}
+\newcommand{\tp}{\tuple}
+\newcommand{\ol}{\overline}
+\newcommand{\abs}[1]{\left\vert#1\right\vert}
+\newcommand{\ctp}[1]{\left\lceil#1\right\rceil}
+\newcommand{\ftp}[1]{\left\lfloor#1\right\rfloor}
+\newcommand{\Ind}[1]{\-{Ind}_{#1}}
+\newcommand{\todo}[1]{{\color{red} TODO: #1}}
+
+\newcommand{\Cor}{\Psi^{\mathrm{sym}}}
+\newcommand{\cor}{\Psi^{\-{cor}}}
+\newcommand{\Inf}{\Psi}
+% \newcommand{\diag}{\-{diag}}
+
+\def\*#1{\boldsymbol{#1}} % Use \*A for \mathbf{A}
+\def\+#1{\mathcal{#1}} % Use \+A for \mathcal{A}
+\def\-#1{\mathrm{#1}} % Use \-A for \mathrm{A}
+\def\=#1{\mathbb{#1}} % Use \^A for \mathbb{A}
+\def\!#1{\mathfrak{#1}} % Use \!A for \mathfrak{A}
+
+\newcommand*\diff{\mathop{}\!\mathrm{d}}
+
+% probability
+% \DeclareMathOperator*{\oPr}{\mathbf{Pr}}
+\def\oPr{\mathop{\mathrm{Pr}}}
+\renewcommand{\Pr}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oPr\left[#2\right]}
+  {\oPr_{#1}\left[#2\right]} } % Use \Pr[a]{b} for \mathbf{Pr}_a[b], \Pr{b} for  \mathbf{Pr}[b]
+
+% expectation: relies on the package "dsfont"
+% \DeclareMathOperator*{\oE}{\mathbb{E}}
+\def\oE{\mathop{\mathbb{E}}}
+\newcommand{\E}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oE\left[#2\right]}
+  {\oE_{#1}\left[#2\right]} }
+
+% variance
+%\DeclareMathOperator*{\oVar}{\mathbf{Var}}
+\def\oVar{\mathrm{Var}}
+\newcommand{\Var}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oVar\left[#2\right]}
+  {\oVar_{#1}\left[#2\right]} }
+
+% entropy
+% \DeclareMathOperator*{\oEnt}{\mathbf{Ent}}
+\def\oEnt{\mathrm{Ent}}
+\newcommand{\Ent}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oEnt\left[#2\right]}
+  {\oEnt_{#1}\left[#2\right]} }
+
+\newcommand{\PhiEnt}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oEnt^\phi\left[#2\right]}
+  {\oEnt^\phi_{#1}\left[#2\right]} }
+
+
+\newenvironment{Exampleparagraph}[1][]
+{
+    \par 
+    \noindent 
+    \textbf{\color{blue} #1}
+    \par 
+    \vspace{0.5em} 
+    \itshape 
+}
+{
+    \par 
+    \vspace{1em} 
+}
+
+%\input{local-macro}
+
+\newcommand{\RED}[1]{\textcolor{red}{#1}}
+
+\newcommand{\bern}[1]{\mathrm{Bern}\left(#1\right)}
+\newcommand{\pll}{\parallel}
+
+
+
+\title{CS 7545 F26, Homework 1}
+\date{Due on September 17, 2026}
+\author{{\textbf{Zejia Chen}} \\ \textbf{GTID: 904178159}}
+
+\pgfplotsset{compat=1.18} 
+\begin{document}
+
+\maketitle
+
+\section*{Exercise 1}
+Fix $i\neq j$.
+By independence of entries of $\vec{x}^{(i)}$ and $\vec{x}^{(j)}$, we have that $\ind[\vec{x}^{(i)}_k \neq \vec{x}^{(j)}_k] \sim \-{Bernoulli}\tp{\frac 12}$ independently.
+Therefore, by Chernoff's bound,
+$$
+  \Pr{\norm{\vec{x}^{(i)} - \vec x^{(j)}} < \sqrt d}
+  = \Pr{\sum_{k=1}^d \ind[\vec{x}^{(i)}_k \neq \vec{x}^{(i)}_k] <  d/4}
+$$
+$$
+  = \Pr{\frac d2 - \sum_{k=1}^d \ind[\vec{x}^{(i)}_k \neq \vec{x}^{(i)}_k] \geq  d/4} \leq \exp(-d/8) .
+$$
+By the union bound,
+$$
+  \Pr{\forall i\neq j: \norm{\vec{x}^{(i)} - \vec x^{(j)}} \geq \sqrt d} \geq 1 - \binom n2\exp(-d/8) \geq 1 - \delta,
+$$
+since $n\leq \sqrt{2\delta} \exp(d/16)$.
+\section*{Exercise 2}
+\textbf{(1)} Since $f_{Z_i}(z) = f_{Z_i}(-z)$ for any $z\in \R$, $\Pr{X_i \geq z} = \Pr{X_i \leq -z}$ for $z\in \R$.
+Hence $X_i$ has the same distribution as $-X_i$ and by independence, the empirical average $A$ has the same distribution as $-A$.
+Therefore, $\E{X_i} = \frac 12(\E{X_i}+\E{-X_i})=0$ and $\Pr{|A|\geq \eps} = \Pr{A \geq \eps} + \Pr{-A \geq \eps} = 2\Pr{A\geq \eps}$.
+\\\textbf{(2)} By Hoeffding's inequality, we have that
+$$
+  \Pr{A \geq \eps} =  \Pr{A - \E{A}\geq \eps} 
+  \leq \exp\tp{-\frac{n\eps^2}{2M^2}}.
+$$
+\textbf{(3)} The following holds
+\begin{align*}
+  \E{X_i^2} &= 2\int_{0}^{M}t^2 \frac {\exp(-t)}2 dt
+  =  \left.-(t^2+2t+2)e^{-t}\right|_{0}^{M}
+  =2-(M^2+2M+2)e^{-M} .
+\end{align*}
+\textbf{(4)} By Bernstein’s Inequality, we have that 
+$$
+  \Pr{A \geq \eps} =  \Pr{A - \E{A}\geq \eps} 
+  \leq \exp\tp{-\frac{n\eps^2/2}{\frac 1n\sum_{i=1}^n \E{X_i^2}+\frac 13M\eps}} \leq \exp\tp{-\frac{n\eps^2}{4+2M\eps/3}},
+$$
+where the last inequality follows from $\E{X_i^2} \leq 2$ for $i\in[n]$.
+\\\textbf{(5)}
+Since $\eps\leq M$ and $M\geq 2$, we have that
+$$
+  \exp\tp{-\frac{n\eps^2}{4+2M\eps/3}} \leq \exp\tp{-\frac{n\eps^2}{M^2+2M\eps/3}} \leq \exp\tp{-\frac{n\eps^2}{2M^2}} .
+$$
+Therefore, Bernstein’s bound from Part \textbf{(4)} is tighter than the Hoeffding bound from Part \textbf{(2)}.
+\\\textbf{(6)} We have that
+\begin{align*}
+  \E{\exp(tX_i)} &= \Pr{\abs{Z_i} > M} + \int_0^M \frac {e^{tx}+e^{-tx}}2\exp(-x) dx
+  \\&= e^{-M} + \frac 12\tp{\frac {1-e^{(t-1)M}}{1-t} + \frac{1-e^{-(t+1)M}}{t+1}}
+  \\&\leq e^{-M} + \frac 12\tp{\frac {1}{1-t} + \frac{1}{t+1} - 2e^{-M}} = \frac 1{1-t^2} .
+\end{align*}
+The inequality follows from the hint with $x=e^{-M}$.
+\\\textbf{(7)} 
+The following holds for $\eps > 0$ and $t\in (0,1)$,
+\begin{align*}
+  \Pr{A\geq \eps} &= \Pr{\exp(tA) \geq \exp(t\eps)}
+  \\&\leq \frac{\E{\exp(tA)}}{\exp(t\eps)} = \frac{\displaystyle \prod_{i=1}^n \E{\exp(tX_i/n)}}{\exp(t\eps)} &&(\text{Markov's ineq.})
+  \\&\leq \frac{(1-(t/n)^2)^{-n}}{\exp(t\eps)} = \exp\tp{-n\tp{\ln (1-\frac{t^2}{n^2}) + \frac{t\eps}{n}}}. &&(\text{Part \textbf{(6)}}) 
+\end{align*}
+Plugging $t = n(\sqrt{1+\eps^2} - 1)/\eps$ into the above inequality, we complete the proof.
+\\\textbf{(8)}
+Set $s = \sqrt{1+\eps^2} - 1$ and it is sufficient to show that
+$$
+  f(\eps) = \ln \frac 2{s+2} + s \geq \frac{2s(s+2)}{8+s(s+2)} .
+$$
+Let $g(x) = \ln(2/(x+2))+x-\frac{2x(x+2)}{8+x(x+2)}$.
+We have that for $x\geq 0$,
+$$
+  g'(x) = \frac{x^2(x+1)(x^2+4x+20)}{(x+2)(x^2+2x+8)^2} \geq 0.
+$$
+Therefore $g$ is nondecreasing on $x\geq 0$ and hence, $g(x) \geq g(0) = 0$.
+Since 
+$$
+  \exp(-nf(\eps)) \leq \exp\tp{-\frac{n\eps^2}{4+\frac 12 \eps^2}}\leq \exp\tp{-\frac{n\eps^2}{4+2\eps^2/3}}\leq \exp\tp{-\frac{n\eps^2}{4+2M\eps/3}}, 
+$$
+the bound from Part \textbf{(7)} is tighter than Bernstein’s inequality.
+\section*{Exercise 3}
+\textbf{(1)} Fix the values of $S_1,\ldots,S_{i-1}$.
+Let $Y := S_{i} - S_{i-1}\mid S_1,\ldots,S_{i-1}$ and $Z := (Y+c)/2c$.
+We have that $\E{Z} = \frac 12$ and $Z\in [0,1]$ a.s.
+Therefore,
+$$
+  \E{\exp(tY)} = e^{-ct}\E{\exp(2tcZ)} 
+  \leq e^{-ct}\E{1 - Z + e^{2tc}Z} = \frac{e^{tc}+e^{-tc}}2,
+$$
+where the inequality follows from the convexity of $x\mapsto \exp(x)$.
+Since
+$$
+  \frac{e^x + e^{-x}}2 = \sum_{i=0}^{\infty}\frac{x^{2i}}{(2i)!}
+  \leq \sum_{i=0}^{\infty}\frac{x^{2i}}{2^ii!} = e^{x^2/2},
+$$
+$$
+  \E{\exp(tY)} \leq  \frac{e^{tc}+e^{-tc}}2 \leq \exp(t^2c^2/2).
+$$
+\textbf{(2)} By Part \textbf{(1)}, we have that
+$$
+  \E{\exp(t(S_{i} - S_{i-1}))\mid S_1,\ldots,S_{i-1}}
+  = \E{\exp(tS_{i})\mid S_1,\ldots,S_{i-1}}\exp(-tS_{i-1})\leq \exp\tp{\frac{t^2c^2}{2}} .
+$$
+Hence, $\E{\exp(tS_{i})\mid S_1,\ldots,S_{i-1}} \leq \exp(\frac{t^2c^2}{2}+tS_{i-1})$.
+Taking expectation on both sides, we conclude that
+\begin{align*}
+  \E{\exp(tS_i)} &= \E{\E{\exp(tS_i)\mid S_1,\ldots,S_{i-1}}}
+  \\&\leq \E{\exp\tp{\frac{t^2c^2}{2}+tS_{i-1}}}
+  = \exp\tp{\frac{t^2c^2}{2}}\E{\exp(tS_{i-1})} .
+\end{align*}
+\textbf{(3)} By Part \textbf{(2)}, we have that
+\begin{align}\label{eq:E3_1}
+  \E{\exp(tS_n)} \leq \exp\tp{\frac{t^2c^2}{2}}\E{\exp(tS_{n-1})}
+  \leq \cdots \leq \exp\tp{\frac{t^2c^2}{2}}^n\E{\exp(tS_{0})} 
+  =\exp\tp{\frac{nt^2c^2}{2}} .
+\end{align}
+By Markov's inequality and \Cref{eq:E3_1}, for any $t > 0$, the following holds,
+\begin{align}\label{eq:E3_2}
+  \Pr{S_n\geq \eps n} = \Pr{\exp(tS_n) \geq \exp(t\eps n)}
+  \leq \frac{\E{\exp(tS_n)}}{\exp(t\eps n)}
+  \leq \exp\tp{\frac{nt^2c^2}{2} - t\eps n} .
+\end{align}
+Plugging $t = \frac{\eps}{c^2}$ into \Cref{eq:E3_2}, we conclude that
+$$
+  \Pr{S_n\geq \eps n} \leq \exp\tp{-\frac{n\eps^2}{2c^2}} .
+$$
+\section*{Exercise 4}
+\textbf{(1)} Since the samples in $S$ are i.i.d., Bernstein’s inequality and the union bound give
+\begin{align*}
+  \Pr{\exists h\in H: L(h) - \hat L_S(h) \geq \eps}
+  &\leq |H|\max_{h\in H}\exp\tp{-\frac{3n\eps^2}{6L(h)(1-L(h))+2\eps}}
+  \\&\leq |H|\exp\tp{-\frac{3n\eps^2}{6p(1-p)+2\eps}},
+\end{align*}
+since $p \leq 1/2$.
+\\\textbf{(2)}
+Set 
+$$
+  \eps = \sqrt{\frac{2p(1-p)\ln(|H|/\delta)}{n}} +\frac{2}{3n}\ln(|H|/\delta).
+$$
+By Part \textbf{(1)}, it is sufficient to show that
+\begin{align}\label{eq:E4_1}
+  |H|\exp\tp{-\frac{3n\eps^2}{6p(1-p)+2\eps}} \leq \delta
+  \iff 3n\eps^2 - 2\ln\tp{\frac{|H|}{\delta}}\eps - 6\ln\tp{\frac{|H|}{\delta}}p(1-p)\geq 0 .
+\end{align}
+By solving the quadratic inequality, \Cref{eq:E4_1} holds if 
+\begin{align}\label{eq:E4_2}
+  \eps \geq \frac{\ln(|H|/\delta)}{3n} + \sqrt{\frac {(\ln(|H|/\delta))^2}{9n^2} + \frac{2p(1-p)\ln(|H|/\delta)}{n}}.
+\end{align}
+\Cref{eq:E4_2} immediately follows from $\sqrt{a+b} \leq \sqrt{a}+\sqrt{b}$ for $a,b \geq 0$.
+\section*{Exercise 5}
+\textbf{(1)}
+By minimality, $L(\hat h_S) - L(h^*)\geq 0$.
+Then Part \textbf{(1)} follows from Markov's inequality.
+\\\textbf{(2)}
+Let $A$ be the event that $L(\hat h_S) - L(h^*) \geq \eps$.
+Since $L(\hat h_S) - L(h^*) \leq L(\hat h_S) \leq 1$, we have that
+\begin{align*}
+  \E{L(\hat h_S) - L(h^*)} &= \E{L(\hat h_S) - L(h^*)\mid \overline A}\Pr{\overline A} + \E{L(\hat h_S) - L(h^*)\mid A}\Pr{A}
+  \\&\leq \E{L(\hat h_S) - L(h^*)\mid \overline A} + \Pr{A}
+  \leq \eps + \delta .
+\end{align*}
+\textbf{(3)}
+Since $\E{X} = \int_0^\infty \Pr{X > x} dx$, we have that for any $\eps > 0$,
+\begin{align}
+  E &= \int_0^\eps \Pr{L(\hat h_S) - L(h^*) > x} dx + \int_\eps^\infty \Pr{L(\hat h_S) - L(h^*) > x} dx \nonumber
+  \\&\leq \int_0^\eps 1 dx + \int_\eps^\infty 2|H|\exp(-nx^2/2) dx \nonumber
+  \\&=\eps + \frac{2|H|}{\sqrt n}\int_{\sqrt n \eps}^\infty \exp(-t^2/2) dt \nonumber
+  \\&\leq \eps + \frac{2|H|}{n\eps}\exp(-n\eps^2/2). \label{eq:E5_1}
+\end{align}
+Plugging $\eps = \sqrt{\frac{2\ln(2|H|)}{n}}$ into \Cref{eq:E5_1}, we conclude that
+$$
+  E \leq \sqrt{\frac{2\ln(2|H|)}{n}} + \sqrt{\frac 1{2n\ln (2|H|)}} = \sqrt{\frac{2\ln(2|H|)}n} \left(1+\frac1{2\ln(2|H|)}\right).
+$$
+\end{document}
