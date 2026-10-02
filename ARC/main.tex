@@ -1,0 +1,311 @@
+\documentclass[11pt]{article}
+\pagestyle{plain}
+
+% \pgfplotsset{compat=1.18}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amsfonts,amssymb,amsthm}
+\usepackage[ruled,vlined,linesnumbered,commentsnumbered]{algorithm2e}
+\SetKwInput{KwIn}{Input}
+\SetKwInput{KwOut}{Output}
+\SetKwInput{KwGlobal}{Global variable}
+\SetKwInput{KwOracle}{Oracle}
+\SetKwComment{Comment}{// }{}
+\usepackage{graphicx}
+\usepackage{enumerate}
+\usepackage{bbm}
+\usepackage{verbatim}
+\usepackage{hyperref,color}
+\usepackage[capitalize,nameinlink]{cleveref}
+\usepackage[dvipsnames]{xcolor}
+\hypersetup{
+	colorlinks=true,
+	pdfpagemode=UseNone,
+	citecolor=OliveGreen,
+	linkcolor=NavyBlue,
+	urlcolor=Magenta,
+	pdfstartview=FitW
+}
+\usepackage{appendix}
+\usepackage{makecell}
+\usepackage{tablefootnote}
+\crefname{appsec}{Appendix}{Appendices}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{xifthen}
+\usepackage{subcaption}
+\usepackage{hhline}
+\usepackage{listings}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{problem}[theorem]{Problem}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{fact}[theorem]{Fact}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{observation}[theorem]{Observation}
+\newtheorem{assumption}[theorem]{Assumption}
+\newtheorem*{assumption*}{Assumption}
+\newtheorem{condition}[theorem]{Condition}
+
+\newtheorem{introconjecture}[theorem]{Conjecture}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\crefname{lemma}{Lemma}{Lemmas}
+\crefname{theorem}{Theorem}{Theorems}
+\crefname{definition}{Definition}{Definitions}
+\crefname{fact}{Fact}{Facts}
+\crefname{claim}{Claim}{Claims}
+\crefname{proposition}{Proposition}{Propositions}
+
+
+\newcommand{\dif}{\,\mathrm{d}}
+%\newcommand{\E}{\mathbb{E}}
+%\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\Cov}{\mathrm{Cov}}
+\newcommand{\MI}{\mathrm{I}}
+%\newcommand{\Ent}{\mathrm{Ent}}
+\newcommand{\ind}{\mathbbm{1}}
+\newcommand{\allone}{\mathbf{1}}
+\newcommand{\tr}{\mathrm{tr}}
+\newcommand{\wt}{\mathrm{weight}}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\newcommand{\TV}[2]{\left\|#1 - #2\right\|_{\mathrm{TV}}}
+\newcommand{\ceil}[1]{\left\lceil #1 \right\rceil}
+\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
+\newcommand{\ip}[2]{\left\langle #1 , #2 \right\rangle}
+\newcommand{\grad}{\nabla}
+\newcommand{\hessian}{\nabla^2}
+\newcommand{\trans}{\intercal}
+\newcommand{\diag}{\mathrm{diag}}
+\newcommand{\poly}{\mathrm{poly}}
+\newcommand{\dist}{\mathrm{dist}}
+\newcommand{\sgn}{\mathrm{sgn}}
+\newcommand{\fpras}{\mathsf{FPRAS}}
+\newcommand{\fpaus}{\mathsf{FPAUS}}
+\newcommand{\fptas}{\mathsf{FPTAS}}
+
+\newcommand{\eps}{\varepsilon}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+
+\renewcommand{\AA}{\mathcal{A}}
+\newcommand{\BB}{\mathcal{B}}
+\newcommand{\CC}{\mathcal{C}}
+\newcommand{\DD}{\mathcal{D}}
+\newcommand{\EE}{\mathcal{E}}
+\newcommand{\FF}{\mathcal{F}}
+\newcommand{\GG}{\mathcal{G}}
+\newcommand{\HH}{\mathcal{H}}
+\newcommand{\II}{\mathcal{I}}
+\newcommand{\JJ}{\mathcal{J}}
+\newcommand{\KK}{\mathcal{K}}
+\newcommand{\LL}{\mathcal{L}}
+\newcommand{\MM}{\mathcal{M}}
+\newcommand{\NN}{\mathcal{N}}
+\newcommand{\OO}{\mathcal{O}}
+\newcommand{\PP}{\mathcal{P}}
+\newcommand{\QQ}{\mathcal{Q}}
+\newcommand{\RR}{\mathcal{R}}
+\renewcommand{\SS}{\mathcal{S}}
+\newcommand{\TT}{\mathcal{T}}
+\newcommand{\UU}{\mathcal{U}}
+\newcommand{\VV}{\mathcal{V}}
+\newcommand{\WW}{\mathcal{W}}
+\newcommand{\XX}{\mathcal{X}}
+\newcommand{\YY}{\mathcal{Y}}
+\newcommand{\ZZ}{\mathcal{Z}}
+
+\newcommand{\KL}[2]{D_{\mathrm{KL}} \left( #1 \,\Vert\, #2 \right)}
+\newcommand{\KLbig}[2]{D_{\mathrm{KL}} \left( #1 \,\big\Vert\, #2 \right)}
+\newcommand{\KLBig}[2]{D_{\mathrm{KL}} \left( #1 \,\Big\Vert\, #2 \right)}
+
+\newcommand{\SKL}[2]{D_{\mathrm{SKL}} \left( #1 \,\Vert\, #2 \right)}
+\newcommand{\SKLbig}[2]{D_{\mathrm{SKL}} \left( #1 \,\big\Vert\, #2 \right)}
+\newcommand{\SKLBig}[2]{D_{\mathrm{SKL}} \left( #1 \,\Big\Vert\, #2 \right)}
+
+\newcommand{\qandq}{\quad\text{and}\quad}
+\newcommand{\supp}{\mathrm{supp}}
+
+\newcommand{\DKL}[2]{\-D_{\-{KL}}\left(#1 \parallel #2\right)}
+\newcommand{\DTV}[2]{\-D_{\mathrm{TV}}\left({#1},{#2}\right)}
+% \newcommand{\dist}{\mathrm{dist}}
+\newcommand{\e}{\mathrm{e}}
+\renewcommand{\epsilon}{\varepsilon}
+\renewcommand{\emptyset}{\varnothing}
+% \newcommand{\norm}[1]{\left\Vert#1\right\Vert}
+\newcommand{\set}[1]{\left\{#1\right\}}
+\newcommand{\tuple}[1]{\left(#1\right)} 
+% \newcommand{\eps}{\varepsilon}
+\newcommand{\inner}[2]{\left\langle #1,#2\right\rangle}
+\newcommand{\tp}{\tuple}
+\newcommand{\ol}{\overline}
+\newcommand{\abs}[1]{\left\vert#1\right\vert}
+\newcommand{\ctp}[1]{\left\lceil#1\right\rceil}
+\newcommand{\ftp}[1]{\left\lfloor#1\right\rfloor}
+\newcommand{\Ind}[1]{\-{Ind}_{#1}}
+\newcommand{\todo}[1]{{\color{red} TODO: #1}}
+
+\newcommand{\Cor}{\Psi^{\mathrm{sym}}}
+\newcommand{\cor}{\Psi^{\-{cor}}}
+\newcommand{\Inf}{\Psi}
+% \newcommand{\diag}{\-{diag}}
+
+\def\*#1{\boldsymbol{#1}} % Use \*A for \mathbf{A}
+\def\+#1{\mathcal{#1}} % Use \+A for \mathcal{A}
+\def\-#1{\mathrm{#1}} % Use \-A for \mathrm{A}
+\def\=#1{\mathbb{#1}} % Use \^A for \mathbb{A}
+\def\!#1{\mathfrak{#1}} % Use \!A for \mathfrak{A}
+
+\newcommand*\diff{\mathop{}\!\mathrm{d}}
+
+% probability
+% \DeclareMathOperator*{\oPr}{\mathbf{Pr}}
+\def\oPr{\mathop{\mathrm{Pr}}}
+\renewcommand{\Pr}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oPr\left[#2\right]}
+  {\oPr_{#1}\left[#2\right]} } % Use \Pr[a]{b} for \mathbf{Pr}_a[b], \Pr{b} for  \mathbf{Pr}[b]
+
+% expectation: relies on the package "dsfont"
+% \DeclareMathOperator*{\oE}{\mathbb{E}}
+\def\oE{\mathop{\mathbb{E}}}
+\newcommand{\E}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oE\left[#2\right]}
+  {\oE_{#1}\left[#2\right]} }
+
+% variance
+%\DeclareMathOperator*{\oVar}{\mathbf{Var}}
+\def\oVar{\mathrm{Var}}
+\newcommand{\Var}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oVar\left[#2\right]}
+  {\oVar_{#1}\left[#2\right]} }
+
+% entropy
+% \DeclareMathOperator*{\oEnt}{\mathbf{Ent}}
+\def\oEnt{\mathrm{Ent}}
+\newcommand{\Ent}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oEnt\left[#2\right]}
+  {\oEnt_{#1}\left[#2\right]} }
+
+\newcommand{\PhiEnt}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oEnt^\phi\left[#2\right]}
+  {\oEnt^\phi_{#1}\left[#2\right]} }
+
+
+\newenvironment{Exampleparagraph}[1][]
+{
+    \par 
+    \noindent 
+    \textbf{\color{blue} #1}
+    \par 
+    \vspace{0.5em} 
+    \itshape 
+}
+{
+    \par 
+    \vspace{1em} 
+}
+
+%\input{local-macro}
+
+\newcommand{\RED}[1]{\textcolor{red}{#1}}
+
+\newcommand{\bern}[1]{\mathrm{Bern}\left(#1\right)}
+\newcommand{\pll}{\parallel}
+
+
+
+\title{Isoperimetric Inequalities on Matroid}
+\date{\today}
+\author{Zejia Chen}
+
+\pgfplotsset{compat=1.18} 
+\begin{document}
+
+\maketitle
+\paragraph{Introduction.}
+Isoperimetric inequalities, which relate the area to the perimeter of its boundary, have been widly studied in many areas of mathematics.
+For example, in the two dimensional Euclidean space, the classical isoperimetric inequality states that for closed curve with length $L$, the area $A$ of the region that it encloses satisifes: $4\pi A \leq L^2$.
+
+Instead of considering the continuous space, we foucs on the isoperimetric inequalities on Boolean hypercube $\Omega = \{\pm 1\}^n$ with the distribution $\mu$ over $\Omega$.
+For a subset $S\subseteq \Omega$, the analogue of its volume is measured by $\mu(S)$.
+In the following, we represent a subset $S\subseteq\Omega$ by a Boolean function $f:\Omega\mapsto \{\pm 1\}$.
+In this notation, $\Var[\mu]{f} = 4\mu(S)(1-\mu(S)) \geq 2\min\{\mu(S),1-\mu(S)\}$ serves as the volume term, measuring the smaller side of the partition in terms of the fixed boundary.
+There are several natural notions of boundary on the Boolean hypercube. Two classical ones are based on the \emph{influence} and the \emph{sensitivity} of coordinates.
+We introduce the influence of $i$-th coordinate and the sensitivity with respect to the boolean function $f$ as follows:
+$$
+    \mathsf{Inf}_{\mu,i}(f) = \Pr[\mu]{f(x)\neq f(x_i)}
+    \quad \text{and} \quad s_\mu(S)(x) = \sum_{i=1}^n \ind[f(x)\neq f(x^i)],
+$$
+where $x^i$ is obtained by filpping the sign of $i$-th coordinate of $x$.
+These quantities have a natural graph correspondance with respect to the $n$-dimensional hypercube graph. 
+For subset of vertices $S = \{f(x)=1\mid x\in \Omega\}$, both influence and sensitivity quantify the size of the edge boundary $\partial S=\{(i,x):f(x)\neq f(x^i)\}$ from different perspectives.
+
+One fundamental isoperimetric inequality is the Poincar\'e inequality: for boolean function $f$, $2\min\{\mu(S),1-\mu(S)\} \leq \Var[\mu]{f} \leq \sum_{i=1}^n \mathsf{Inf}_{\mu,i}(f)$.
+In this work, we focus primally the following isoperimetric inequalities, for any Boolean function $f:\Omega\mapsto \{\pm 1\}$:
+\begin{itemize}
+    \item [1.] \textbf{Talagrand's $L^1$--$L^2$ inequality} \cite{Talagrand94}: $\Var[\mu]{f}\lesssim \displaystyle \sum_{i=1}^n \frac{\mathsf{Inf}_{\mu,i}(f)}{1 + \log(1/\mathsf{Inf}_{\mu,i}(f))}$.
+    % \item [2.] Kahn--Kalai--Linial (KKL) inequality:
+    \item [2.] \textbf{Eldan--Gross inequality} \cite{EldanGross22}: $\Var[\mu]{f}\cdot \displaystyle \sqrt{\log\tp{2+\frac e{\sum_{i=1}^n \mathsf{Inf}_{\mu,i}(f)^2}}}\lesssim \E{\sqrt{s(f)}}$.
+\end{itemize}
+Talagrand’s inequality provides a logarithmic improvement over the Poincar\'e inequality when influences are small, while the Eldan–Gross inequality relates the square-root sensitivity boundary to influences across coordinates.
+These inequalities have a wide range of appliations, such as voting models with correlated preferences \cite{KoehlerLifshitzMinzerMossel23}.
+
+Most previous work presents isoperimetric inequalities equipped with the fully-support measure on the Boolean hypercube under suitable weak-dependence assumptions.
+By contrast, analogous inequalities on classical combinatorial structures, such as matroids and high-dimensional expanders, still remain unexplored, even for element-weighted distributions.
+This motivates the following conjecture for this proposal:
+\begin{conjecture}
+    The Talagrand's $L^1$--$L^2$ inequality and Eldan-Gross inequality hold for element-weighted distribtion over matroid independent sets and bases.
+\end{conjecture}
+% Introudce what is influences and what kind of isoperimetric inequalities we want to show.
+
+% State the previous results and the related works.
+
+% State why extension to matroid independent sets is important.
+\paragraph{Approach and Previous Work.}
+% [OW13], [CL12], [IZ26], [CCZ26]
+Talagrand's $L^1$--$L^2$ inequality was first proved for biased product distribution \cite{Talagrand94}.
+It was later extended to Markov random fields on bounded-degree graphs under suitable hypercontractivity assumptions \cite{KoehlerLifshitzMinzerMossel23}.
+Eldan and Gross proved their inequality for the uniform measure using pathwise stochastic analysis \cite{EldanGross22}.
+Ivanisvili and Zhang subsequently gave a simpler semigroup proof that also applies to biased product measures \cite{IvanisviliZhang26}.
+In my recent work with Zongchen Chen and Xinyuan Zhang \cite{chen2026discrete}, we established the isoperimetric inequalities in terms of the weak correlation property of the underlying distribution through the Markov semigroup and gradient estimates.
+
+A \emph{Markov semigroup} $(P_t)_{t\geq 0}$ describes the time evolution of a Markov process and is generated by an operator $L$ ($P_t = e^{tL}$): for any $f: \Omega\mapsto \R$ and $x\in\Omega$, $Lf(x) = \sum_{i=1}^n q_i(x)(f(x^i)-f(x))$.
+Here $\{q_i\}_{i\in[n]}$ is called the \emph{transition rates} of the Markov semigroup, which is always assumed to be \emph{reversible} with respect to $\mu$: $\mu(x)q_i(x)=\mu(x^i)q_i(x^i)$.
+Given the Markov semigroup $(P_t)_{t\geq 0}$, the corresponding strong gradient estimate holds for constant $\rho$ if for any function $f:\Omega\mapsto\R$ and $t\geq 0$,
+$$
+    \norm{\nabla P_t f}_2 \leq e^{-\rho t}P_t\tp{\norm{\nabla f}_2},
+$$ 
+where the discrete gradient of $f$ is defined as $\nabla f(x) = [\sqrt{q_i(x)}(f(x^i)-f(x))]_{i\in[n]}$.
+Through the potential function and derivative techniques, the gradient estimate can be equivalently written as a functional inequality, which is known as the Bakry--\'Emery-type condition \cite{BakryEmery85}.
+This can be formulated as a local matrix eigenvalue problem \cite{CKLP22}.
+
+Previous work established the implicition between the gradient estimates and Talagrand's $L^1$--$L^2$ inequality under the assumption of hypercontractivity \cite{CorderoErausquinLedoux12}.
+In \cite{chen2026discrete}, this implicition was strengthened to Eland--Gross's inequality using a stronger, coordinate-wise gradient estimate and the semigroup framework of \cite{IvanisviliZhang26}.
+By analyzing commutators between the generator and discrete gradient ($(L\nabla - \nabla L)f= H\cdot \nabla f$), we also derived sufficient local matrix criteria for these estimates and verified them under suitable weak-dependence assumptions on $\mu$.
+
+\paragraph{Future Work.}
+% In previous work, one transition rate which requires the full support of distribution was imposed. 
+% This can be adjusted depdends on the combinatorial structure and 
+
+% State how we extend it to matroid setting.
+% \begin{itemize}
+%     \item Different notation of gradient and influence.
+%     \item Establish commutator identity. 
+% \end{itemize}
+\bibliographystyle{alpha}
+\bibliography{ref.bib}
+\end{document}

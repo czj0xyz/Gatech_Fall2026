@@ -1,0 +1,416 @@
+\documentclass[11pt]{article}
+\pagestyle{plain}
+
+% \pgfplotsset{compat=1.18}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amsfonts,amssymb,amsthm}
+\usepackage[ruled,vlined,linesnumbered,commentsnumbered]{algorithm2e}
+\SetKwInput{KwIn}{Input}
+\SetKwInput{KwOut}{Output}
+\SetKwInput{KwGlobal}{Global variable}
+\SetKwInput{KwOracle}{Oracle}
+\SetKwComment{Comment}{// }{}
+\usepackage{graphicx}
+\usepackage{enumerate}
+\usepackage{bbm}
+\usepackage{verbatim}
+\usepackage{hyperref,color}
+\usepackage[capitalize,nameinlink]{cleveref}
+\usepackage[dvipsnames]{xcolor}
+\hypersetup{
+	colorlinks=true,
+	pdfpagemode=UseNone,
+	citecolor=OliveGreen,
+	linkcolor=NavyBlue,
+	urlcolor=Magenta,
+	pdfstartview=FitW
+}
+\usepackage{appendix}
+\usepackage{makecell}
+\usepackage{tablefootnote}
+\crefname{appsec}{Appendix}{Appendices}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{xifthen}
+\usepackage{subcaption}
+\usepackage{hhline}
+\usepackage{listings}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{problem}[theorem]{Problem}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{fact}[theorem]{Fact}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{observation}[theorem]{Observation}
+\newtheorem{assumption}[theorem]{Assumption}
+\newtheorem*{assumption*}{Assumption}
+\newtheorem{condition}[theorem]{Condition}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\crefname{lemma}{Lemma}{Lemmas}
+\crefname{theorem}{Theorem}{Theorems}
+\crefname{definition}{Definition}{Definitions}
+\crefname{fact}{Fact}{Facts}
+\crefname{claim}{Claim}{Claims}
+\crefname{proposition}{Proposition}{Propositions}
+
+
+\newcommand{\dif}{\,\mathrm{d}}
+%\newcommand{\E}{\mathbb{E}}
+%\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\Cov}{\mathrm{Cov}}
+\newcommand{\MI}{\mathrm{I}}
+%\newcommand{\Ent}{\mathrm{Ent}}
+\newcommand{\ind}{\mathbbm{1}}
+\newcommand{\allone}{\mathbf{1}}
+\newcommand{\tr}{\mathrm{tr}}
+\newcommand{\wt}{\mathrm{weight}}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\newcommand{\TV}[2]{\left\|#1 - #2\right\|_{\mathrm{TV}}}
+\newcommand{\ceil}[1]{\left\lceil #1 \right\rceil}
+\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
+\newcommand{\ip}[2]{\left\langle #1 , #2 \right\rangle}
+\newcommand{\grad}{\nabla}
+\newcommand{\hessian}{\nabla^2}
+\newcommand{\trans}{\intercal}
+\newcommand{\diag}{\mathrm{diag}}
+\newcommand{\poly}{\mathrm{poly}}
+\newcommand{\dist}{\mathrm{dist}}
+\newcommand{\sgn}{\mathrm{sgn}}
+\newcommand{\fpras}{\mathsf{FPRAS}}
+\newcommand{\fpaus}{\mathsf{FPAUS}}
+\newcommand{\fptas}{\mathsf{FPTAS}}
+
+\newcommand{\eps}{\varepsilon}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+
+\renewcommand{\AA}{\mathcal{A}}
+\newcommand{\BB}{\mathcal{B}}
+\newcommand{\CC}{\mathcal{C}}
+\newcommand{\DD}{\mathcal{D}}
+\newcommand{\EE}{\mathcal{E}}
+\newcommand{\FF}{\mathcal{F}}
+\newcommand{\GG}{\mathcal{G}}
+\newcommand{\HH}{\mathcal{H}}
+\newcommand{\II}{\mathcal{I}}
+\newcommand{\JJ}{\mathcal{J}}
+\newcommand{\KK}{\mathcal{K}}
+\newcommand{\LL}{\mathcal{L}}
+\newcommand{\MM}{\mathcal{M}}
+\newcommand{\NN}{\mathcal{N}}
+\newcommand{\OO}{\mathcal{O}}
+\newcommand{\PP}{\mathcal{P}}
+\newcommand{\QQ}{\mathcal{Q}}
+\newcommand{\RR}{\mathcal{R}}
+\renewcommand{\SS}{\mathcal{S}}
+\newcommand{\TT}{\mathcal{T}}
+\newcommand{\UU}{\mathcal{U}}
+\newcommand{\VV}{\mathcal{V}}
+\newcommand{\WW}{\mathcal{W}}
+\newcommand{\XX}{\mathcal{X}}
+\newcommand{\YY}{\mathcal{Y}}
+\newcommand{\ZZ}{\mathcal{Z}}
+
+\newcommand{\KL}[2]{D_{\mathrm{KL}} \left( #1 \,\Vert\, #2 \right)}
+\newcommand{\KLbig}[2]{D_{\mathrm{KL}} \left( #1 \,\big\Vert\, #2 \right)}
+\newcommand{\KLBig}[2]{D_{\mathrm{KL}} \left( #1 \,\Big\Vert\, #2 \right)}
+
+\newcommand{\SKL}[2]{D_{\mathrm{SKL}} \left( #1 \,\Vert\, #2 \right)}
+\newcommand{\SKLbig}[2]{D_{\mathrm{SKL}} \left( #1 \,\big\Vert\, #2 \right)}
+\newcommand{\SKLBig}[2]{D_{\mathrm{SKL}} \left( #1 \,\Big\Vert\, #2 \right)}
+
+\newcommand{\qandq}{\quad\text{and}\quad}
+\newcommand{\supp}{\mathrm{supp}}
+
+\newcommand{\DKL}[2]{\-D_{\-{KL}}\left(#1 \parallel #2\right)}
+\newcommand{\DTV}[2]{\-D_{\mathrm{TV}}\left({#1},{#2}\right)}
+% \newcommand{\dist}{\mathrm{dist}}
+\newcommand{\e}{\mathrm{e}}
+\renewcommand{\epsilon}{\varepsilon}
+\renewcommand{\emptyset}{\varnothing}
+% \newcommand{\norm}[1]{\left\Vert#1\right\Vert}
+\newcommand{\set}[1]{\left\{#1\right\}}
+\newcommand{\tuple}[1]{\left(#1\right)} 
+% \newcommand{\eps}{\varepsilon}
+\newcommand{\inner}[2]{\left\langle #1,#2\right\rangle}
+\newcommand{\tp}{\tuple}
+\newcommand{\ol}{\overline}
+\newcommand{\abs}[1]{\left\vert#1\right\vert}
+\newcommand{\ctp}[1]{\left\lceil#1\right\rceil}
+\newcommand{\ftp}[1]{\left\lfloor#1\right\rfloor}
+\newcommand{\Ind}[1]{\-{Ind}_{#1}}
+\newcommand{\todo}[1]{{\color{red} TODO: #1}}
+
+\newcommand{\Cor}{\Psi^{\mathrm{sym}}}
+\newcommand{\cor}{\Psi^{\-{cor}}}
+\newcommand{\Inf}{\Psi}
+% \newcommand{\diag}{\-{diag}}
+
+\def\*#1{\boldsymbol{#1}} % Use \*A for \mathbf{A}
+\def\+#1{\mathcal{#1}} % Use \+A for \mathcal{A}
+\def\-#1{\mathrm{#1}} % Use \-A for \mathrm{A}
+\def\=#1{\mathbb{#1}} % Use \^A for \mathbb{A}
+\def\!#1{\mathfrak{#1}} % Use \!A for \mathfrak{A}
+
+\newcommand*\diff{\mathop{}\!\mathrm{d}}
+
+% probability
+% \DeclareMathOperator*{\oPr}{\mathbf{Pr}}
+\def\oPr{\mathop{\mathrm{Pr}}}
+\renewcommand{\Pr}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oPr\left[#2\right]}
+  {\oPr_{#1}\left[#2\right]} } % Use \Pr[a]{b} for \mathbf{Pr}_a[b], \Pr{b} for  \mathbf{Pr}[b]
+
+% expectation: relies on the package "dsfont"
+% \DeclareMathOperator*{\oE}{\mathbb{E}}
+\def\oE{\mathop{\mathbb{E}}}
+\newcommand{\E}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oE\left[#2\right]}
+  {\oE_{#1}\left[#2\right]} }
+
+% variance
+%\DeclareMathOperator*{\oVar}{\mathbf{Var}}
+\def\oVar{\mathrm{Var}}
+\newcommand{\Var}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oVar\left[#2\right]}
+  {\oVar_{#1}\left[#2\right]} }
+
+% entropy
+% \DeclareMathOperator*{\oEnt}{\mathbf{Ent}}
+\def\oEnt{\mathrm{Ent}}
+\newcommand{\Ent}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oEnt\left[#2\right]}
+  {\oEnt_{#1}\left[#2\right]} }
+
+\newcommand{\PhiEnt}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oEnt^\phi\left[#2\right]}
+  {\oEnt^\phi_{#1}\left[#2\right]} }
+
+
+\newenvironment{Exampleparagraph}[1][]
+{
+    \par 
+    \noindent 
+    \textbf{\color{blue} #1}
+    \par 
+    \vspace{0.5em} 
+    \itshape 
+}
+{
+    \par 
+    \vspace{1em} 
+}
+
+%\input{local-macro}
+
+\newcommand{\RED}[1]{\textcolor{red}{#1}}
+
+\newcommand{\bern}[1]{\mathrm{Bern}\left(#1\right)}
+\newcommand{\pll}{\parallel}
+
+
+
+\title{CS 7545 F26, Homework 2}
+\date{Due on October 1, 2026}
+\author{{\textbf{Zejia Chen}} \\ \textbf{GTID: 904178159}}
+
+\pgfplotsset{compat=1.18} 
+\begin{document}
+
+\maketitle
+
+\section*{Exercise 1}
+\textbf{(1)} 
+Suppose $h^\star = (b_1^\star,\cdots,b_d^\star)$ and let $j_i^\star \in \arg\min_{j\in[R]} \abs{\frac{2j-1}{2R} - b_i^\star}$.
+Let $h' = \tp{\frac{2j_1^\star - 1}{2R},\cdots,\frac{2j_d^\star -1 }{2R}}$.
+Define 
+$$
+  \ell_i = \min\tp{b_i^\star,\frac{2j_i^\star-1}{2R}}, r_i = \max\tp{b_i^\star,\frac{2j_i^\star-1}{2R}}.
+$$
+Then we have that
+\begin{align*}
+  L(h_R^\star) \leq L(h') &= \Pr[(x,y)]{\ind\left[\forall i,x_i\leq \frac{2j_i^\star - 1}{2R}\right] \neq \frac{y+1}{2}} 
+  \\&\leq \Pr[(x,y)]{\tp{\ind[\forall i, x_i\leq b_i^\star] \neq \frac{y+1}2 }\lor \tp{\exists i, \ell_i<x_i\leq r_i}}
+  \\&\leq L(h^\star) + \sum_{i=1}^d \Pr[x]{\ell_i<x_i\leq r_i}
+  \\&= L(h^\star) + \sum_{i=1}^d r_i-\ell_i
+  \leq L(h^\star) + \frac{d}{2R},
+\end{align*}
+where the second inequality follows from the union bound and the last inequality follows from $\min_{j\in[R]} \abs{\frac{2j-1}{2R} - b_i^\star} \leq \frac 1{2R}$ for $i\in [d]$.
+\\\textbf{(2)}
+By Hoeffding's bound, for any fixed $h\in H_R$, we have that 
+$$
+  \Pr{\hat L_S(h) - L(h) \geq \eps } \leq \exp(-2n\eps^2), \quad
+  \Pr{L(h) - \hat L_S(h) \geq \eps } \leq \exp(-2n\eps^2).
+$$
+Therefore, by union bound, with probability at least $1 - 2R^{d}\exp(-2n\eps^2)$, we have that
+$$
+  \forall h\in H_R, L(h) - \hat L_S(h) + \hat L_S(h_R^\star) - L(h_R^\star)\leq 2\eps
+  % \implies \forall h\in H, L(h) - L(h_R^\star) \leq \eps, 
+$$
+Since $\hat L_S(h_R^\star) \geq \hat L_S(\hat h_{S,R})$, we have that 
+\begin{align}
+  \Pr{L(\hat h_{S,R}) - L(h_{R}^\star)\leq 2\eps}
+  &\geq \Pr{L(\hat h_{S,R}) - \hat L_S(\hat h_{S,R}) + \hat L_S(h_R^\star) - L(h_{R}^\star)\leq 2\eps} \nonumber
+  \\&\geq \Pr{\forall h\in H_R, L(h) - \hat L_S(h) + \hat L_S(h_R^\star) - L(h_{R}^\star)\leq 2\eps} \nonumber
+  \\&\geq 1 - 2R^{d}\exp(-2n\eps^2). \label{eq:E1_P2}
+\end{align}
+Plugging $\eps = \sqrt{\frac{d\ln(R)+\ln(2/\delta)}{2n}}$ into \Cref{eq:E1_P2}, we complete the proof.
+\\\textbf{(3)}
+By Part \textbf{(1)} and Part \textbf{(2)}, take $R= dn $, with probability at least $1 - \delta$, we have that 
+$$
+  L(\hat h_{S,R}) - L(h^\star) \leq \frac{d}{2R} + 2\sqrt{\frac{d\ln(R) + \ln(2/\delta)}{2n}} \lesssim \frac 1n + \sqrt{\frac{d\ln(dn)}{n}} = O\tp{\sqrt{\frac{d\ln (dn)}{n}}}.
+$$
+
+\section*{Exercise 2}
+\textbf{(1)} The VC dimension is $2$.
+For $S\subseteq \+X$ with $|S| = 3$, we have that $(1,1,1)\notin H\mid_S$ since the length of the interval in $H$ is only $1.5$ and $\sup S - \inf S \geq 2$.
+For $S = \{1,2\}$, it is clear that $H\mid_S = \{(-1,-1),(-1,1),(1,-1),(1,1)\}$.
+\\\textbf{(2)}$\Pi_H(n) = 2n$.
+Since the VC dimension is $2$, $\Pi_H(n) = 2^n = 2n$ for $n\leq 2$.
+For $n\geq 3$, since the length of the interval in $H$ is only $1.5$, it can only cover at most $2$ points and these two points must be consecutive.
+Therefore, for any $S \subset \Z$ with $|S| = n$, we have that  
+$$
+  \abs{H|_S} = 1 + n + \sum_{x\in S}\ind [x+1\in S] \leq 1 +n + n-1 = 2n,
+$$
+with equality achieved by $S = [n]$.
+Therefore, $\Pi_H(n) = \max_{|S|=n} \abs{H|_S} = 2n$.
+\\\textbf{(3)}
+The upper bound of the Sauer-Shelah Lemma is $\frac{n^2+n+2}{2}$, which is quadratic in $n$, whereas $\Pi_H(n)$ is linear in $n$.
+The underlying reason is that the general upper bound misses the combinatorial structure of $H$.
+Here if two points in $S$ are labeled $+1$, these two points must be consecutive, which is not generally true for hypothesis class with VC dimension $2$.
+This property restricts $\Pi_H(n)$ to $2n$.
+\section*{Exercise 3}
+\textbf{(1)}
+We have that
+\begin{align*}
+  \Pi_{H_1\cup H_2}(n) &= \sup_{|S|=n}\abs{(H_1\cup H_2)|_S} \leq \sup_{|S|=n}\tp{\abs{H_1|_S} + \abs{H_2|_S}}
+  \\&\leq \sup_{|S_1|=n}\abs{H_1|_{S_1}} + \sup_{|S_2|=n}\abs{H_2|_{S_2}} = \Pi_{H_1}(n) + \Pi_{H_2}(n)
+\end{align*}
+\textbf{(2)}
+By Part \textbf{(1)} and the Sauer-Shelah Lemma, we have that for any set $S$ with $|S| = d_1+d_2+2$,
+\begin{align*}
+  \Pi_{H_1\cup H_2}(d_1+d_2+2) &\leq \Pi_{H_1}(d_1+d_2+2) + \Pi_{H_2}(d_1+d_2+2)
+  \\&\leq \sum_{i=0}^{d_1} \binom{d_1+d_2+2}{i} + \sum_{i=0}^{d_2} \binom{d_1+d_2+2}{(d_1+d_2+2)-i}
+  \\&= 2^{d_1+d_2+2}-\binom{d_1+d_2+2}{d_1+1}
+  < 2^{d_1+d_2+2}.
+\end{align*}
+Therefore, $d(H_1\cup H_2)\leq d_1+d_2+1$.
+\\\textbf{(3)}
+For any set $S\subset \Z$ with $|S| = d_1$, we have that $\abs{H_1|_S} = |\{T\subseteq S\mid |T|\leq d_1\}| = 2^{d_1}$.
+However, for any $S\subset \Z$ with $|S| = d_1 + 1$, $(1,1,\cdots,1)\notin H_1|_S$.
+Therefore, $d(H_1) = d_1$.
+In the same way, $d(H_2) = d_2$.
+
+Fix $S\subset Z$ with $|S| = d_1 + d_2 + 1$.
+For any vector $v$ in $\{\pm 1\}^{|S|}$, either $v$ contains at most $d_1$ entries equal to $+1$ or at most $d_2$ entries equal to $-1$.
+In the former case, there exists some $h\in H_1$ such that $(h(x_1),\cdots,h(x_{|S|})) = v$.
+In the other case, $v$ can be achieved by some $h\in H_2$.
+Therefore, $\abs{(H_1\cup H_2)|_S} = 2^{d_1+d_2+1}$.
+By Part \textbf{(2)}, we conclude that $d(H_1\cup H_2)  = d_1+d_2+1$.
+\section*{Exercise 4}
+\textbf{(1)}
+By the union bound and Hoeffding's bound, we have that
+\begin{equation}\label{eq:E4_P1}
+  \Pr{\exists h\in H_k, L(h) - \hat L_S(h) \geq \eps} \leq \sum_{h\in H_k} \cdot \Pr{L(h) - \hat L_S(h) \geq \eps} \leq \exp(k-2n\eps^2).
+\end{equation}
+Plugging $\eps = \sqrt{\frac{k+\ln(1/\delta)}{2n}}$ into \Cref{eq:E4_P1}, we have that
+\begin{align*}
+  \Pr{L(\hat h_{S,k}) \leq \hat L_S(\hat h_{S,k}) + \sqrt{\frac {k+\ln (1/\delta)}{2n}}} \geq \Pr{\forall h\in H_k, L(h) - \hat L_S(h) \leq \sqrt{\frac {k+\ln (1/\delta)}{2n}}} \geq 1 - \delta.
+\end{align*}
+\textbf{(2)}
+Since for any hypothesis $h$, $n\hat L_S(h)\in \Z_{\geq 0}$, we have that for $k < k_S$, $\min_{h\in H_{k+1}} \hat L_S(h) \leq \min_{h\in H_{k}} \hat L_S(h) - \frac 1n$.
+The loss function satisfies $\hat L_S(h)\in [0,1]$ for hypothesis $h$.
+Therefore, we conclude that
+$$
+  0\leq \min_{h\in H_{k_S}} \hat L_S(h) \leq \min_{h\in H_{k_S-1}} \hat L_S(h)-\frac 1n \leq \cdots \leq \min_{h\in H_{0}} \hat L_S(h)-\frac {k_S}n \leq 1-\frac {k_S}n ,
+$$
+which shows $k_S\leq n$.
+\\\textbf{(3)}
+By union bound and Part \textbf{(1)}, for $\delta' > 0$, with probability at least $1 - (n+1)\delta'$, 
+$$
+  \forall k\in \{0\}\cup [n], \quad L(\hat h_{S,k}) \leq \hat L_S(\hat h_{S,k}) + \sqrt{\frac {k+\ln (1/\delta')}{2n}}.
+$$
+By Part \textbf{(2)} and $\hat h_{S,\-{iter}} = \hat h_{S,k_S}$, and take $\delta = \delta'(n+1)$, we conclude that
+\begin{align*}
+  &\Pr{L(\hat h_{S,k_S}) \leq \hat L_S(\hat h_{S,k_S}) + \sqrt{\frac {k_S+\ln(n+1)+\ln (1/\delta)}{2n}}} 
+  \\\geq &\Pr{\forall k\in \{0\}\cup [n], L(\hat h_{S,k}) \leq \hat L_S(\hat h_{S,k}) + \sqrt{\frac {k+\ln(n+1)+\ln (1/\delta)}{2n}}} \geq 1 - \delta.
+\end{align*}
+
+\section*{Exercise 5}
+\textbf{(1)}
+For each point $x$, sample its label from $\{\pm 1\}$ uniformly at random and the sampling is independent of the algorithm.
+Let $\+X = \{x_1,\cdots,x_d\}$ be the data points and $\+Y$ be the corresponding sampled labels.
+Fix the sample set $S$, for any output $h$ of $\+A(S)$, since $\+X$ is shattered by $H$, we have that for any $x_i\in \+X$,
+$$
+  x_i\notin S\implies y_i = h(x_i)\ \text{w.p.}\ \frac 12 .
+$$ 
+Therefore, any excluded point will contribute error $\frac 12$.
+From this, we conclude the expectation of the loss function of non-single points:
+\begin{align*}
+  \E[\+Y]{\E[S,\+A]{L_{\text{non-single}}(\+A(S))}} &\geq \frac 12(d-1)\cdot \frac{b}{d-1}\cdot \tp{1 - \frac{b}{d-1}}^n
+  \\&\geq  \frac 12 b\cdot \tp{1 - \frac{nb}{d-1}} ,
+\end{align*}
+where the last inequality follows from the Bernoulli's inequality.
+Choosing $b = \frac{d-1}{2n}$, we get $\E[\+Y]{\E[S,\+A]{L_{\text{non-single}}(\+A(S))}} \geq \frac{d-1}{8n}$.
+\\\textbf{(2)}
+By Part \textbf{(1)}, we have that
+$$
+  \max_{\+Y\in \{\pm 1\}^{\+X}} \E[S,\+A]{L_{\text{non-single}}(\+A(S))}
+  \geq \E[\+Y]{\E[S,\+A]{L_{\text{non-single}}(\+A(S))}} = \frac b2\tp{1 - \frac{nb}{d-1}} .
+$$
+Fix $\+Y\in \arg \max_{\+Y\in \{\pm 1\}^{\+X}} \E[S,\+A]{L_{\text{non-single}}(\+A(S))}$.
+We get the distribution $\+D$ from Part \textbf{(1)}, which is realizable by $H$.
+Let $Z = L_{\text{non-single}}(\+A(S))$.
+Since $\+D(\text{non-single point}) = b$, we have that $Z \leq b$ and $b-Z$ is nonnegative.
+Take $b = \frac{d-1}{2n}$, then by Part \textbf{(1)} and the choice of $\+Y$, $\E{Z} \geq b/4$.
+By Markov's inequality, we have that
+$$
+  \Pr{Z\leq \frac{b}{8}} = \Pr{b-Z\geq \frac{7b}{8}} \leq \frac{b-\E{Z}}{7b/8} \leq \frac{6}{7}.
+$$
+Therefore, since $d\geq 2$,
+$$  
+  \Pr{L(\+A(S))< \frac 1{32}\frac dn} \leq \Pr{Z< \frac 1{32}\frac dn}
+  \leq \Pr{Z \leq \frac 1{16}\frac {d-1}n} \leq \frac 67.
+$$
+\textbf{(3)}
+Let these two points be $x_1,x_2$ and $\+D(x_1) = 1-b$.
+Let $S = \{s_1,\cdots,s_n\}$.
+Since $s_1,\cdots,s_n$ are sampled i.i.d., we have that 
+$$
+  \Pr{\forall i\in[n], s_i = x_1} = \prod_{i=1}^n \Pr{s_i=x_1} = \+D(x_1)^n = (1-b)^n .
+$$
+As in Part \textbf{(1)}, we sample the labels $\+Y$ of data points from $\{\pm 1\}$ uniformly at random.
+If $x_2\notin S$, then $\E{\ind[\+A(S)(x_2)\neq y_2]} = \frac 12$.
+Therefore, there exists $y_2' \in \{\pm 1\}$ such that $\Pr[\+A]{\+A(S)(x_2)\neq y_2'}\geq \frac 12$ (note that here the randomness comes from the algorithm).
+Hence, we have that
+$$
+  \Pr[S,\+A]{\+A(S)(x_2)\neq y_2'} \geq \Pr[\+A]{\+A(\{x_1,x_1,\cdots,x_1\})(x_2)\neq y_2'}\Pr{x_2\notin S} \geq (1-b)^n/2 .
+$$
+\textbf{(4)}
+When the other point is incorrectly classified, the loss is at least $b$ ($\+D(x_2) = b$).
+Hence, with probability at least $(1-b)^n/2$, $L(\+A(S))\geq b$.
+
+Take $b = \frac{\ln(1/(2\delta))}{2n}$.
+Since $\delta\in [e^{-n},1/2]$, $b\in [0,\frac 12]$.
+Then $(1-b)^n/2 \geq \exp(-2bn)/2$.
+Therefore,
+$$
+  \Pr{L(\+A(S)) \geq \frac{\ln(1/(2\delta))}{2n}} \geq \frac{(1-b)^n}2\geq \frac{e^{-2bn}}2 = \delta.
+$$
+\end{document}
