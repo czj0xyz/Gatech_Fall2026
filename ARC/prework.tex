@@ -1,0 +1,29 @@
+\paragraph{Previous Work and Proposed Problem.}
+% Talagrand's $L^1$--$L^2$ inequality was first proved for biased product distribution 
+% It was later extended to under suitable hypercontractivity assumptions \cite{KoehlerLifshitzMinzerMossel23}.
+% Eldan and Gross proved their inequality for the uniform measure using pathwise stochastic analysis \cite{EldanGross22}.
+% Ivanisvili and Zhang subsequently gave a simpler semigroup proof that also applies to biased product measures \cite{IvanisviliZhang26}.
+
+Most previous work establishes influence and isoperimetric inequalities for uniform or biased product distributions \cite{Talagrand93,KKL88,CorderoErausquinLedoux12}.
+KKL and other influence-type inequalities have also been extended to certain Schreier graphs \cite{ODonnellWimmer13} and Markov random fields on bounded-degree graphs under suitable mixing assumptions \cite{KoehlerLifshitzMinzerMossel23}. 
+In my recent work with Zongchen Chen and Xinyuan Zhang \cite{chen2026discrete}, we established these inequalities for distributions with full support that satisfy marginal boundedness and a Dobrushin-type condition \cite{Dobrushin68}, which controls dependence among coordinates.
+
+A limitation of our hypercube argument is its reliance on full support.
+It therefore does not directly apply to distributions with constrained support.
+An important exception is the uniform distribution over matroid independent sets.
+We say $\+M=(S,\+I)$ is a matroid if $\+I\subseteq 2^S$ is downward-closed and satisfies the exchange property: $\forall A,B\in \+I, |A|>|B|\implies \exists u\in A\setminus B, B\cup\{u\}\in\+I$.
+The members of $\mathcal{I}$ are its independent sets.
+Matroids capture a fundamental combinatorial structure in theoretical computer science.
+For example, graphic matroids describe acyclic subgraphs.
+Studying influence and isoperimetric inequalities on matroid independent sets provides insights into Boolean function analysis beyond the Boolean hypercube \cite{Hop26}.
+In the graphic case, isoperimetric inequalities on graphic matroids would help quantify the stability of graph properties over acyclic subgraphs.
+This motivates us to explore the influence and isoperimetric inequalities on matroid independent sets.
+Formally, we would like to answer the following problem.
+\begin{prob}\emph{
+    Do the KKL inequality and Talagrand's inequality hold for the uniform distribution over matroid independent sets?
+}\end{prob}
+% The hard-core model, a distribution over vertex-weighted independent sets, provides another natural setting for these questions.
+% It can model selection in a social network where no two committee members are friends.
+More broadly, the proposed problem is a first step toward analogous inequalities for high-dimensional expanders \cite{gotlib2023no}, determinantal point processes \cite{taskar2013determinantal}, and spin systems with hard constraints \cite{chen2023spectral}, such as the hard-core model (vertex-weighted independent sets) and graph colorings.
+Further targets include Talagrand's $L^1$--$L^2$ inequality \cite{Talagrand94}, which strengthens KKL, and the Eldan--Gross inequality \cite{EldanGross22}, which incorporates both KKL and surface-area inequalities.
+Our recent work \cite{chen2026discrete} also established these stronger inequalities under appropriate assumptions.

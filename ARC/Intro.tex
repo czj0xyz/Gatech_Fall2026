@@ -1,0 +1,39 @@
+\paragraph{Introduction.}
+Isoperimetric inequalities, which relate the area to the length of its boundary, have been widely studied in mathematics.
+For example, the isoperimetric inequality states that for a closed curve with length $L$, the area $A$ of the region satisfies $4\pi A \leq L^2$ in two-dimensional Euclidean space.
+
+We study influence and isoperimetric inequalities on the Boolean hypercube $\Omega = \{\pm 1\}^n$ with the distribution $\mu$ over $\Omega$.
+For a subset $S\subseteq \Omega$, the analogue of its volume is measured by $\mu(S)$.
+In the following, we represent a subset $S\subseteq\Omega$ by a Boolean function $f:\Omega\mapsto \{\pm 1\}$ ($f^{-1}(+1) = S$).
+Boolean functions naturally model voting rules, graph properties, and
+set families.
+For example, in a voting rule, each coordinate records an individual
+vote, $f(x)$ gives the collective decision, and $S$ represents the
+winning coalitions.
+In this notation, $\Var[\mu]{f} = 4\mu(S)(1-\mu(S)) \geq 2\min\{\mu(S),1-\mu(S)\}$ serves as the analogue of a volume term, measuring the smaller side of the partition with fixed boundary.
+
+There are several natural notions of boundary on the Boolean hypercube. Two classical ones are based on the \emph{influence} and the \emph{sensitivity} of coordinates.
+We introduce the influence of the $i$-th coordinate and the sensitivity with respect to the Boolean function $f$ as follows:
+$$
+    \mathsf{Inf}_{\mu,i}(f) = \Pr[\mu]{f(x)\neq f(x^i)}
+    \quad \text{and} \quad s_\mu(f)(x) = \sum_{i=1}^n \ind[f(x)\neq f(x^i)],
+$$
+where $x^i$ is obtained by flipping the sign of the $i$-th coordinate of $x$.
+The influence $\mathsf{Inf}_{\mu,i}(f)$ measures the volume affected by flipping the $i$-th coordinate while the sensitivity counts how many coordinates change the membership for a given $x$. 
+In our voting model, they correspond to the importance of the $i$-th voter and the number of voters who can individually change the outcome of an election, respectively.
+The \emph{surface area}, $\mathsf{SA}_\mu(f):=\E[\mu]{\sqrt{s_\mu(f)}}$, is the boundary area based on square-root sensitivity.
+For the uniform measure on the Boolean hypercube, $\mathsf{SA}_\mu(f)$ corresponds to the Houdr\'e--Tetali isoperimetric constant $\varphi_{1/2}$, which interpolates between edge conductance and vertex expansion \cite{lau2024houdr}.
+These quantities have a natural interpretation on the hypercube graph.
+For a subset of vertices $S=f^{-1}(+1)$, both the \emph{total influence} $\sum_{i=1}^n\mathsf{Inf}_{\mu,i}(f)$ and the surface area $\mathsf{SA}_\mu(f)$ quantify the size of the edge boundary $\partial S=\{(i,x):f(x)\neq f(x^i)\}$ from different perspectives.
+
+Let us consider $\mu$ to be the uniform distribution.
+One fundamental isoperimetric inequality is the Poincar\'e inequality: for Boolean function $f:\Omega\mapsto \{\pm 1\}$, $\Var[\mu]{f} \leq \sum_{i=1}^n \mathsf{Inf}_{\mu,i}(f)$, which guarantees that $\max_{i\in[n]} \mathsf{Inf}_{\mu,i}(f) \ge \Var[\mu]{f}/n$.
+In this proposal, we focus primarily on the following inequalities, for any Boolean function $f:\Omega\mapsto \{\pm 1\}$:
+\begin{itemize}
+    \item [1.] \textbf{Kahn--Kalai--Linial (KKL) inequality \cite{KKL88}}: $\displaystyle \max_{i\in[n]} \mathsf{Inf}_{\mu,i}(f)\gtrsim \frac{\log n}n\Var[\mu]{f}$.
+    \item [2.] \textbf{Talagrand inequality \cite{Talagrand93}}: $\displaystyle \mathsf{SA}_\mu(f)\gtrsim\Var[\mu]{f}\sqrt{\log \frac e{\Var[\mu]{f}}}$.
+\end{itemize}
+For a voting rule, KKL guarantees a voter with influence $\Omega((\log n)/n)$, a logarithmic improvement over the Poincar\'e inequality.
+% The variance--surface-area inequality instead relates boundary size to volume.
+These inequalities have a wide range of applications \cite{FriedgutKalai96,GG11,KoehlerLifshitzMinzerMossel23,khot2018monotonicity}, such as sharp-threshold phenomena and voting models with correlated preferences.
+% For Boolean functions encoding graph properties, such as the existence of a Hamiltonian cycle, these inequalities characterize the robustness of the property to local edge changes.
