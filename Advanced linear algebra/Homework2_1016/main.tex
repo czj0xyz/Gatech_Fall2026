@@ -1,0 +1,590 @@
+\documentclass[11pt]{article}
+\pagestyle{plain}
+
+% \pgfplotsset{compat=1.18}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amsfonts,amssymb,amsthm}
+\usepackage[ruled,vlined,linesnumbered,commentsnumbered]{algorithm2e}
+\SetKwInput{KwIn}{Input}
+\SetKwInput{KwOut}{Output}
+\SetKwInput{KwGlobal}{Global variable}
+\SetKwInput{KwOracle}{Oracle}
+\SetKwComment{Comment}{// }{}
+\usepackage{graphicx}
+\usepackage{enumerate}
+\usepackage{bbm}
+\usepackage{verbatim}
+\usepackage{hyperref,color}
+\usepackage[capitalize,nameinlink]{cleveref}
+\usepackage[dvipsnames]{xcolor}
+\hypersetup{
+	colorlinks=true,
+	pdfpagemode=UseNone,
+	citecolor=OliveGreen,
+	linkcolor=NavyBlue,
+	urlcolor=Magenta,
+	pdfstartview=FitW
+}
+\usepackage{appendix}
+\usepackage{makecell}
+\usepackage{tablefootnote}
+\crefname{appsec}{Appendix}{Appendices}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{xifthen}
+\usepackage{subcaption}
+\usepackage{hhline}
+\usepackage{listings}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{problem}[theorem]{Problem}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{fact}[theorem]{Fact}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{observation}[theorem]{Observation}
+\newtheorem{assumption}[theorem]{Assumption}
+\newtheorem*{assumption*}{Assumption}
+\newtheorem{condition}[theorem]{Condition}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\crefname{lemma}{Lemma}{Lemmas}
+\crefname{theorem}{Theorem}{Theorems}
+\crefname{definition}{Definition}{Definitions}
+\crefname{fact}{Fact}{Facts}
+\crefname{claim}{Claim}{Claims}
+\crefname{proposition}{Proposition}{Propositions}
+
+
+\newcommand{\dif}{\,\mathrm{d}}
+%\newcommand{\E}{\mathbb{E}}
+%\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\Cov}{\mathrm{Cov}}
+\newcommand{\MI}{\mathrm{I}}
+%\newcommand{\Ent}{\mathrm{Ent}}
+\newcommand{\ind}{\mathbbm{1}}
+\newcommand{\allone}{\mathbf{1}}
+\newcommand{\tr}{\mathrm{tr}}
+\newcommand{\wt}{\mathrm{weight}}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\newcommand{\TV}[2]{\left\|#1 - #2\right\|_{\mathrm{TV}}}
+\newcommand{\ceil}[1]{\left\lceil #1 \right\rceil}
+\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
+\newcommand{\ip}[2]{\left\langle #1 , #2 \right\rangle}
+\newcommand{\grad}{\nabla}
+\newcommand{\hessian}{\nabla^2}
+\newcommand{\trans}{\intercal}
+\newcommand{\diag}{\mathrm{diag}}
+\newcommand{\poly}{\mathrm{poly}}
+\newcommand{\dist}{\mathrm{dist}}
+\newcommand{\sgn}{\mathrm{sgn}}
+\newcommand{\fpras}{\mathsf{FPRAS}}
+\newcommand{\fpaus}{\mathsf{FPAUS}}
+\newcommand{\fptas}{\mathsf{FPTAS}}
+
+\newcommand{\eps}{\varepsilon}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\C}{\mathbb{C}}
+
+\renewcommand{\AA}{\mathcal{A}}
+\newcommand{\BB}{\mathcal{B}}
+\newcommand{\CC}{\mathcal{C}}
+\newcommand{\DD}{\mathcal{D}}
+\newcommand{\EE}{\mathcal{E}}
+\newcommand{\FF}{\mathcal{F}}
+\newcommand{\GG}{\mathcal{G}}
+\newcommand{\HH}{\mathcal{H}}
+\newcommand{\II}{\mathcal{I}}
+\newcommand{\JJ}{\mathcal{J}}
+\newcommand{\KK}{\mathcal{K}}
+\newcommand{\LL}{\mathcal{L}}
+\newcommand{\MM}{\mathcal{M}}
+\newcommand{\NN}{\mathcal{N}}
+\newcommand{\OO}{\mathcal{O}}
+\newcommand{\PP}{\mathcal{P}}
+\newcommand{\QQ}{\mathcal{Q}}
+\newcommand{\RR}{\mathcal{R}}
+\renewcommand{\SS}{\mathcal{S}}
+\newcommand{\TT}{\mathcal{T}}
+\newcommand{\UU}{\mathcal{U}}
+\newcommand{\VV}{\mathcal{V}}
+\newcommand{\WW}{\mathcal{W}}
+\newcommand{\XX}{\mathcal{X}}
+\newcommand{\YY}{\mathcal{Y}}
+\newcommand{\ZZ}{\mathcal{Z}}
+
+\newcommand{\KL}[2]{D_{\mathrm{KL}} \left( #1 \,\Vert\, #2 \right)}
+\newcommand{\KLbig}[2]{D_{\mathrm{KL}} \left( #1 \,\big\Vert\, #2 \right)}
+\newcommand{\KLBig}[2]{D_{\mathrm{KL}} \left( #1 \,\Big\Vert\, #2 \right)}
+
+\newcommand{\SKL}[2]{D_{\mathrm{SKL}} \left( #1 \,\Vert\, #2 \right)}
+\newcommand{\SKLbig}[2]{D_{\mathrm{SKL}} \left( #1 \,\big\Vert\, #2 \right)}
+\newcommand{\SKLBig}[2]{D_{\mathrm{SKL}} \left( #1 \,\Big\Vert\, #2 \right)}
+
+\newcommand{\qandq}{\quad\text{and}\quad}
+\newcommand{\supp}{\mathrm{supp}}
+
+\newcommand{\DKL}[2]{\-D_{\-{KL}}\left(#1 \parallel #2\right)}
+\newcommand{\DTV}[2]{\-D_{\mathrm{TV}}\left({#1},{#2}\right)}
+% \newcommand{\dist}{\mathrm{dist}}
+\newcommand{\e}{\mathrm{e}}
+\renewcommand{\epsilon}{\varepsilon}
+\renewcommand{\emptyset}{\varnothing}
+% \newcommand{\norm}[1]{\left\Vert#1\right\Vert}
+\newcommand{\set}[1]{\left\{#1\right\}}
+\newcommand{\tuple}[1]{\left(#1\right)} 
+% \newcommand{\eps}{\varepsilon}
+\newcommand{\inner}[2]{\left\langle #1,#2\right\rangle}
+\newcommand{\tp}{\tuple}
+\newcommand{\ol}{\overline}
+\newcommand{\abs}[1]{\left\vert#1\right\vert}
+\newcommand{\ctp}[1]{\left\lceil#1\right\rceil}
+\newcommand{\ftp}[1]{\left\lfloor#1\right\rfloor}
+\newcommand{\Ind}[1]{\-{Ind}_{#1}}
+\newcommand{\todo}[1]{{\color{red} TODO: #1}}
+
+\newcommand{\Cor}{\Psi^{\mathrm{sym}}}
+\newcommand{\cor}{\Psi^{\-{cor}}}
+\newcommand{\Inf}{\Psi}
+% \newcommand{\diag}{\-{diag}}
+
+\def\*#1{\boldsymbol{#1}} % Use \*A for \mathbf{A}
+\def\+#1{\mathcal{#1}} % Use \+A for \mathcal{A}
+\def\-#1{\mathrm{#1}} % Use \-A for \mathrm{A}
+\def\=#1{\mathbb{#1}} % Use \^A for \mathbb{A}
+\def\!#1{\mathfrak{#1}} % Use \!A for \mathfrak{A}
+
+\newcommand*\diff{\mathop{}\!\mathrm{d}}
+
+% probability
+% \DeclareMathOperator*{\oPr}{\mathbf{Pr}}
+\def\oPr{\mathop{\mathrm{Pr}}}
+\renewcommand{\Pr}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oPr\left[#2\right]}
+  {\oPr_{#1}\left[#2\right]} } % Use \Pr[a]{b} for \mathbf{Pr}_a[b], \Pr{b} for  \mathbf{Pr}[b]
+
+% expectation: relies on the package "dsfont"
+% \DeclareMathOperator*{\oE}{\mathbb{E}}
+\def\oE{\mathop{\mathbb{E}}}
+\newcommand{\E}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oE\left[#2\right]}
+  {\oE_{#1}\left[#2\right]} }
+
+% variance
+%\DeclareMathOperator*{\oVar}{\mathbf{Var}}
+\def\oVar{\mathrm{Var}}
+\newcommand{\Var}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oVar\left[#2\right]}
+  {\oVar_{#1}\left[#2\right]} }
+
+% entropy
+% \DeclareMathOperator*{\oEnt}{\mathbf{Ent}}
+\def\oEnt{\mathrm{Ent}}
+\newcommand{\Ent}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oEnt\left[#2\right]}
+  {\oEnt_{#1}\left[#2\right]} }
+
+\newcommand{\PhiEnt}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oEnt^\phi\left[#2\right]}
+  {\oEnt^\phi_{#1}\left[#2\right]} }
+
+
+\newenvironment{Exampleparagraph}[1][]
+{
+    \par 
+    \noindent 
+    \textbf{\color{blue} #1}
+    \par 
+    \vspace{0.5em} 
+    \itshape 
+}
+{
+    \par 
+    \vspace{1em} 
+}
+
+%\input{local-macro}
+
+\newcommand{\RED}[1]{\textcolor{red}{#1}}
+
+\newcommand{\bern}[1]{\mathrm{Bern}\left(#1\right)}
+\newcommand{\pll}{\parallel}
+
+
+
+\title{MATH 6112. FALL 2026. ASSIGNMENT 2.}
+\date{Due on October 16, 2026}
+\author{{\textbf{Zejia Chen}} \\ \textbf{GTID: 904178159}}
+
+\pgfplotsset{compat=1.18} 
+\begin{document}
+\maketitle
+Let $D_p = \begin{pmatrix} I_p & 0\\0 & 0\end{pmatrix}$ and we use $e_i$ to denote the $i$-th standard basis vector of $\C^n$, with $1$ in the $i$-th coordinate and $0$ elsewhere.
+\section*{Problem 1}
+\textbf{(a)}
+$\boldsymbol{\implies}$: for any eigenvalue $\lambda$ of $B$ with eigenvector $v$, we have that $B^2v = \lambda^2 v = Bv = \lambda v$.
+Since $v\neq 0$, $\lambda^2 - \lambda = 0 \implies \lambda = 0,1$.
+Therefore, diagonalization of $B$ implies it is similar to $D_p$ for some $p\in\{0\}\cup[n]$.
+It is sufficient to show that $B$ is diagonalizable, that is $\dim \ker B + \dim \ker (I-B) = n$.
+Suppose $\-{rank}(B) = n-k$, then $\dim \ker B = k$.
+Since $\dim \ker (I-B)+\dim \-{Im} (I-B) = n$, we need to show $\dim \-{Im} (I-B) = k$.
+Since for any $x\in \C^n$, $x = Bx + (I-B)x$ and hence $\-{span}(\-{Im} B , \-{Im}(I-B)) = \C^n$.
+For $y\in \-{Im} B \cap \-{Im}(I-B)$, let $y = Bt_1 = (I-B)t_2$, we have that
+$$
+    0 = (B-B^2)t_2 = By = B^2 t_1 = Bt_1 = y .
+$$
+Therefore, $\-{Im} B \cap \-{Im}(I-B) = \{0\}$ and since $\-{span}(\-{Im} B, \-{Im}(I-B)) = \C^n$, $\dim \-{Im} B + \dim \-{Im}(I-B) = n$.
+We know $\dim \-{Im} B = \-{rank}(B) = n-k$, thus, $\dim \-{Im}(I-B) = k$.
+In conclusion, $B$ is diagonalizable.
+\\$\boldsymbol{\impliedby}$: similarity implies that there exists $V\in \C^{n\times n}$ such that $B = V^{-1} D_p V$.
+Since $D_p^2=D_p$, $B^2 = V^{-1} D_p V V^{-1} D_p V = V^{-1} D_p V = B$.
+\\\textbf{(b)} Suppose $V = [v_1,\cdots,v_n]$.
+Since $V^{-1}BV = D_p$, we have that $Bv_i = v_i$ for $i\in[p]$ and $Bv_i = 0$ for $i > p$.
+For any vector $v \in \C^n$, suppose $v = \sum_{i=1}^n \lambda_i v_i$ since $\-{span}(V) = \C^n$ and we have that
+$$
+    Bv = \sum_{i=1}^n \lambda_i Bv_i = \sum_{i=1}^p \lambda_i Bv_i \in \-{span}\{v_1,\ldots,v_p\}.
+$$ 
+Together with $Bv_i = v_i$ for $i\in[p]$, $B$ projects onto the subspace $\+V = \-{span}\{v_1,\ldots,v_p\}$.
+\\\textbf{(c)}
+Note that the plane $2x_1 - 3x_2 + x_3 = 0$ is 
+$$
+    \-{span}\left\{\begin{pmatrix}
+    0\\1\\3
+    \end{pmatrix},\begin{pmatrix}
+    -1\\0\\2
+    \end{pmatrix}\right\}. 
+$$
+Define 
+$$
+    V = \begin{pmatrix}
+           0 & -1 & 0
+        \\ 1 & 0 & 1
+        \\ 3 & 2 & 0
+    \end{pmatrix}\quad \text{and}\quad B = V D_2 V^{-1} = \frac 13\begin{pmatrix}
+           3 & 0 & 0
+        \\ 2 & 0 & 1
+        \\ 0 & 0 & 3
+    \end{pmatrix} .
+$$
+By Part \textbf{(b)}, $B$ projects onto the subspace $2x_1-3x_2+x_3=0$ and $B^* \neq B$.
+Take Gram-Schmidt Orthogonalization of $V$, we have that 
+$$
+    U = \frac 1{\sqrt{70}}\begin{pmatrix}
+           0 & -5\sqrt{2} & -2\sqrt{5}
+        \\ \sqrt 7 & -3\sqrt 2 & 3\sqrt 5
+        \\ 3\sqrt 7 & \sqrt 2 & -\sqrt 5
+    \end{pmatrix} \quad \text{and} \quad \-{span}(U_1,U_2) = \{x\in \R^{3}\mid 2x_1-3x_2+x_3=0\},
+$$
+where we use $U_i$ to denote the $i$-th column of $U$.
+Take $B' = UD_2U^* = \frac 1{14}\begin{pmatrix}10 & 6 & -2\\6 & 5 & 3\\-2 & 3 & 13\end{pmatrix}$.
+By Part \textbf{(b)}, $B'$ projects onto the subspace $2x_1-3x_2+x_3=0$ and $(B')^* = B'$.
+\\\textbf{(d)} 
+Take $V = \begin{pmatrix}1 & t\\0 & 1\end{pmatrix}$ and $B := VD_1V^{-1} =  \begin{pmatrix}1 & -t\\0 & 0\end{pmatrix}$.
+By Part \textbf{(b)}, $B$ projects onto $\-{span}\{e_1\}$ and $B^\top \neq B$.
+We have that $\norm{B}_2^2 \geq \norm{B(e_1-e_2)}_2^2/2 = (t+1)^2/2$ and take $t\to \infty$, we get arbitrarily large $2$-norm of $B$.
+\section*{Problem 2}
+\textbf{(a)} Since $A$ is normal, there exists a unitary transformation $U$ such that $A = U \Lambda U^*$ where $\Lambda = \diag\{\lambda_i\}_{i\in[n]}$ is the diagonal matrix of eigenvalues.
+Let $U = [u_1,\cdots,u_n]$.
+For $x\in \C^n$, suppose $x = \sum_{i=1}^n \mu_iu_i$ with $\sum_{i=1}^n\abs{\mu_i}^2 = 1$ and we have that 
+$$
+    x^*Ax = \sum_{i,j=1}^n \overline{\mu_i}\mu_j (u_i^*Au_j) = \sum_{i=1}^n \abs{\mu_i}^2 \lambda_i \in \-{Co}(\sigma(A)).
+$$
+Hence, $\+F(A) \subseteq \-{Co}(\sigma(A))$.
+Fix $x =  \sum_{i=1}^n \gamma_i\lambda_i \in \-{Co(\sigma(A))}$ with $\sum_{i=1}^n \gamma_i=1$ and $\gamma_i \geq 0$ for $i\in[n]$, take $\mu_i = \sqrt{\gamma_i}$ and $y = \sum_{i=1}^n \mu_i u_i$.
+We have that $\norm{y}_2=1$ and $y^*Ay = x$.
+Therefore, $\-{Co}(\sigma(A)) \subseteq \+F(A)$.
+In conclusion, $\-{Co}(\sigma(A)) = \+F(A)$.
+\\\textbf{(b)} $\boldsymbol{\implies}$: $A$ is Hermitian implies all the eigenvalues of $A$ are real.
+By Part \textbf{(a)}, $\+F(A)$ is a segment of the real line.
+\\$\boldsymbol{\impliedby}$: for any $k\in [n]$, $e_k^\top Ae_k = A_{kk}\in \+F(A)\subseteq \R$.
+Fix $k,j\in[n]$ with $k\neq j$.
+We have that
+$$
+    \frac 12(e_k+e_j)^\top A(e_k+e_j) \in \+F(A) \subseteq \R \implies A_{kj} + A_{jk}\in \R,
+$$
+since $A_{kk},A_{jj}\in \R$.
+Suppose $A_{kj} = \alpha_1 + \beta i$ and $A_{jk} = \alpha_2 - \beta i$ where $\alpha_1,\alpha_2,\beta\in \R$.
+We have that 
+$$
+    \frac 12(e_k-ie_j)^\top A(e_k+ie_j) \in \+F(A) \subseteq \R \implies i(A_{kj} - A_{jk})\in \R \implies (\alpha_1-\alpha_2)i\in\R \implies \alpha_1=\alpha_2,
+$$
+which implies $A_{kj} = \overline{A_{jk}}$.
+Therefore, $A$ is Hermitian.
+\\The endpoints of $\+F(A)$ are $\lambda_{\min}(A)$ and $\lambda_{\max}(A)$. 
+\\\textbf{(c)}
+Define $P = \begin{pmatrix}
+    0 & 1 \\ 0 & 0
+\end{pmatrix}$.
+For any $x\in \C^2$ with $\norm{x}_2=1$, we can write $x = (\cos\alpha e^{i\theta_1},\sin\alpha e^{i\theta_2})$, where $\alpha \in [0,\frac \pi2]$ and $\theta_1,\theta_2\in [0,2\pi)$, by polar transformation.
+We have that $x^*Px = \overline{x_1}x_2 = \frac{1}{2}\sin(2\alpha)e^{i(\theta_2-\theta_1)}$.
+Taking over $\alpha \in [0,\frac \pi2]$ and $\theta_1,\theta_2\in [0,2\pi)$, we conclude that $\+F(P)$ is a disk with radius $\frac 12$ and center $0$.
+
+It is clear that $\+F(A) = \+F(P+I) = 1+\+F(P)$ and $r(A) \leq 1 + \frac 12$ and the equality can be achieved since $\+F(P)$ is a disk.
+In the same way,  $\+F(A^2) = \+F(2P+I) = 1+2\+F(P)$ and $r(A^2) = 1+2\times \frac 12$.
+Therefore, $r(A) = 3/2$ and $r(A^2) = 2$.
+\\\textbf{(d)} Nonnegativity and positive homogeneity of numerical radius follow from the nonnegativity and positive homogeneity of the norm of complex number.
+If $r(A) = 0$, then $\+F(A) = \{0\}$ and $A = 0$.
+The triangle inequality follows from the following inequality:
+\begin{align*}
+    r(A+B) &= \max_{\norm{x}_2=1}\abs{x^*(A+B)x}
+    \leq \max_{\norm{x}_2=1}\abs{x^*Ax}+\abs{x^*Bx}
+    \\&\leq \max_{\norm{x}_2=1}\abs{x^*Ax}+\max_{\norm{y}_2=1}\abs{y^*Ay}
+    = r(A)+r(B).
+\end{align*}
+Hence, $r(\cdot)$ is a norm.
+However, consider $A = \begin{pmatrix} 0 & 1 \\ 0 & 0 \end{pmatrix}$ and $B = \begin{pmatrix} 0 & 0 \\ 1 & 0 \end{pmatrix}$.
+We have that
+$$
+    r(AB) \geq |e_1^\top AB e_1| = 1.
+$$
+By AM-GM inequality,
+$$
+    \forall x\in \C^2 \text{ with }\norm{x}_2 = 1, \abs{\overline{x_1}x_2} = \abs{x_1}\abs{x_2} \leq \frac 12\tp{\abs{x_1}^2+\abs{x_2}^2} = \frac 12 \implies r(A) \leq \frac 12.
+$$
+In the same way, $r(B)\leq \frac 12$.
+Therefore, $r(AB) = 1 > \frac 14 \geq r(A)r(B)$ and $r$ is not a consistent matrix norm.
+\section*{Problem 3}
+\begin{align*}
+    \begin{pmatrix}
+        A & 0
+        \\I & B
+    \end{pmatrix} &\xrightarrow{\text{swap columns}} 
+    \begin{pmatrix}
+        A & 0
+        \\I & B
+    \end{pmatrix}
+    \begin{pmatrix}
+        0 & I
+        \\I & 0
+    \end{pmatrix}
+    =
+    \begin{pmatrix}
+        0 & A
+        \\B & I
+    \end{pmatrix}
+    \\&\xrightarrow{\text{Add ($-A\times$row $2$) to row $1$}} 
+    \begin{pmatrix}
+        I & -A
+        \\0 & I
+    \end{pmatrix}
+    \begin{pmatrix}
+        0 & A
+        \\B & I
+    \end{pmatrix}
+    =
+    \begin{pmatrix}
+        -AB & 0
+        \\B & I
+    \end{pmatrix} 
+    \\&\xrightarrow{\text{Multiply row $1$ by $-1$}} 
+    \begin{pmatrix}
+        -I & 0
+        \\0 & I
+    \end{pmatrix} 
+    \begin{pmatrix}
+        -AB & 0
+        \\B & I
+    \end{pmatrix} 
+    =
+    \begin{pmatrix}
+        AB & 0
+        \\B & I
+    \end{pmatrix}.
+\end{align*}
+Therefore,
+$$
+    M = \begin{pmatrix}
+        -I & 0
+        \\0 & I
+    \end{pmatrix} \begin{pmatrix}
+        I & -A
+        \\0 & I
+    \end{pmatrix}
+    =\begin{pmatrix}
+        -I & A
+        \\0 & I
+    \end{pmatrix}
+    \quad \text{ and } \quad
+    W = \begin{pmatrix}
+        0 & I
+        \\I & 0
+    \end{pmatrix} .
+$$
+By properties in the problem statement, we claim that 
+\begin{align*}
+    \det(A)\det(B)&=\det \begin{pmatrix}
+        A & 0
+        \\I & B
+    \end{pmatrix} =
+    (-1)^n\det \begin{pmatrix}
+        0 & A
+        \\B & I
+    \end{pmatrix}
+    = 
+    (-1)^n \det \begin{pmatrix}
+        -AB & 0
+        \\B & I
+    \end{pmatrix}
+    \\&= 
+    (-1)^{2n}\det \begin{pmatrix}
+        AB & 0
+        \\B & I
+    \end{pmatrix}=\det(AB) .
+\end{align*}
+\section*{Problem 4}
+We first show that for any matrix $A\in \F^{n\times n}$, $\norm{A^*}_2 = \norm{A}_2$:
+\begin{align*}
+    \norm{A}_2 = \sup_{\norm{x}_2 = 1} \norm{Ax}_2
+    = \sup_{\norm{x}_2 = \norm{y}_2 = 1} \abs{\inner{Ax}{y}}
+    = \sup_{\norm{x}_2 = \norm{y}_2 = 1} \abs{\inner{x}{A^*y}}
+    = \sup_{\norm{y}_2 = 1} \norm{A^*y}_2 = \norm{A^*}_2 .
+\end{align*}
+Therefore, we have that $\norm{(A^*)^{-1}}_2\norm{A-B}_2 < 1$.
+Suppose $B$ is not invertible, that is, there is a vector $v\in \F^n$ such that $\norm{v}_2 = 1$ and $Bv = 0$.
+Hence, we have that 
+\begin{align*}
+\norm{(A^*)^{-1}}_2\norm{A-B}_2 &\geq \norm{(A^*)^{-1}v}_2*\norm{(A-B)v}_2 = \norm{(A^*)^{-1}v}_2*\norm{Av}_2
+\\& \geq \abs{\inner{(A^*)^{-1}v}{Av}} = \abs{v^*(A^{-1}A)v} = 1,
+\end{align*}
+which contradicts $\norm{(A^*)^{-1}}_2\norm{A-B}_2 < 1$.
+\section*{Problem 5}
+Simple observation shows that
+$$
+    \begin{pmatrix}
+        A & B
+        \\ C & D
+    \end{pmatrix} = 
+    \begin{pmatrix}
+        I & 0
+        \\ CA^{-1} & D-CA^{-1}B
+    \end{pmatrix}
+    \begin{pmatrix}
+        I & -B
+        \\ 0 & I
+    \end{pmatrix}^{-1}
+    \begin{pmatrix}
+        A^{-1} & 0
+        \\ 0 & I
+    \end{pmatrix}^{-1} .
+$$
+Therefore, by Problem \textbf{(3)}, we have that
+\begin{align*}
+    \det(M) &= \det\begin{pmatrix}
+        I & 0
+        \\ CA^{-1} & D-CA^{-1}B
+    \end{pmatrix}
+    \det\begin{pmatrix}
+        I & -B
+        \\ 0 & I
+    \end{pmatrix}^{-1}
+    \det \begin{pmatrix}
+        A^{-1} & 0
+        \\ 0 & I
+    \end{pmatrix}^{-1}
+    \\&= \det(D-CA^{-1}B)\det(A^{-1})^{-1}
+    \\&= \det(A)\det(D-CA^{-1}B)
+    =\det(AD-ACA^{-1}B) &&(\textbf{Problem }(3))
+    \\&=\det(AD-CAA^{-1}B) = \det(AD-CB), &&(AC=CA)
+\end{align*}
+where the second equality follows from $\det(A^{-1}) = \det(A)^{-1}$ and the determinant of a block matrix. 
+
+For the counterexample, let us consider $n = 2$ and
+$$
+    M = \begin{pmatrix}
+          1& 0& 1& 0
+        \\1& 2& 0& 1
+        \\1& 1& 1& 0
+        \\1& 1& 0& 2
+    \end{pmatrix}.
+$$
+We have that $\det(M) = 1$ while $\det(AD-CB) = 0$.
+
+Suppose $A$ is not invertible.  
+The eigenvalues of $A$ are $\lambda_1,\cdots,\lambda_n$ and let
+$$
+    m = \begin{cases}1 &,\lambda_1 = \cdots=\lambda_n=0 \\\min_{i:\lambda_i\neq 0}|\lambda_i| &,\text{otherwise} \end{cases} .
+$$
+Take $t\in (0,m)$, we have that $A + t I$ is invertible: 
+$$
+    \exists V\in C^{n\times n}: A=V^{-1}\tp{R+\diag\{\lambda_i\}_{i\in[n]}}V \implies A+tI = V^{-1}\tp{R+\diag\{\lambda_i+t\}_{i\in[n]}}V,
+$$
+where $R$ is some strict upper triangular matrix and $\lambda_i + t \neq 0$ for $i\in[n]$.
+And also, $(A+tI)C = AC+tC=CA+tC=C(A+tI)$.
+Then by the previous part, we have that 
+$$
+    \det\begin{pmatrix}
+        A + tI & B
+        \\ C & D
+    \end{pmatrix} = \det(AD+tD-CB).
+$$
+Note that $\det\begin{pmatrix}
+        A + tI & B
+        \\ C & D
+    \end{pmatrix}$ is a polynomial function with respect to $t$, and thereby continuous.
+Taking $t$ tends to $0$, we conclude that
+$$
+    \det\begin{pmatrix}
+        A & B
+        \\ C & D
+    \end{pmatrix} = \lim_{t\to 0^+}\det\begin{pmatrix}
+        A+tI & B
+        \\ C & D
+    \end{pmatrix} = \lim_{t\to 0^+}\det(AD+tD-CB) = \det(AD-CB).
+$$
+\section*{Problem 6}
+\textbf{(a)} Diagonalization of $A$ holds since $A$ is Hermitian.
+Let $U,V$ be unitary matrices satisfying that
+$$
+    U^*AU=V^*AV = \begin{pmatrix}
+        \mu_1 I_{n_1} & & 
+        \\& \ddots &
+        \\& & \mu_pI_{n_p}
+    \end{pmatrix}\quad\text{ and }\quad
+    W = U^*V = \begin{pmatrix}
+        W_{11} &\cdots & W_{1p}
+        \\\vdots& \ddots &\vdots
+        \\W_{p1}&\cdots & W_{pp}
+    \end{pmatrix}.
+$$
+Let $D = \diag\{\mu_i I_{n_i}\}_{i\in[p]}$.
+Following from the above equality, we have that $WD=DW$, that is,
+$$
+    \begin{pmatrix}
+        \mu_1W_{11} &\cdots & \mu_1W_{1p}
+        \\\vdots& \ddots &\vdots
+        \\\mu_pW_{p1}&\cdots & \mu_pW_{pp}
+    \end{pmatrix} = \begin{pmatrix}
+        \mu_1W_{11} &\cdots & \mu_pW_{1p}
+        \\\vdots& \ddots &\vdots
+        \\\mu_1W_{p1}&\cdots & \mu_pW_{pp}
+    \end{pmatrix} .
+$$
+For $i\neq j$, $\mu_i\neq \mu_j$ but $\mu_iW_{ij}=\mu_jW_{ij}$, implying $W_{ij}=0$.
+Therefore $W = \diag\{W_{ii}\}_{i\in[p]}$.
+Since $\diag\{W_{ii}^*W_{ii}\}_{i\in[p]} = W^*W = V^*UU^*V = I$, we have that $W_{ii}^*W_{ii}=I_{n_i}$ for any $i\in[p]$.
+This completes the proof.
+\\\textbf{(b)} The proof is exactly the same. 
+Diagonalization of $A$ holds since $A$ is symmetric.
+Let $U,V$ be orthogonal transformations and $U^\top A U = V^\top A V = \diag\{\mu_iI_{n_i}\}_{i\in[p]}$.
+Let $D = \diag\{\mu_i I_{n_i}\}_{i\in[p]}$ and $W=U^\top V$.
+We have that $DW=WD$, implying $W = \diag\{W_{ii}\}_{i\in[p]}$ is diagonal block matrix.
+Since $W = U^\top V$, $W$ is orthogonal and thus, $W_{ii}$ is orthogonal for $i\in [p]$.
+This completes the proof.
+% \section*{Acknowledgement}
+% External tools, such as AI and WolframAlpha, were used to calculate determinants and matrix multiplication, and provide some hints.
+\end{document}
