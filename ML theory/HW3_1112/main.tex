@@ -1,0 +1,427 @@
+\documentclass[11pt]{article}
+\pagestyle{plain}
+
+% \pgfplotsset{compat=1.18}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amsfonts,amssymb,amsthm}
+\usepackage[ruled,vlined,linesnumbered,commentsnumbered]{algorithm2e}
+\SetKwInput{KwIn}{Input}
+\SetKwInput{KwOut}{Output}
+\SetKwInput{KwGlobal}{Global variable}
+\SetKwInput{KwOracle}{Oracle}
+\SetKwComment{Comment}{// }{}
+\usepackage{graphicx}
+\usepackage{enumerate}
+\usepackage{bbm}
+\usepackage{verbatim}
+\usepackage{hyperref,color}
+\usepackage[capitalize,nameinlink]{cleveref}
+\usepackage[dvipsnames]{xcolor}
+\hypersetup{
+	colorlinks=true,
+	pdfpagemode=UseNone,
+	citecolor=OliveGreen,
+	linkcolor=NavyBlue,
+	urlcolor=Magenta,
+	pdfstartview=FitW
+}
+\usepackage{appendix}
+\usepackage{makecell}
+\usepackage{tablefootnote}
+\crefname{appsec}{Appendix}{Appendices}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{xifthen}
+\usepackage{subcaption}
+\usepackage{hhline}
+\usepackage{listings}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{problem}[theorem]{Problem}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{fact}[theorem]{Fact}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{observation}[theorem]{Observation}
+\newtheorem{assumption}[theorem]{Assumption}
+\newtheorem*{assumption*}{Assumption}
+\newtheorem{condition}[theorem]{Condition}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\crefname{lemma}{Lemma}{Lemmas}
+\crefname{theorem}{Theorem}{Theorems}
+\crefname{definition}{Definition}{Definitions}
+\crefname{fact}{Fact}{Facts}
+\crefname{claim}{Claim}{Claims}
+\crefname{proposition}{Proposition}{Propositions}
+
+
+\newcommand{\dif}{\,\mathrm{d}}
+%\newcommand{\E}{\mathbb{E}}
+%\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\Cov}{\mathrm{Cov}}
+\newcommand{\MI}{\mathrm{I}}
+%\newcommand{\Ent}{\mathrm{Ent}}
+\newcommand{\ind}{\mathbbm{1}}
+\newcommand{\allone}{\mathbf{1}}
+\newcommand{\tr}{\mathrm{tr}}
+\newcommand{\wt}{\mathrm{weight}}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\newcommand{\TV}[2]{\left\|#1 - #2\right\|_{\mathrm{TV}}}
+\newcommand{\ceil}[1]{\left\lceil #1 \right\rceil}
+\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
+\newcommand{\ip}[2]{\left\langle #1 , #2 \right\rangle}
+\newcommand{\grad}{\nabla}
+\newcommand{\hessian}{\nabla^2}
+\newcommand{\trans}{\intercal}
+\newcommand{\diag}{\mathrm{diag}}
+\newcommand{\poly}{\mathrm{poly}}
+\newcommand{\dist}{\mathrm{dist}}
+\newcommand{\sgn}{\mathrm{sgn}}
+\newcommand{\fpras}{\mathsf{FPRAS}}
+\newcommand{\fpaus}{\mathsf{FPAUS}}
+\newcommand{\fptas}{\mathsf{FPTAS}}
+
+\newcommand{\eps}{\varepsilon}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+
+\renewcommand{\AA}{\mathcal{A}}
+\newcommand{\BB}{\mathcal{B}}
+\newcommand{\CC}{\mathcal{C}}
+\newcommand{\DD}{\mathcal{D}}
+\newcommand{\EE}{\mathcal{E}}
+\newcommand{\FF}{\mathcal{F}}
+\newcommand{\GG}{\mathcal{G}}
+\newcommand{\HH}{\mathcal{H}}
+\newcommand{\II}{\mathcal{I}}
+\newcommand{\JJ}{\mathcal{J}}
+\newcommand{\KK}{\mathcal{K}}
+\newcommand{\LL}{\mathcal{L}}
+\newcommand{\MM}{\mathcal{M}}
+\newcommand{\NN}{\mathcal{N}}
+\newcommand{\OO}{\mathcal{O}}
+\newcommand{\PP}{\mathcal{P}}
+\newcommand{\QQ}{\mathcal{Q}}
+\newcommand{\RR}{\mathcal{R}}
+\renewcommand{\SS}{\mathcal{S}}
+\newcommand{\TT}{\mathcal{T}}
+\newcommand{\UU}{\mathcal{U}}
+\newcommand{\VV}{\mathcal{V}}
+\newcommand{\WW}{\mathcal{W}}
+\newcommand{\XX}{\mathcal{X}}
+\newcommand{\YY}{\mathcal{Y}}
+\newcommand{\ZZ}{\mathcal{Z}}
+
+\newcommand{\KL}[2]{D_{\mathrm{KL}} \left( #1 \,\Vert\, #2 \right)}
+\newcommand{\KLbig}[2]{D_{\mathrm{KL}} \left( #1 \,\big\Vert\, #2 \right)}
+\newcommand{\KLBig}[2]{D_{\mathrm{KL}} \left( #1 \,\Big\Vert\, #2 \right)}
+
+\newcommand{\SKL}[2]{D_{\mathrm{SKL}} \left( #1 \,\Vert\, #2 \right)}
+\newcommand{\SKLbig}[2]{D_{\mathrm{SKL}} \left( #1 \,\big\Vert\, #2 \right)}
+\newcommand{\SKLBig}[2]{D_{\mathrm{SKL}} \left( #1 \,\Big\Vert\, #2 \right)}
+
+\newcommand{\qandq}{\quad\text{and}\quad}
+\newcommand{\supp}{\mathrm{supp}}
+
+\newcommand{\DKL}[2]{\-D_{\-{KL}}\left(#1 \parallel #2\right)}
+\newcommand{\DTV}[2]{\-D_{\mathrm{TV}}\left({#1},{#2}\right)}
+% \newcommand{\dist}{\mathrm{dist}}
+\newcommand{\e}{\mathrm{e}}
+\renewcommand{\epsilon}{\varepsilon}
+\renewcommand{\emptyset}{\varnothing}
+% \newcommand{\norm}[1]{\left\Vert#1\right\Vert}
+\newcommand{\set}[1]{\left\{#1\right\}}
+\newcommand{\tuple}[1]{\left(#1\right)} 
+% \newcommand{\eps}{\varepsilon}
+\newcommand{\inner}[2]{\left\langle #1,#2\right\rangle}
+\newcommand{\tp}{\tuple}
+\newcommand{\ol}{\overline}
+\newcommand{\abs}[1]{\left\vert#1\right\vert}
+\newcommand{\ctp}[1]{\left\lceil#1\right\rceil}
+\newcommand{\ftp}[1]{\left\lfloor#1\right\rfloor}
+\newcommand{\Ind}[1]{\-{Ind}_{#1}}
+\newcommand{\todo}[1]{{\color{red} TODO: #1}}
+
+\newcommand{\Cor}{\Psi^{\mathrm{sym}}}
+\newcommand{\cor}{\Psi^{\-{cor}}}
+\newcommand{\Inf}{\Psi}
+\newcommand{\MAP}{\-{MAP}}
+
+\def\*#1{\boldsymbol{#1}} % Use \*A for \mathbf{A}
+\def\+#1{\mathcal{#1}} % Use \+A for \mathcal{A}
+\def\-#1{\mathrm{#1}} % Use \-A for \mathrm{A}
+\def\=#1{\mathbb{#1}} % Use \^A for \mathbb{A}
+\def\!#1{\mathfrak{#1}} % Use \!A for \mathfrak{A}
+
+\newcommand*\diff{\mathop{}\!\mathrm{d}}
+
+% probability
+% \DeclareMathOperator*{\oPr}{\mathbf{Pr}}
+\def\oPr{\mathop{\mathrm{Pr}}}
+\renewcommand{\Pr}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oPr\left[#2\right]}
+  {\oPr_{#1}\left[#2\right]} } % Use \Pr[a]{b} for \mathbf{Pr}_a[b], \Pr{b} for  \mathbf{Pr}[b]
+
+% expectation: relies on the package "dsfont"
+% \DeclareMathOperator*{\oE}{\mathbb{E}}
+\def\oE{\mathop{\mathbb{E}}}
+\newcommand{\E}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oE\left[#2\right]}
+  {\oE_{#1}\left[#2\right]} }
+
+% variance
+%\DeclareMathOperator*{\oVar}{\mathbf{Var}}
+\def\oVar{\mathrm{Var}}
+\newcommand{\Var}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oVar\left[#2\right]}
+  {\oVar_{#1}\left[#2\right]} }
+
+% entropy
+% \DeclareMathOperator*{\oEnt}{\mathbf{Ent}}
+\def\oEnt{\mathrm{Ent}}
+\newcommand{\Ent}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oEnt\left[#2\right]}
+  {\oEnt_{#1}\left[#2\right]} }
+
+\newcommand{\PhiEnt}[2][]{ \ifthenelse{\isempty{#1}}
+  {\oEnt^\phi\left[#2\right]}
+  {\oEnt^\phi_{#1}\left[#2\right]} }
+
+
+\newenvironment{Exampleparagraph}[1][]
+{
+    \par 
+    \noindent 
+    \textbf{\color{blue} #1}
+    \par 
+    \vspace{0.5em} 
+    \itshape 
+}
+{
+    \par 
+    \vspace{1em} 
+}
+
+%\input{local-macro}
+
+\newcommand{\RED}[1]{\textcolor{red}{#1}}
+
+\newcommand{\bern}[1]{\mathrm{Bern}\left(#1\right)}
+\newcommand{\pll}{\parallel}
+
+
+
+\title{CS 7545 F26, Homework 3}
+\date{Due on November 12, 2026}
+\author{{\textbf{Zejia Chen}} \\ \textbf{GTID: 904178159}}
+
+\pgfplotsset{compat=1.18} 
+\begin{document}
+
+\maketitle
+
+\section*{Exercise 1}
+\textbf{Part A:}
+Since $\E[z]{z}=0, \E[z]{z^2}=1$, we have the following equalities
+$$
+  L(\theta) = \E[z]{(z-\theta)^2} + \lambda(\theta^2 - 1)^2
+  = \E[z]{z^2 - 2z\theta} + \theta^2 + \lambda(\theta^2 - 1)^2
+  = 1 + \theta^2 + \lambda(\theta^2 - 1)^2 ;
+$$
+\begin{align*}
+  \hat L_S(\theta) &= \frac 1n \sum_{i=1}^n \tp{z_i^2-2z_i\theta + \theta^2 + \lambda(\theta^2-1)^2}
+  = \tp{\frac 1n\sum_{i=1}^n z_i^2}- 2\overline{z}_S\theta + \theta^2 + \lambda(\theta^2-1)^2
+  \\&=\tp{\frac 1n\sum_{i=1}^n z_i^2} + (\theta-\overline z_S)^2 - \overline{z}_S^2 + \lambda(\theta^2-1)^2
+\end{align*}
+\textbf{Part B:}
+\\1. With $\lambda = \frac 12$, $L(\theta) = \frac{1}{2}(\theta^4+3)$ and $L''(\theta) = 6\theta^2$.
+Therefore, the minimizer $\theta^\star = 0$ and $L''(\theta^\star) = 0$.
+\\2. $\hat L_S'(\theta) = 2(\theta^3 - \overline z_S)$.
+Since $\hat L_S'(\theta)$ is strictly increasing, the ERM is unique and $\hat L_S'(\hat \theta_S) = 0$ implies that  $\hat \theta_S = (\overline z_S)^{1/3}$.
+\\3. We have that $L(\theta^\star) = 3/2$ and 
+$$
+  \E{L(\hat \theta_S) - L(\theta^\star)} = \E{1 + (\overline z_S)^{2/3} + \frac 12\tp{(\overline z_S)^{2/3}-1}^2} - \frac 32
+  = \frac 12\E{(\overline z_S)^{4/3}} = \frac 12\E{\abs{\overline z_S}^{4/3}} .
+$$
+Since $x\mapsto x^{4/3}$ is convex, by Jensen's inequality, $\E{L(\hat \theta_S) - L(\theta^\star)} = \frac 12\E{\abs{\overline z_S}^{4/3}} \geq \frac 12\E{\abs{\overline z_S}}^{4/3}$.
+\\4. Since $z_i\sim \+N(0,1)$, $\overline z_S \sim \+N(0,1/n)$. Therefore, the expected excess loss satisfies that 
+$$
+  \E{L(\hat \theta_S) - L(\theta^\star)} \geq \frac 12\E{\abs{\overline z_S}}^{4/3} = \frac 12\tp{\sqrt{\frac 2{\pi n}}}^{4/3} = \Omega\tp{n^{-2/3}} .
+$$
+\textbf{Part C:} 
+1. $L(\theta) = \frac{2}{3}(\theta^2 - \frac 14)^2 + \frac{13}8$.
+Therefore, the global minimizers satisfy $(\theta^\star)^2 = \frac 14$, and hence, $\theta^\star = \pm \frac 12$.
+\\2. Direct calculation shows that $\hat L_S(\theta) - \hat L_S(-\theta) = (\theta - \overline z_S)^2 -  (\theta + \overline z_S)^2 = -4\overline z_S\theta$.
+Since $\hat \theta_S$ is the minimizer, $\hat L_S(-\hat \theta_S) - \hat L_S(\hat \theta_S) = 4\overline{z}_S\hat\theta_S \geq 0$.
+Also, $\hat L_S'(0) = -2\overline z_S \neq 0$, implying $\hat \theta_S\neq 0$.
+Therefore, $\hat\theta_S$ has the same sign as $\overline z_S$.
+\\3. $\hat L'_S(\theta) = \frac 83 \theta^3 - \frac 23\theta - 2\overline z_S$.
+Since $\hat \theta_S$ is the minimizer, $\hat L'_S(\hat \theta_S)=0$, that is, $4\hat \theta_S^3 - \hat \theta_S = 3\overline z_S$.
+If $\overline z_S$ is positive, then $\sgn(\hat \theta_S) > 0$ and $\hat \theta_S \geq \frac 12$.
+In this case, $3\overline z_S = (2\hat \theta_S+1)(2\hat \theta_S-1)\hat \theta_S \geq 2(\hat \theta_S-\frac 12)$.
+If $\overline z_S$ is negative, then $\sgn(\hat \theta_S) < 0$ and $\hat \theta_S \leq -\frac 12$.
+In this case, $3\overline z_S = (2\hat \theta_S+1)(2\hat \theta_S-1)\hat \theta_S \leq 2(\hat \theta_S+\frac 12)$.
+Hence, $\abs{\hat \theta_S - \frac 12 \sgn(\overline z_S)}\leq \frac 32 \abs{\overline z_S}$.
+\\4. By Gaussian tail bound, $\Pr{\abs{\overline z_S} \geq t} \leq 2\exp(-nt^2/2)$. By $\abs{\hat \theta_S - \frac 12 \sgn(\overline z_S)}\leq \frac 32 \abs{\overline z_S}$, we conclude that
+$$
+  \Pr{\abs{\hat \theta_S - \frac 12 \sgn(\overline z_S)}\leq \frac 32 t} \geq \Pr{\abs{\overline z_S}\leq t} \geq 1-2\exp\tp{-nt^2/2}.
+$$
+By taking $t = \sqrt{2\ln(2/\delta)/n}$, we complete the proof.
+\section*{Exercise 2}
+We have that $d(x,x) = \sqrt{2k(x,x)-2k(x,x)} = 0$.
+The symmetry of $d$ follows from the symmetry of $k$.
+Define the matrix $K \in \R^{\+X\times \+X}$ and $K = (k(x,y))_{x,y\in \+X}$ is PSD.
+Define $\*1_{a,b}$ to be the vector satisfying that $\*1_{a,b}(x) = \ind[x=a] - \ind[x=b]$. 
+Then $d(x,y) = \sqrt{\*1_{x,y}^\top K\*1_{x,y}}$.
+For the triangle inequality, we have that
+\begin{align*}
+  d(x,y) &= \sqrt{\*1_{x,y}^\top K\*1_{x,y}}
+    = \sqrt{(\*1_{x,z}+\*1_{z,y})^\top K(\*1_{x,z}+\*1_{z,y})}
+    \\&= \sqrt{\*1_{x,z}^\top K \*1_{x,z} + \*1_{z,y}^\top K \*1_{z,y} + 2\inner{K^{1/2}\*1_{x,z}}{K^{1/2}\*1_{z,y}}}
+    \\&\leq \sqrt{\norm{K^{1/2}\*1_{x,z}}_2^2 + \norm{K^{1/2}\*1_{z,y}}_2^2 + 2\norm{K^{1/2}\*1_{x,z}}_2\norm{K^{1/2}\*1_{z,y}}_2}
+    \\&=d(x,z)+d(z,y),
+\end{align*}
+where the inequality follows from the Cauchy-Schwarz inequality.
+\section*{Exercise 3}
+Let $K = (k(x_i,x_j))_{i,j\in[n]}$. Then by Section 3.4 in Lecture notes 9, the prediction on a test point $x_0$ is 
+\begin{equation}\label{eq:E3}
+  k_{x_0}^\top (K+n\lambda I)^{-1}y\qquad \text{where}\qquad (k_{x_0})_i = k(x_i,x_0).
+\end{equation}
+Define $C_1,\ldots,C_p$ to be the ``clusters'' of the training set which satisfies that for any $i,j\in[p]$ and $a\in C_i,b\in C_j$, $i=j\iff k(x_a,x_b)=1$.
+We use $\allone_S$ to denote the indicator vector, that is, $\allone_S(x) = \ind[x\in S]$.
+Therefore, by definition, $K = \sum_{i=1}^p \allone_{C_i}\allone_{C_i}^\top$.
+From the Sherman–Morrison formula, we can observe that the inverse of $K+n\lambda I$ should have the following form,
+$$
+  \tp{n\lambda I + \sum_{i=1}^p \allone_{C_i}\allone_{C_i}^\top}^{-1}
+  = (n\lambda)^{-1} I + \sum_{i=1}^p \alpha_i\allone_{C_i}\allone_{C_i}^\top,
+$$
+where $\{\alpha_i\}_{i\in[p]}$ are coefficients that need to be determined.
+Since $\inner{\allone_{C_i}}{\allone_{C_j}} = 0$ for $i\neq j$, direct calculation shows that
+$$
+  \tp{(n\lambda)^{-1} I + \sum_{i=1}^p \alpha_i\allone_{C_i}\allone_{C_i}^\top} \tp{n\lambda I + \sum_{i=1}^p \allone_{C_i}\allone_{C_i}^\top}
+  = I + \sum_{i=1}^p ((n\lambda)^{-1}+n\alpha_i\lambda+|C_i|\alpha_i)\allone_{C_i}\allone_{C_i}^\top.
+$$
+Setting $\alpha_i = -(n\lambda)^{-1}(n\lambda + |C_i|)^{-1}$, we get the inverse of $K + n\lambda I$.
+
+If $k(x_0,x_i) = 0$ for some $i\in[n]$, then by \Cref{eq:E3}, $k_{x_0} = 0$ and the prediction is $0$, as desired.
+
+Suppose $k(x_0,x_i)=1$ for some $x_i$ and $i\in C_\ell$.
+We have that by the definition of the partition, $C(x_0) = C_\ell$.
+Therefore, by \Cref{eq:E3}, the prediction is as follows,
+\begin{align*}
+  \allone_{C_\ell}^\top \tp{(n\lambda)^{-1} I - \sum_{i=1}^p \frac{1}{n\lambda(n\lambda+|C_i|)}\allone_{C_i}\allone_{C_i}^\top}y
+  &= \allone_{C_\ell}^\top \tp{(n\lambda)^{-1} I - \frac{1}{n\lambda(n\lambda+|C_\ell|)}\allone_{C_\ell}\allone_{C_\ell}^\top}y
+  \\&=\tp{(n\lambda)^{-1} - \frac{|C_\ell|}{n\lambda(n\lambda+|C_\ell|)}}\allone_{C_\ell}^\top y
+  \\&=\frac{\sum_{i\in C(x_0)}y_i}{n\lambda+|C(x_0)|} .
+\end{align*}
+
+\section*{Exercise 4}
+1. Conditioned on $h^\star$, we have that
+\begin{equation}\label{eq:E4_1}
+  \Pr{\hat L_S(h) = 0} = \Pr{\forall i\in [n], h(x_i)= h^\star(x_i)}
+  = (1-\Pr[x\sim \+D]{h(x)\neq h^\star(x)})^n 
+  \leq \exp(-nL_{h^\star}(h)).
+\end{equation}
+2. Fix a hypothesis $h$ and $h^\star$.
+If $L_{h^\star}(h) \leq \frac{\ln(1/\pi(h))+\ln(1/\delta)}n$, the event in the problem description holds with probability $1$.
+Otherwise  by \Cref{eq:E4_1}, the following holds,
+\begin{align}
+  \Pr{\hat L_S(h) = 0\mid h^\star} 
+  \leq\exp(-nL_{h^\star}(h))  
+  \leq\exp(-(\ln(1/\pi(h))+\ln(1/\delta))) = \pi(h)\delta. \label{eq:E4_2}
+\end{align}
+Taking the complementary event completes the proof.
+\\3. Applying the union bound over all $h$ in~\Cref{eq:E4_2}, we have that
+$$
+  \Pr{\exists h, \hat L_S(h) = 0 \text{ and }L_{h^\star}(h) > \frac{\ln(1/\pi(h))+\ln(1/\delta)}n \mid h^\star} \leq \delta
+$$
+Note that for the posterior distribution, we have that
+$\Pr{h = h^\star \mid S} \propto \pi(h) \ind[\hat L_S(h) = 0]$, thus, $\hat L_S(\hat h_{\MAP}(S)) = 0$.
+Therefore,
+\begin{align}
+  &\Pr{L_{h^\star}\tp{\hat h_{\MAP}(S)} \leq \frac{\ln(1/\pi(\hat h_{\MAP}(S)))+\ln(1/\delta)}n\mid h^\star} \nonumber
+  \\\geq &\Pr{\forall h, \hat L_S(h) > 0 \text{ or }L_{h^\star}(h) \leq \frac{\ln(1/\pi(h))+\ln(1/\delta)}n \mid h^\star} \geq 1-\delta. \label{eq:E4_3}
+\end{align}
+4. By the maximality of $\hat h_{\MAP}(S)$, $\pi(\hat h_{\MAP}(S)) \geq \pi(h^\star)$ holds.
+By \Cref{eq:E4_1}, we conclude that
+\begin{align} 
+  \Pr{L_{h^\star}\tp{\hat h_{\MAP}(S)} \geq \eps\mid h^\star}
+  &\leq \Pr{\exists h, \hat L_S(h)=0\text{ and }L_{h^\star}\tp{h}\geq \eps\text{ and }\pi(h)\geq \pi(h^\star)\mid h^\star} \nonumber
+  \\&\leq \sum_{\substack{L_{h^\star}\tp{h}\geq \eps\\\pi(h)\geq \pi(h^\star)}}\Pr{\hat L_S(h)=0\mid h^\star} \nonumber
+  \\&\leq e^{-n\eps}\sum_{h:\pi(h)\geq \pi(h^\star)} \frac{\pi(h)}{\pi(h)}\leq e^{-n\eps}\sum_{h:\pi(h)\geq \pi(h^\star)} \frac{\pi(h)}{\pi(h^\star)} \leq \frac{e^{-n\eps}}{\pi(h^\star)}, \label{eq:E4_4}
+\end{align}
+where the second inequality follows from the union bound.
+\\5. Fix $T = \ln(1/\pi(h^\star))/n$.
+We have that
+\begin{align} 
+  \E[S]{L_{h^\star}\tp{\hat h_{\MAP}(S)}\mid h^\star} &= \int_{0}^{\infty} \Pr{L_{h^\star}\tp{\hat h_{\MAP}(S)} > t\mid h^\star} \dif t
+  \leq T + \int_{T}^{\infty} \frac{e^{-nt}}{\pi(h^\star)} \dif t \nonumber
+  \\&= \frac{1+\ln(1/\pi(h^\star))}{n} .\label{eq:E5_5}
+\end{align}
+6. By \Cref{eq:E5_5}, we conclude that
+\begin{align*}
+  \Pr[S,h^\star]{\hat h_{\MAP}(S)(x_0)\neq y_0} &= \E[S,h^\star,x_0]{\ind\left[\hat h_{\MAP}(S)(x_0)\neq h^\star(x_0)\right]}
+  = \E[S,h^\star]{L_{h^\star}\tp{\hat h_{\MAP}(S)}}
+  \\&=\E[S,h^\star]{\E{L_{h^\star}\tp{\hat h_{\MAP}(S)}\mid h^\star}} \leq \frac {1+\E[h^\star]{\ln(1/\pi(h^\star))}}{n}
+  \\&= \frac{1+\-{Entropy}[\pi]}{n} .
+\end{align*}
+\section*{Exercise 5}
+1. Direct calculation gives 
+$$
+  \Pr{\theta^\star = \theta\mid \{(x_i,y_i)\}_{i=1}^n} \propto \exp\tp{-\frac{\norm{\theta}_2^2}{2\lambda}}\times \exp\tp{-\sum_{i=1}^n\frac{ (\theta \cdot x_i - y_i)^2}{2\sigma^2}}.
+$$
+Therefore, $E(\theta) = \frac{\norm{\theta}_2^2}{2\lambda}+\sum_{i=1}^n(\theta \cdot x_i - y_i)^2/(2\sigma^2)$.
+\\2. We write $X = (x_1,\ldots,x_n)$, $Y = (y_1,\ldots,y_n)^\top$ and $\hat \Sigma = \frac 1n \sum_{i=1}^n x_ix_i^\top$. 
+The derivatives of $E$ are as follows,
+$$
+  \nabla E(\theta) = \frac{\theta}{\lambda} + \frac{XX^\top \theta - XY}{\sigma^2}\qquad\text{and}\qquad
+  \nabla^2 E(\theta) = \frac{I_d}{\lambda} + \frac n{\sigma^2}\hat \Sigma.
+$$
+Since $\hat \theta_\MAP$ minimizes $E$, $\nabla E(\theta) = 0$ implies
+$$
+  \hat \theta_\MAP = \tp{\frac {\sigma^2 I_d}{\lambda} + XX^\top}^{-1}XY .
+$$ 
+Therefore, the Laplace approximation is as follows,
+$$
+  \Pr{\theta^\star = \theta\mid \{(x_i,y_i)\}_{i=1}^n} \propto \exp\tp{-\frac12(\theta - \hat \theta_\MAP)^\top\tp{\frac{I_d}{\lambda} + \frac{n}{\sigma^2}\hat\Sigma}(\theta-\hat \theta_\MAP)} .
+$$
+In this setting, the mean and covariance are as follows,
+$$
+  \mu = \tp{\frac {\sigma^2 I_d}{\lambda} + XX^\top}^{-1}XY,\qquad \Sigma = \tp{\frac{I_d}{\lambda} + \frac n{\sigma^2}\hat \Sigma}^{-1} .
+$$
+3. Direct calculation gives 
+$$
+  \Pr{\theta^\star = \theta\mid \{(x_i,y_i)\}_{i=1}^n} \propto \exp\tp{-\frac{\norm{\theta}_2^2}{2\lambda}}\times \prod_{i=1}^n\sigma\tp{ y_i\inner{\theta}{x_i}} .
+$$
+Therefore, $E(\theta) = \frac{\norm{\theta}_2^2}{2\lambda}-\sum_{i=1}^n \ln(\sigma\tp{ y_i\inner{\theta}{x_i}})$.
+\\4. The derivatives of $E$ are as follows,
+$$
+  \nabla E(\theta) = \frac{\theta}{\lambda} - \sum_{i=1}^n y_i \sigma\tp{-y_i\inner{x_i}{\theta}}x_i
+  \qquad\text{and}\qquad 
+  \nabla^2 E(\theta) = \frac{I_d}{\lambda} + \sum_{i=1}^n  \sigma\tp{\inner{x_i}{\theta}}\sigma\tp{-\inner{x_i}{\theta}}x_ix_i^\top .
+$$
+The maximizer $\hat \theta_\MAP$ satisfies $\nabla E(\hat \theta_\MAP) = 0$.
+For the Laplace approximation, we have that the posterior distribution is proportional to 
+$$
+  \exp\tp{-\frac12(\theta - \hat \theta_\MAP)^\top\tp{\frac{I_d}{\lambda} + \sum_{i=1}^n  \sigma\tp{\inner{x_i}{\hat \theta_\MAP}}\sigma\tp{-\inner{x_i}{\hat \theta_\MAP}}x_ix_i^\top}(\theta-\hat \theta_\MAP)} .
+$$
+In this setting, the mean and covariance are as follows,
+$$
+  \mu = \hat \theta_\MAP,\qquad \Sigma = \tp{\frac{I_d}{\lambda} + \sum_{i=1}^n  \sigma\tp{\inner{x_i}{\hat \theta_\MAP}}\sigma\tp{-\inner{x_i}{\hat \theta_\MAP}}x_ix_i^\top}^{-1} .
+$$
+\end{document}
