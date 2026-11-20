@@ -164,6 +164,7 @@
 % \newcommand{\diag}{\-{diag}}
 \newcommand{\Tr}{\-{Tr}}
 \newcommand{\rank}{\-{rank}}
+\newcommand{\Span}{\-{span}}
 
 \def\*#1{\boldsymbol{#1}} % Use \*A for \mathbf{A}
 \def\+#1{\mathcal{#1}} % Use \+A for \mathcal{A}
@@ -236,9 +237,114 @@
 \pgfplotsset{compat=1.18} 
 \begin{document}
 \maketitle
+For Hermitian matrix $A \in \C^{n\times n}$, we use $\lambda_1(A)\leq \cdots \leq \lambda_n(A)$ to denote the eigenvalues of $A$.
 \section*{Problem 1}
+\textbf{(i)}
+We have that 
+\begin{equation}\label{eq:P1_1}
+    \mu = \min_{x\neq 0} \frac{x^*Ax}{\norm{B^{1/2}x}_2^2} = \min_{\norm{y}_2=1} y^*B^{-\frac 12}AB^{-\frac 12}y = \lambda_1\tp{B^{-\frac 12}AB^{-\frac 12}} = \lambda_1(B^{-1}A),
+\end{equation}
+where the last equality follows from $\det\tp{\lambda I - B^{-1/2}AB^{-1/2}} = \det\tp{\lambda I - B^{-1}A}$.
+Since $A$ is Hermitian, $B^{-1/2}AB^{-1/2}$ can be diagonalized: $B^{-1/2}AB^{-1/2} = V\Lambda V^*$, where $\Lambda$ is the diagonal matrix of eigenvalues of $B^{-1/2}AB^{-1/2}$.
+Hence, $B^{-1}A = B^{-1/2}V\Lambda V^*B^{1/2}$, that is, $B^{-1}A$ is diagonalizable.
+Therefore, all the eigenvalues of $B^{-1}A$ has its cooresponding eigenvector.
+Suppose $B^{-1}A v = \lambda_1(B^{-1}A)v$, then $Av = \mu Bv$ and $x^*Ax = \mu x^*Bx = \mu \norm{B^{1/2}x}_2$, which gives the minimum value in \Cref{eq:P1_1}.
+\\\textbf{(ii)}
+Let $w_1\ldots w_n$ be the eigenvectors of $B^{-1/2}AB^{-1/2}$ with corresponding eigenvalues $\mu_1=\mu\leq\mu_2\leq\ldots \leq\mu_n$.
+Suppose $w_1,\ldots w_n$ are orthonormal since $B^{-1/2}AB^{-1/2}$ is Hermitian.
+Since $B^{-1}Av = \mu v$, $B^{-1/2}AB^{-1/2}(B^{1/2}v) = \mu(B^{1/2}v)$ and thus, $w_1 = B^{1/2}v$.
+We have that 
+\begin{align}\label{eq:P1_2}
+    \nu = \min_{\substack{x\neq 0\\x\perp Bv}} \frac{x^*Ax}{\norm{B^{1/2}x}_2^2} &= \min_{\substack{\norm{y}_2=1\\y\perp B^{1/2}v}}y^*B^{-\frac 12}AB^{-\frac 12}y  = \min_{\substack{\sum_{i>1} a_i^2 = 1\\y=\sum_{i>1}a_iw_i}} y^*B^{-\frac 12}AB^{-\frac 12}y
+    \\&= \min_{\sum_{i>1} a_i^2 = 1}\sum_{i=2}^n \mu_i a_i^2 = \mu_2.
+\end{align}
+The equality can be achieved by $B^{-1/2}w_2$ and $B^{-1/2}AB^{-1/2}w_2 = \nu w_2$ implies $A(B^{-1/2}w_2) = \nu B(B^{-1/2}w_2)$.
+That is, $B^{-1/2}w_2$ is the solution of $Aw = \nu Bw$.
 \section*{Problem 2}
+\textbf{(a)}
+Suppose $\lambda$ is an eigenvalue of $A$ and $v$ is the corresponding eigenvector with $\norm{v}_2 = 1$.
+Therefore, $Av = \lambda v$ and $v^*A^* = \overline{\lambda}v^*$.
+Then we have that
+$$
+    0 > v^*(BA+A^*B)v = 2\Re\lambda (v^*Bv) \implies \Re\lambda < 0,
+$$
+since $B$ is positive definite and $v^*Bv > 0$.
+\\\textbf{(b)} 
+Since for real $t > 0$,
+$$
+    \tp{e^{At}}^* = \sum_{i=0}^\infty \frac{((At)^i)^*}{i!} = \sum_{i=0}^\infty \frac{((A^*t)^i)}{i!} = e^{A^* t}, 
+$$
+$e^{A^*t}e^{At}$ is Hermitian, positive semidefinite and so is $B$.
+For any $v\neq 0$, $e^{0\cdot A}v = v \neq 0$.
+Since $t\mapsto e^{tA} v$ is continuous, there exists $\delta > 0$ such that $e^{tA}v \neq 0$ for any $t\geq \delta$.
+Therefore,
+$$
+    \int_0^\infty v^*e^{tA^*}e^{tA}v \dif t = 
+    \int_0^\infty \norm{e^{tA}v}_2^2 \dif t
+    \geq \int_0^\delta \norm{e^{tA}v}_2^2 \dif t > 0,
+$$
+implying that $B$ is positive definite.
+
+Observe that
+$$
+    \frac{\dif}{\dif t}e^{tA} = \sum_{i=0}^\infty\frac{\dif}{\dif t}\frac{t^iA^i}{i!}
+    = A \sum_{i=1}^\infty \frac{(tA)^{i-1}}{(i-1)!} = A e^{tA} = e^{tA}A.
+$$
+Therefore,
+$$
+    \frac{\dif}{\dif t}\tp{e^{tA^*}e^{tA}} =  \tp{\frac{\dif}{\dif t}e^{tA^*}}e^{tA} + e^{tA^*}\tp{\frac{\dif}{\dif t} e^{tA}} = e^{tA^*}(A^*+A)e^{tA}.
+$$
+Applying the above equation, we conclude that
+$$
+    BA+A^*B = \int_0^\infty e^{tA^*} (A^*+A) e^{tA}\dif t = \left. e^{tA^*}e^{tA} \right|_{0}^{\infty} = -I \prec 0,
+$$
+since $e^{tA}\to 0$ as $t\to \infty$.
+\\\textbf{(c)} 
+We first assume that $A$ is diagonalizable.
+Let $v_1,\ldots,v_n$ be linear independent eigenvectors of $A$ with eigenvalues $a_i + b_i\-i$ ($a_i < 0$ for $i\in[n]$).
+Therefore, for any $i\in[n]$, by Euler's formula,
+$$
+    e^{tA}v_i = \sum_{k=1}^n \frac{t^AA^kv_i}{k!} = \sum_{k=1}^n \frac{t^A(a_i+b_i\-i)v_i}{k!} = e^{a_i+\-i b_i}v_i = e^{ta_i}(\cos tb_i + \-i\sin tb_i)v_i
+    \xrightarrow{t\to \infty} 0\cdot v_i = 0,
+$$
+where the convergence follows from $a_i < 0$ and $|\cos \theta + \-i\sin\theta| = 1$ for any $\theta$.
+Since $A$ is diagonalizable, $\Span(v_1,\ldots v_n) = \C^n$, which implies that $e^{tA} \to 0$ as $t\to \infty$.
+
+Let $M$ be the maximum of real part of eigenvalues of $A$.
+Since the diagonalizable matrices are dense in $\C^{n\times n}$, there is a sequence of diagonalizable matrices $(A_k')_{k\geq 1}$ that converges to $A$ with $\max_j\Re\lambda_j(A_k)\le M/2$ for any $k\in[n]$.
+Hence, $\norm{e^{tA_k}}_2 \leq e^{tM/2}$ holds and the convergence is uniform.
+We then can swap the limits by uniform convergence,
+$$
+    \lim_{t\to \infty} e^{tA} = \lim_{t\to \infty} \lim_{k\to \infty}e^{tA_k}
+    = \lim_{k\to \infty}\lim_{t\to \infty} e^{tA_k} = 0 .
+$$
 \section*{Problem 3}
+\textbf{(a)}
+Since $v^\top A v = (v^\top A v)^\top = v^\top A^\top v$, we have that
+$$
+   v^\top A v = 0 \iff 2v^\top A v = v^\top A v + v^\top A^\top v = v^\top(A+A^\top)v = 0.
+$$
+Therefore, replacing $A$ with $A+A^\top$ does not change the problem.
+\\\textbf{(b)}
+Since $A^\top = A$, $A = U\Lambda U^\top = \sum_{i=1}^n \lambda_i u_iu_i^\top$ for orthonormal $U = (u_1,\ldots,u_n)$, where $\lambda_1\geq \ldots \geq \lambda_n$ and $\Lambda = \diag\{\lambda_i\}_{i\in[n]}$.
+\\$\implies:$ Let $v$ be the non-trivial isotropic vector.
+We have that 
+$$
+    v^\top Av = \sum_{i=1}^n \lambda_i \inner{v}{u_i}^2 = 0\implies (\forall i\in[n], \lambda_i\inner{v}{u_i}=0)\lor (\lambda_1 > 0\land \lambda_n < 0).
+$$
+Since $Av = \sum_{i=0}^n \lambda_i\inner{v}{u_i}u_i \neq 0$, we conclude that $\lambda_1 > 0$ and $\lambda_n < 0$.
+\\$\impliedby:$ Define $u(t) = tu_1 + (1-t)u_n$.
+For any $t\in[0,1]$, the following holds,
+$$
+    Au(t) = \lambda_1 tu_1 + \lambda_n(1-t)u_n \neq 0,
+$$
+since $u_1,\ldots,u_n$ are linearly independent and $\lambda_1 > 0,\lambda_n < 0$.
+Let $f(t) = u(t)^\top A u(t)$.
+Trivially $f$ is a quadratic function and $f$ is continuous.
+Therefore, by $f(0) = \lambda_n < 0$, $f(1) = \lambda_1 > 0$ and continuity, there exists $t' \in (0,1)$ such that $f(t') = 0$.
+That is, $u(t')^\top Au(t') = 0$ and $Au(t') \neq 0$.
+Hence, $u(t')$ is the non-trivial isotropic vector.
+
 \section*{Problem 4}
 \section*{Problem 5}
 \section*{Problem 6}
